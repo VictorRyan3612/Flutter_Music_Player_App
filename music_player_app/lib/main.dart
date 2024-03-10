@@ -15,9 +15,9 @@ class MainApp extends HookWidget {
   @override
   Widget build(BuildContext context) {
 
-    musicDataService.loadfolderPath();
+    musicDataService.loadFolderPath();
 
-    
+
     return MaterialApp(
       // theme: finalTheme,
       debugShowCheckedModeBanner: false,
