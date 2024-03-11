@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_player_app/view/list_music.dart';
 
 
 class DesktopHomeScreen extends StatelessWidget {
@@ -7,9 +8,8 @@ class DesktopHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text("Desktop screen")
-      )
+      appBar: AppBar(),
+      body: ListMusics()
     );
   }
 }
