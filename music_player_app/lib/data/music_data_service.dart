@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 
 enum TableStatus {idle, loading, ready, error}
 
@@ -26,6 +27,30 @@ class MusicDataService{
       print(error);
       musicsValueNotifier.value['status'] = TableStatus.error;
     }
+  }
+  
+  Future<void> loadMusicsDatas() async{
+    await loadFolderPath();
+
+    for (var singlePath in listPaths.value) {
+      try {
+    var metadata = await MetadataRetriever.fromFile(File(singlePath));
+    var musicInfo = {
+      'title': metadata.trackName,
+      'artist': metadata.albumArtistName,
+      'album': metadata.albumName,
+      'duration': metadata.trackDuration,
+      'path': singlePath,
+    };
+    musicsValueNotifier.value['objects'].add(musicInfo);
+  } catch (error) {
+    print('Erro ao obter metadados do arquivo: $error');
+  }
+
+    }
+    // print(musicsValueNotifier.value['objects']);
+    musicsValueNotifier.value['status'] = TableStatus.ready;
+    
   }
 }
 
