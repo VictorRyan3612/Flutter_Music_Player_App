@@ -11,11 +11,7 @@ class BuilderLayout extends StatelessWidget {
     return FutureBuilder(
       future: musicDataService.loadMusicsDatas(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator()
-          );
-        } else if (snapshot.hasError) {
+        if (snapshot.hasError) {
           return Text('Erro: ${snapshot.error}');
         } else {
           return LayoutDecider();
