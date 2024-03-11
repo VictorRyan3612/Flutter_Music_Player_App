@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:music_player_app/data/music_data_service.dart';
 import 'package:music_player_app/layout/layout.dart';
+import 'package:music_player_app/view/builder_layout.dart';
 
 
 void main() {
@@ -21,20 +22,7 @@ class MainApp extends HookWidget {
       debugShowCheckedModeBanner: false,
       
 
-      home: FutureBuilder(
-        future: musicDataService.loadMusicsDatas(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Text('Erro: ${snapshot.error}');
-          } else {
-            return LayoutDecider();
-            
-          }
-        },
-        
-      ),
+      home: BuilderLayout()
 
       // initialRoute: '/',
       // routes: {
