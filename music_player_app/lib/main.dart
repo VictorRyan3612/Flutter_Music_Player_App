@@ -29,7 +29,6 @@ class MainApp extends HookWidget {
           } else if (snapshot.hasError) {
             return Text('Erro: ${snapshot.error}');
           } else {
-            print(musicDataService.musicsValueNotifier.value['objects']);
             return LayoutDecider();
             
           }

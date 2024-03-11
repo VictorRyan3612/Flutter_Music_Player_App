@@ -34,18 +34,11 @@ class MusicDataService{
 
     for (var singlePath in listPaths.value) {
       try {
-    var metadata = await MetadataRetriever.fromFile(File(singlePath));
-    var musicInfo = {
-      'title': metadata.trackName,
-      'artist': metadata.albumArtistName,
-      'album': metadata.albumName,
-      'duration': metadata.trackDuration,
-      'path': singlePath,
-    };
-    musicsValueNotifier.value['objects'].add(musicInfo);
-  } catch (error) {
-    print('Erro ao obter metadados do arquivo: $error');
-  }
+        var metadata = await MetadataRetriever.fromFile(File(singlePath));
+        musicsValueNotifier.value['objects'].add(metadata);
+      } catch (error) {
+        print('Erro ao obter metadados do arquivo: $error');
+      }
 
     }
     // print(musicsValueNotifier.value['objects']);
