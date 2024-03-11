@@ -15,19 +15,32 @@ class MainApp extends HookWidget {
   @override
   Widget build(BuildContext context) {
 
-    musicDataService.loadFolderPath();
-
 
     return MaterialApp(
       // theme: finalTheme,
       debugShowCheckedModeBanner: false,
       
 
+      home: FutureBuilder(
+        future: musicDataService.loadMusicsDatas(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Text('Erro: ${snapshot.error}');
+          } else {
+            print(musicDataService.musicsValueNotifier.value['objects']);
+            return LayoutDecider();
+            
+          }
+        },
+        
+      ),
 
-      initialRoute: '/',
-      routes: {
-        '/': (context) => LayoutDecider(),
-      }
+      // initialRoute: '/',
+      // routes: {
+      //   '/': (context) => LayoutDecider(),
+      // }
     );
   }
 }
