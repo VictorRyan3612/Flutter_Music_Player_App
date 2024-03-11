@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:music_player_app/config/settings_data_service.dart';
 import 'package:music_player_app/data/music_data_service.dart';
 import 'package:music_player_app/layout/layout.dart';
 import 'package:music_player_app/view/builder_layout.dart';
@@ -15,7 +16,7 @@ class MainApp extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    settingsService.loadSettings();
 
     return MaterialApp(
       // theme: finalTheme,
