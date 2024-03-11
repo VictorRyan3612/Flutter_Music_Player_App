@@ -9,13 +9,6 @@ class ConfigScreen extends StatelessWidget {
 
   const ConfigScreen({super.key, required this.currentIsDarkMode, required this.currentColor});
 
-  // Save settings to file
-    Future<void> saveSettings() async {
-      final prefs = await SharedPreferences.getInstance();
-
-      prefs.setBool('isDarkMode', currentIsDarkMode.value);
-      prefs.setString('colorTheme', currentColor.value);
-    }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +30,7 @@ class ConfigScreen extends StatelessWidget {
                       value: currentIsDarkMode.value, 
                       onChanged: (value) {
                         currentIsDarkMode.value = value;
-                        saveSettings();
+                        settingsService.saveSettings(currentIsDarkMode.value);
                       },
                     ),
                     
