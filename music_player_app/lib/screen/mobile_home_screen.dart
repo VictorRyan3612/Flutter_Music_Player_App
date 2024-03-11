@@ -19,22 +19,24 @@ class MobileHomeScreen extends StatelessWidget {
           builder: (context, value, child) {
             // print(value['objects']);
             return ListView.builder(
+              
               itemCount: value['objects'].length,
               itemBuilder: (context, index) {
+                
                 return ListTile(
                   title: Text("${value['objects'][index].trackName}", style: TextStyle(fontSize: 20),),
                   subtitle: Text("${value['objects'][index].albumArtistName} - ${value['objects'][index].albumName}", style: TextStyle(fontSize: 15)),
-                  leading: Icon(Icons.music_note, size: 32),
                   trailing: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        "3:30",
+                        "${musicDataService.formatMilliseconds(value['objects'][index].trackDuration)}",
                         style: TextStyle(fontSize: 15),
                       ),
                     ],
                   ),
+                  leading: Image.memory(value['objects'][index].albumArt),
                 );
               },
             );

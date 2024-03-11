@@ -45,6 +45,18 @@ class MusicDataService{
     musicsValueNotifier.value['status'] = TableStatus.ready;
     
   }
+
+  String formatMilliseconds(int milliseconds) {
+    Duration duration = Duration(milliseconds: milliseconds);
+    int minutes = duration.inMinutes;
+    int seconds = duration.inSeconds % 60;
+
+    String minutesStr = minutes.toString().padLeft(2, '0');
+    String secondsStr = seconds.toString().padLeft(2, '0');
+
+    return '$minutesStr:$secondsStr';
+  }
+
 }
 
 MusicDataService musicDataService = MusicDataService();
