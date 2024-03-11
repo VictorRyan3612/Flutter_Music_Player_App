@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:music_player_app/config/settings_data_service.dart';
 import 'package:music_player_app/data/music_data_service.dart';
 import 'package:music_player_app/layout/layout.dart';
+import 'package:music_player_app/screen/config_screen.dart';
 import 'package:music_player_app/view/builder_layout.dart';
 
 
@@ -23,12 +24,13 @@ class MainApp extends HookWidget {
       debugShowCheckedModeBanner: false,
       
 
-      home: BuilderLayout()
+      // home: BuilderLayout()
 
-      // initialRoute: '/',
-      // routes: {
-      //   '/': (context) => LayoutDecider(),
-      // }
+      initialRoute: '/',
+      routes: {
+        '/': (context) => BuilderLayout(),
+        '/configs': (context) => ConfigScreen()
+      }
     );
   }
 }
