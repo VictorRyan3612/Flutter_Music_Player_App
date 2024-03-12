@@ -28,13 +28,33 @@ class MusicDataService{
       musicsValueNotifier.value['status'] = TableStatus.error;
     }
   }
-  
-  Future<void> loadMusicsDatas() async{
-    await loadFolderPath();
+  isMp3(String file){
+    String format = file.split('.').last.toLowerCase();
+    return format == 'mp3';
+  }
+  foldersPathToFilesPath(List<String> listPathFolders){
+    for (var pathFolder in listPathFolders){
+      Directory directory = Directory(pathFolder);
+      directory.listSync().forEach((entity) {
+
+        if(isMp3(entity.path)){
+          listPaths.value.add(entity.path);
+
+        }
+      });
+    }
+  }
+
+  Future<void> loadMusicsDatas(List<String> listPathFolders) async{
+    await foldersPathToFilesPath(listPathFolders);
+    // await loadFolderPath();
 
     for (var singlePath in listPaths.value) {
       try {
         var metadata = await MetadataRetriever.fromFile(File(singlePath));
+        if(metadata.trackDuration == null){
+          print('Path: ${singlePath} trackDuration: ${metadata.trackDuration}\n');
+        }
         musicsValueNotifier.value['objects'].add(metadata);
       } catch (error) {
         print('Erro ao obter metadados do arquivo: $error');
