@@ -52,16 +52,17 @@ class MusicDataService{
     for (var singlePath in listPaths.value) {
       try {
         var metadata = await MetadataRetriever.fromFile(File(singlePath));
+
         if(metadata.trackDuration == null){
           print('Path: ${singlePath} trackDuration: ${metadata.trackDuration}\n');
         }
+        
         musicsValueNotifier.value['objects'].add(metadata);
       } catch (error) {
         print('Erro ao obter metadados do arquivo: $error');
       }
 
     }
-    // print(musicsValueNotifier.value['objects']);
     musicsValueNotifier.value['status'] = TableStatus.ready;
     
   }

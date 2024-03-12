@@ -14,7 +14,6 @@ class ListMusics extends StatelessWidget {
         child: ValueListenableBuilder(
           valueListenable: musicDataService.musicsValueNotifier,
           builder: (context, value, child) {
-            // print(value['objects']);
             return ListView.builder(
               
               itemCount: value['objects'].length,
@@ -46,7 +45,6 @@ class ListMusics extends StatelessWidget {
                       try {
                         return Image.memory(value['objects'][index].albumArt);
                       } catch (e) {
-                        print(value['objects'][index]);
                         return Icon(Icons.music_note);
                       }
                     },
