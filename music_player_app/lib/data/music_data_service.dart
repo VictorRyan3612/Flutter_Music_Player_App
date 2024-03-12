@@ -33,6 +33,7 @@ class MusicDataService{
     String format = file.split('.').last.toLowerCase();
     return format == 'mp3';
   }
+
   foldersPathToFilesPath(List<String> listPathFolders){
     for (var pathFolder in listPathFolders){
       Directory directory = Directory(pathFolder);
@@ -46,6 +47,27 @@ class MusicDataService{
     }
   }
 
+  Future<void> copyFileWithData(String sourcePath, String destinationPath) async {
+    try {
+      File sourceFile = File(sourcePath);
+      File destinationFile = File(destinationPath);
+
+      if (await sourceFile.exists()) {
+        IOSink destinationSink = destinationFile.openWrite();
+        await sourceFile.openRead().pipe(destinationSink);
+
+        await destinationSink.flush();
+        await destinationSink.close();
+
+        // print('Arquivo copiado com sucesso de\n $sourcePath \npara\n $destinationPath');
+        
+      } else {
+        print('Arquivo de origem não encontrado: $sourcePath');
+      }
+    } catch (e) {
+      print('Erro ao copiar arquivo: $e');
+    }
+  }
 
   String finalNamePath({required Directory directoryFolder, required String musicPath}){
     
@@ -70,6 +92,8 @@ class MusicDataService{
   copyErrorMusic (String pathOrigin) async{
     Directory directory = await folderMusicsErrors();
     String pathFinal = finalNamePath(directoryFolder: directory, musicPath: pathOrigin);
+
+    await copyFileWithData(pathOrigin, pathFinal);
   }
 
 
