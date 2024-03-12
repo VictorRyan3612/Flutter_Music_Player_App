@@ -45,7 +45,21 @@ class MusicDataService{
       });
     }
   }
-  
+
+
+  String finalNamePath({required Directory directoryFolder, required String musicPath}){
+    
+    String nameMusic = musicPath!.split('\\').last;
+
+    RegExp regex = RegExp(r'[^\x00-\x7F]');
+    String nameFormated = nameMusic.replaceAll(regex, '');
+
+    String pathFinal = '${directoryFolder.path}\\$nameFormated' ;
+
+    return pathFinal;
+  }
+
+
   Future<Directory> folderMusicsErrors() async{
     Directory directory = await getApplicationSupportDirectory();
     Directory directoryMusicsErrosFolder = Directory('${directory.path}\\musicsErrosCopies');
@@ -55,6 +69,7 @@ class MusicDataService{
 
   copyErrorMusic (String pathOrigin) async{
     Directory directory = await folderMusicsErrors();
+    String pathFinal = finalNamePath(directoryFolder: directory, musicPath: pathOrigin);
   }
 
 
