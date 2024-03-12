@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_player_app/config/settings_data_service.dart';
 import 'package:music_player_app/data/music_data_service.dart';
 import 'package:music_player_app/layout/layout.dart';
 
@@ -35,16 +36,22 @@ class BuilderLayout extends StatelessWidget {
     // 'C:/Off/As coisas de Victor/Musicas/T-Z'
   ];
   var a = ['C:/Off/As coisas de Victor/Musicas/a'];
-    return FutureBuilder(
-      future: musicDataService.loadMusicsDatas(foldersPaths),
-      // future: musicDataService.loadMusicsDatas(a),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Text('Erro: ${snapshot.error}');
-        } else {
-          return LayoutDecider();
-        }
-      }
+    return ValueListenableBuilder(
+      valueListenable: settingsService.listFolders,
+      builder: (context, value, child) {
+        return FutureBuilder(
+        // future: musicDataService.loadMusicsDatas(foldersPaths),
+        future: musicDataService.loadMusicsDatas(settingsService.listFolders.value),
+        // future: musicDataService.loadMusicsDatas(a),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Erro: ${snapshot.error}');
+          } else {
+            return LayoutDecider();
+          }
+        });
+      },
+      
     );
   }
 }

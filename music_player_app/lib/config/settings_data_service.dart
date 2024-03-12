@@ -6,7 +6,7 @@ class SettingsService{
   ValueNotifier<bool> isMobile = ValueNotifier(false);
   ValueNotifier<bool> isDarkMode = ValueNotifier(true);
   ValueNotifier<String> colorName = ValueNotifier('Blue');
-
+  ValueNotifier<List<String>> listFolders = ValueNotifier([]);
 
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
@@ -16,6 +16,9 @@ class SettingsService{
     
     final colorTheme = prefs.getString('colorTheme') ?? settingsService.colorName.value;
     settingsService.colorName.value = colorTheme;
+
+    final listFolders = prefs.getStringList('listFolders') ?? settingsService.listFolders.value;
+    settingsService.listFolders.value = listFolders;
   }
 
   Future<void> saveSettings(bool boolIsDarkMode) async {
@@ -23,6 +26,12 @@ class SettingsService{
     
     prefs.setBool('isDarkMode', boolIsDarkMode);
     prefs.setString('colorTheme', colorName.value);
+
+  }
+  Future<void> saveFolders(List<String> listFolders) async {
+    final prefs = await SharedPreferences.getInstance();
+    
+    prefs.setStringList('listFolders', listFolders);
 
   }
 }
