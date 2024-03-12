@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
+import 'package:path_provider/path_provider.dart';
 
 enum TableStatus {idle, loading, ready, error}
 
@@ -44,10 +45,16 @@ class MusicDataService{
       });
     }
   }
-
+  
+  Future<Directory> folderMusicsErrors() async{
+    Directory directory = await getApplicationSupportDirectory();
+    Directory directoryMusicsErrosFolder = Directory('${directory.path}\\musicsErrosCopies');
+    directoryMusicsErrosFolder.createSync();
+    return directoryMusicsErrosFolder;
+  }
 
   copyErrorMusic (String pathOrigin) async{
-    
+    Directory directory = await folderMusicsErrors();
   }
 
 
