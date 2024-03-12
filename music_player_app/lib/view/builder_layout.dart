@@ -11,15 +11,23 @@ class BuilderLayout extends StatelessWidget {
     List<String> foldersPaths = [
     'C:/Off/As coisas de Victor/Musicas/7MZ Duelo de Titans',
     'C:/Off/As coisas de Victor/Musicas/7MZ Raps',
+    'C:/Off/As coisas de Victor/Musicas/A-B',
     'C:/Off/As coisas de Victor/Musicas/C-E',
     'C:/Off/As coisas de Victor/Musicas/Classics',
     'C:/Off/As coisas de Victor/Musicas/Covers',
+    'C:/Off/As coisas de Victor/Musicas/F',
+    'C:/Off/As coisas de Victor/Musicas/H-I',
     'C:/Off/As coisas de Victor/Musicas/Is',
+    'C:/Off/As coisas de Victor/Musicas/K-M',
+    'C:/Off/As coisas de Victor/Musicas/M',
     'C:/Off/As coisas de Victor/Musicas/Midnight Club 3',
     'C:/Off/As coisas de Victor/Musicas/Montage Rock',
+    'C:/Off/As coisas de Victor/Musicas/N',
+    'C:/Off/As coisas de Victor/Musicas/O',
     'C:/Off/As coisas de Victor/Musicas/Playlists',
+    'C:/Off/As coisas de Victor/Musicas/P-R',
     'C:/Off/As coisas de Victor/Musicas/Reverse Rock',
-    'C:/Off/As coisas de Victor/Musicas/Rock',
+    'C:/Off/As coisas de Victor/Musicas/S',
     'C:/Off/As coisas de Victor/Musicas/Shingeki no Kyojin',
     'C:/Off/As coisas de Victor/Musicas/Sundry',
     'C:/Off/As coisas de Victor/Musicas/Tauz Games',
@@ -28,8 +36,8 @@ class BuilderLayout extends StatelessWidget {
   ];
   var a = ['C:/Off/As coisas de Victor/Musicas/a'];
     return FutureBuilder(
-      // future: musicDataService.loadMusicsDatas(foldersPaths),
-      future: musicDataService.loadMusicsDatas(a),
+      future: musicDataService.loadMusicsDatas(foldersPaths),
+      // future: musicDataService.loadMusicsDatas(a),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text('Erro: ${snapshot.error}');
