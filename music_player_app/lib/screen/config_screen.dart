@@ -46,6 +46,7 @@ class ConfigScreen extends StatelessWidget {
                         folder = folder.replaceAll('\\', '/');
                         settingsService.listFolders.value.add(folder);
                         settingsService.saveFolders(settingsService.listFolders.value);
+                        settingsService.listFolders.notifyListeners();
                       } else {
                         print('Nenhuma pasta selecionada.');
                       }
@@ -55,8 +56,21 @@ class ConfigScreen extends StatelessWidget {
 
                   Divider(),
                   ListTile(
-                    title: Text("Opção 3"),
-                    subtitle: Text("Subtitulo 3"),
+                    title: Text("Remover Pastas"),
+                    onTap: () async {
+                      String? folder = await FilePicker.platform.getDirectoryPath();
+                      
+                      if (folder != null) {
+                        print('Pasta selecionada: $folder');
+                        folder = folder.replaceAll('\\', '/');
+                        settingsService.listFolders.value.remove(folder);
+                        settingsService.saveFolders(settingsService.listFolders.value);
+                        settingsService.listFolders.notifyListeners();
+                      } else {
+                        print('Nenhuma pasta selecionada.');
+                      }
+
+                    },
                   ),
                   Divider(),
                 ],
