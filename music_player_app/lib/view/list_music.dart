@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player_app/data/music_data_service.dart';
 
@@ -24,13 +27,31 @@ class ListMusics extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(
-                        "${musicDataService.formatMilliseconds(value['objects'][index].trackDuration)}",
-                        style: TextStyle(fontSize: 15),
+                      Builder(
+                        builder: (context) {
+                          if (value['objects'][index].trackDuration == null){
+                            return Text('00:00',style: TextStyle(fontSize: 15));
+                          }
+                          return Text(
+                            "${musicDataService.formatMilliseconds(value['objects'][index].trackDuration)}",
+                            style: TextStyle(fontSize: 15),
+                          );
+                        },
+                        
                       ),
                     ],
                   ),
-                  leading: Image.memory(value['objects'][index].albumArt),
+                  leading: Builder(
+                    builder: (context) {
+                      try {
+                        return Image.memory(value['objects'][index].albumArt);
+                      } catch (e) {
+                        print(value['objects'][index]);
+                        return Icon(Icons.music_note);
+                      }
+                    },
+                  ),
+
                 );
               },
             );
