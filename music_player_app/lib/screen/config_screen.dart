@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:music_player_app/config/settings_data_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 
 class ConfigScreen extends StatelessWidget {
