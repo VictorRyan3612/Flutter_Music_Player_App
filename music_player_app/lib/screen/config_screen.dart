@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player_app/config/settings_data_service.dart';
 
@@ -36,9 +37,19 @@ class ConfigScreen extends StatelessWidget {
                   ),
                   Divider(),
                   ListTile(
-                    title: Text("Opção 2"),
-                    subtitle: Text("Subtitulo 2"),
+                    title: Text("Selecionar Pastas"),
+                    onTap: () async {
+                      String? folder = await FilePicker.platform.getDirectoryPath();
+                      
+                      if (folder != null) {
+                        print('Pasta selecionada: $folder');
+                      } else {
+                        print('Nenhuma pasta selecionada.');
+                      }
+
+                    },
                   ),
+
                   Divider(),
                   ListTile(
                     title: Text("Opção 3"),
