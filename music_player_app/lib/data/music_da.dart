@@ -2,12 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
-
+import 'package:path_provider/path_provider.dart';
 enum TableStatus {idle, loading, ready, error}
 
 class MusicDataService{
   ValueNotifier<List<String>> listFoldersPaths = ValueNotifier([]);
   ValueNotifier<List<String>> listPaths = ValueNotifier([]);
+  ValueNotifier<List<String>> listMusicsError = ValueNotifier([]);
   ValueNotifier<Map<String,dynamic>> musicsValueNotifier = ValueNotifier({
     'status': TableStatus.idle,
     'objects': []
@@ -46,10 +47,59 @@ class MusicDataService{
   }
 
 
-  copyErrorMusic (String pathOrigin) async{
-    
+  Future<void> copyFileWithData(String sourcePath, String destinationPath) async {
+  try {
+    File sourceFile = File(sourcePath);
+    File destinationFile = File(destinationPath);
+
+    if (await sourceFile.exists()) {
+      IOSink destinationSink = destinationFile.openWrite();
+      await sourceFile.openRead().pipe(destinationSink);
+
+      await destinationSink.flush();
+      await destinationSink.close();
+
+      print('Arquivo copiado com sucesso de\n $sourcePath \npara\n $destinationPath');
+      
+    } else {
+      print('Arquivo de origem não encontrado: $sourcePath');
+    }
+  } catch (e) {
+    print('Erro ao copiar arquivo: $e');
+  }
+}
+  
+
+  // String removeCharacters(String text){
+  //   RegExp regex = RegExp(r'[^\x00-\x7F]');
+  //   return text.replaceAll(regex, '');
+  // }
+
+  newName(Directory directory, String musicPath){
+    var nomeMusic = musicPath!.split('\\').last;
+
+    RegExp regex = RegExp(r'[^\x00-\x7F]');
+    var nameFormated = nomeMusic.replaceAll(regex, '');
+
+
+    String nameFinal = directory.path +'\\' + nameFormated ;
+    return nameFinal;
   }
 
+  Future<Directory> folderMusicsErrors() async{
+    Directory directory = await getApplicationSupportDirectory();
+    Directory directoryMusicsErrosFolder = Directory('${directory.path}\\musicsErrosCopies');
+    directoryMusicsErrosFolder.createSync();
+    return directoryMusicsErrosFolder;
+  }
+
+  Future<String> savecopy2(String path) async{
+    Directory directory = await folderMusicsErrors();
+    String nameFinal = newName(directory, path);
+    
+    await copyFileWithData(path, nameFinal);
+    return nameFinal;
+  }
 
   Future<void> loadMusicsDatas(List<String> listPathFolders) async{
     await foldersPathToFilesPath(listPathFolders);
@@ -60,11 +110,17 @@ class MusicDataService{
         var metadata = await MetadataRetriever.fromFile(File(singlePath));
 
         if(metadata.bitrate == null){
-          String musicCopiedpath = copyErrorMusic(metadata.filePath!);
+          var namefinal = await savecopy2(metadata.filePath!);
+          listMusicsError.value.add(namefinal);
+          
+          var metadata2 = await MetadataRetriever.fromFile(File(namefinal));
+          musicsValueNotifier.value['objects'].add(metadata2);
+        }
+        else{
+          musicsValueNotifier.value['objects'].add(metadata);
 
         }
         
-        musicsValueNotifier.value['objects'].add(metadata);
       } catch (error) {
         print('Erro ao obter metadados do arquivo: $error');
       }
