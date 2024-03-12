@@ -10,10 +10,10 @@ class SettingsService{
 
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    
     final isDarkMode = prefs.getBool('isDarkMode') ?? settingsService.isDarkMode.value;
     settingsService.isDarkMode.value = isDarkMode;
 
+    
     final colorTheme = prefs.getString('colorTheme') ?? settingsService.colorName.value;
     settingsService.colorName.value = colorTheme;
   }

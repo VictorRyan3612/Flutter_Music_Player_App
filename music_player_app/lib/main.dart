@@ -19,22 +19,16 @@ class MainApp extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-        // base states 
+    // base states 
     final currentIsDarkMode = useState(true); //Theme
     final currentColor = useState('Blue'); // Accent color
 
-    Future<void> loadSettings() async {
-      final prefs = await SharedPreferences.getInstance();
+    settingsService.loadSettings().whenComplete(() {
+      currentIsDarkMode.value = settingsService.isDarkMode.value;
+      currentColor.value = settingsService.colorName.value;
+    });
       
-      final isDarkMode = prefs.getBool('isDarkMode') ?? true;
-      currentIsDarkMode.value = isDarkMode;
 
-      final colorTheme = prefs.getString('colorTheme') ?? 'Blue';
-      currentColor.value = colorTheme;
-
-    }
-
-    loadSettings();
     final finalTheme = setTheme(currentIsDarkMode.value, currentColor.value);
 
     return MaterialApp(
