@@ -9,6 +9,7 @@ enum TableStatus {idle, loading, ready, error}
 class MusicDataService{
   ValueNotifier<List<String>> listFoldersPaths = ValueNotifier([]);
   ValueNotifier<List<String>> listPaths = ValueNotifier([]);
+  ValueNotifier<List<String>> listMusicsError = ValueNotifier([]);
   ValueNotifier<Map<String,dynamic>> musicsValueNotifier = ValueNotifier({
     'status': TableStatus.idle,
     'objects': []
@@ -89,11 +90,12 @@ class MusicDataService{
     return directoryMusicsErrosFolder;
   }
 
-  copyErrorMusic (String pathOrigin) async{
+  Future<String> copyErrorMusic (String pathOrigin) async{
     Directory directory = await folderMusicsErrors();
     String pathFinal = finalNamePath(directoryFolder: directory, musicPath: pathOrigin);
 
     await copyFileWithData(pathOrigin, pathFinal);
+    return pathFinal;
   }
 
 
@@ -106,11 +108,15 @@ class MusicDataService{
         var metadata = await MetadataRetriever.fromFile(File(singlePath));
 
         if(metadata.bitrate == null){
-          String musicCopiedpath = copyErrorMusic(metadata.filePath!);
-
+          String musicCopiedpath = await copyErrorMusic(metadata.filePath!);
+          listMusicsError.value.add(musicCopiedpath);
+          
+          var metadata2 = await MetadataRetriever.fromFile(File(musicCopiedpath));
+          musicsValueNotifier.value['objects'].add(metadata2);
         }
-        
-        musicsValueNotifier.value['objects'].add(metadata);
+        else{
+          musicsValueNotifier.value['objects'].add(metadata);
+        }
       } catch (error) {
         print('Erro ao obter metadados do arquivo: $error');
       }
