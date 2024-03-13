@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 enum TableStatus {idle, loading, ready, error}
 
 class MusicDataService{
-  ValueNotifier<List<String>> listFoldersPaths = ValueNotifier([]);
+  ValueNotifier<List<String>> listFoldersPathsValueNotifier = ValueNotifier([]);
   ValueNotifier<List<String>> listPaths = ValueNotifier([]);
   ValueNotifier<List<String>> listMusicsError = ValueNotifier([]);
   ValueNotifier<Map<String,dynamic>> musicsValueNotifier = ValueNotifier({
@@ -15,7 +15,11 @@ class MusicDataService{
     'objects': []
   });
 
-  
+  setFoldersPath(List<String> listFoldersPaths) async{
+    listFoldersPathsValueNotifier.value = listFoldersPaths;
+    await foldersPathToFilesPath(listFoldersPathsValueNotifier.value);
+  }
+
   isMp3(String file){
     String format = file.split('.').last.toLowerCase();
     return format == 'mp3';
@@ -88,12 +92,12 @@ class MusicDataService{
   }
 
   addFolderPath(String folderPath){
-    listFoldersPaths.value.add(folderPath);
+    listFoldersPathsValueNotifier.value.add(folderPath);
   }
   removeFolderPath(String folderPath){
-    listFoldersPaths.value.remove(folderPath);
+    listFoldersPathsValueNotifier.value.remove(folderPath);
   }
-  
+
   Future<void> loadMusicsDatas(List<String> listPathFolders) async{
     await foldersPathToFilesPath(listPathFolders);
     // await loadFolderPath();
