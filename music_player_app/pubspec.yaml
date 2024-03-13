@@ -14,6 +14,11 @@ dependencies:
   flutter_media_metadata: ^1.0.0+1
   path_provider: ^2.1.2
   shared_preferences: ^2.2.2
+  audioplayers: ^0.20.1
+  just_audio: ^0.9.36
+  just_audio_windows: ^0.2.0
+  rxdart: ^0.27.7
+  audio_session: ^0.1.18
 
 dev_dependencies:
   flutter_test:
