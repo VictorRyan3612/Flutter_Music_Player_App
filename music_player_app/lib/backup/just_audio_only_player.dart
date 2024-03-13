@@ -21,9 +21,7 @@ class MyAppState extends State<MyApp> {
     _init();
   }
 
-  Future<void> _init() async {
-    // Inform the operating system of our app's audio attributes etc.
-    // We pick a reasonable default for an app that plays speech.
+  Future<void> sessionFunction() async {
     final session = await AudioSession.instance;
     await session.configure(const AudioSessionConfiguration.speech());
     // Listen to errors during playback.
@@ -31,6 +29,13 @@ class MyAppState extends State<MyApp> {
         onError: (Object e, StackTrace stackTrace) {
       print('A stream error occurred: $e');
     });
+  }
+  
+
+  Future<void> _init() async {
+    sessionFunction();
+    // Inform the operating system of our app's audio attributes etc.
+    // We pick a reasonable default for an app that plays speech.
     // Try to load audio from a source and catch any errors.
     try {
       // AAC example: https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.aac
