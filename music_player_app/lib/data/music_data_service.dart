@@ -91,17 +91,16 @@ class MusicDataService{
     return pathFinal;
   }
 
-  addFolderPath(String folderPath){
+  addFolderPath(String folderPath) async {
     listFoldersPathsValueNotifier.value.add(folderPath);
+    await foldersPathToFilesPath(listFoldersPathsValueNotifier.value);
   }
+  
   removeFolderPath(String folderPath){
     listFoldersPathsValueNotifier.value.remove(folderPath);
   }
 
-  Future<void> loadMusicsDatas(List<String> listPathFolders) async{
-    await foldersPathToFilesPath(listPathFolders);
-    // await loadFolderPath();
-
+  Future<void> loadMusicsDatas() async{
     for (var singlePath in listPaths.value) {
       try {
         var metadata = await MetadataRetriever.fromFile(File(singlePath));
