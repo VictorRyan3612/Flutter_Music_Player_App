@@ -87,7 +87,13 @@ class MusicDataService{
     return pathFinal;
   }
 
-
+  addFolderPath(String folderPath){
+    listFoldersPaths.value.add(folderPath);
+  }
+  removeFolderPath(String folderPath){
+    listFoldersPaths.value.remove(folderPath);
+  }
+  
   Future<void> loadMusicsDatas(List<String> listPathFolders) async{
     await foldersPathToFilesPath(listPathFolders);
     // await loadFolderPath();
