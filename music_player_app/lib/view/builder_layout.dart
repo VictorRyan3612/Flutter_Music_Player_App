@@ -37,11 +37,11 @@ class BuilderLayout extends StatelessWidget {
   ];
   var a = ['C:/Off/As coisas de Victor/Musicas/a'];
     return ValueListenableBuilder(
-      valueListenable: settingsService.listFolders,
+      valueListenable: settingsService.listFoldersPaths,
       builder: (context, value, child) {
         return FutureBuilder(
         // future: musicDataService.loadMusicsDatas(foldersPaths),
-        future: musicDataService.loadMusicsDatas(settingsService.listFolders.value),
+        future: musicDataService.loadMusicsDatas(settingsService.listFoldersPaths.value),
         // future: musicDataService.loadMusicsDatas(a),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
