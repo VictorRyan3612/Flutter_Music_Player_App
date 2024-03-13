@@ -8,7 +8,13 @@ class DesktopHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.settings),
+          onPressed: () {
+            Navigator.pushNamed(context, '/configs');
+          },),
+      ),
       body: ListMusics()
     );
   }
