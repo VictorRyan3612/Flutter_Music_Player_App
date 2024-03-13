@@ -17,7 +17,7 @@ class MusicDataService{
 
   setFoldersPath(List<String> listFoldersPaths) async{
     listFoldersPathsValueNotifier.value = listFoldersPaths;
-    await foldersPathToFilesPath(listFoldersPathsValueNotifier.value);
+    foldersPathToFilesPath(listFoldersPathsValueNotifier.value);
   }
 
   isMp3(String file){
@@ -93,7 +93,7 @@ class MusicDataService{
 
   addFolderPath(String folderPath) async {
     listFoldersPathsValueNotifier.value.add(folderPath);
-    await foldersPathToFilesPath(listFoldersPathsValueNotifier.value);
+    foldersPathToFilesPath([folderPath]);
   }
   
   removeFolderPath(String folderPath){

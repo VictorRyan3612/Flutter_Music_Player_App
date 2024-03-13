@@ -21,19 +21,14 @@ class SettingsService{
     settingsService.listFoldersPaths.value = listFoldersPaths;
   }
 
-  Future<void> saveSettings(bool boolIsDarkMode) async {
+  Future<void> saveSettings() async {
     final prefs = await SharedPreferences.getInstance();
     
-    prefs.setBool('isDarkMode', boolIsDarkMode);
+    prefs.setBool('isDarkMode', isDarkMode.value);
     prefs.setString('colorTheme', colorName.value);
-
+    prefs.setStringList('listFoldersPaths', listFoldersPaths.value);
   }
-  Future<void> saveFolders(List<String> listFoldersPaths) async {
-    final prefs = await SharedPreferences.getInstance();
-    
-    prefs.setStringList('listFoldersPaths', listFoldersPaths);
-
-  }
+  
 }
 
 SettingsService settingsService = SettingsService();
