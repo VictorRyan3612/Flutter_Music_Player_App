@@ -15,21 +15,7 @@ class MusicDataService{
     'objects': []
   });
 
-  Future<void> loadFolderPath() async {
-    musicsValueNotifier.value['status'] = TableStatus.loading;
-
-    try {
-      Directory directory = Directory('C:/Off/As coisas de Victor/Musicas/Classics');
-      directory.listSync().forEach((entity) {
-        listPaths.value.add(entity.path);
-      });
-
-      musicsValueNotifier.value['status'] = TableStatus.ready;
-    } catch (error) {
-      print(error);
-      musicsValueNotifier.value['status'] = TableStatus.error;
-    }
-  }
+  
   isMp3(String file){
     String format = file.split('.').last.toLowerCase();
     return format == 'mp3';
@@ -49,6 +35,7 @@ class MusicDataService{
   }
 
   Future<void> copyFileWithData(String sourcePath, String destinationPath) async {
+    musicsValueNotifier.value['status'] = TableStatus.loading;
     try {
       File sourceFile = File(sourcePath);
       File destinationFile = File(destinationPath);
@@ -65,8 +52,10 @@ class MusicDataService{
       } else {
         print('Arquivo de origem não encontrado: $sourcePath');
       }
+      musicsValueNotifier.value['status'] = TableStatus.ready;
     } catch (e) {
       print('Erro ao copiar arquivo: $e');
+      musicsValueNotifier.value['status'] = TableStatus.error;
     }
   }
 
