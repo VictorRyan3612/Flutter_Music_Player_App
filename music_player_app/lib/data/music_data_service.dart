@@ -18,6 +18,7 @@ class MusicDataService{
   setFoldersPath(List<String> listFoldersPaths) async{
     listFoldersPathsValueNotifier.value = listFoldersPaths;
     foldersPathToFilesPath(listFoldersPathsValueNotifier.value);
+    loadMusicsDatas();
   }
 
   isMp3(String file){
@@ -94,6 +95,7 @@ class MusicDataService{
   addFolderPath(String folderPath) async {
     listFoldersPathsValueNotifier.value.add(folderPath);
     foldersPathToFilesPath([folderPath]);
+    loadMusicsDatas();
   }
   
   removeFolderPath(String folderPath){
@@ -101,6 +103,7 @@ class MusicDataService{
   }
 
   Future<void> loadMusicsDatas() async{
+    musicsValueNotifier.value['status'] = TableStatus.loading;
     for (var singlePath in listPaths.value) {
       try {
         var metadata = await MetadataRetriever.fromFile(File(singlePath));
@@ -117,6 +120,7 @@ class MusicDataService{
         }
       } catch (error) {
         print('Erro ao obter metadados do arquivo: $error');
+        musicsValueNotifier.value['status'] = TableStatus.error;
       }
 
     }
