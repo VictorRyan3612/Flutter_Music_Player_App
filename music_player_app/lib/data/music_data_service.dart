@@ -9,10 +9,11 @@ enum TableStatus {idle, loading, ready, error}
 class MusicDataService{
   ValueNotifier<List<String>> listFoldersPathsValueNotifier = ValueNotifier([]);
   ValueNotifier<List<String>> listPaths = ValueNotifier([]);
+  ValueNotifier<List<String>> listPathsDeleted = ValueNotifier([]);
   ValueNotifier<List<String>> listMusicsError = ValueNotifier([]);
   ValueNotifier<Map<String,dynamic>> musicsValueNotifier = ValueNotifier({
     'status': TableStatus.idle,
-    'objects': []
+    'objects': <Metadata>[]
   });
 
   setFoldersPath(List<String> listFoldersPaths) async{
@@ -98,9 +99,25 @@ class MusicDataService{
     loadMusicsDatas();
   }
   
-  removeFolderPath(String folderPath){
-    listFoldersPathsValueNotifier.value.remove(folderPath);
+  Future<void> removeFolderPath(String folderPath) async {
+  musicsValueNotifier.value['status'] = TableStatus.loading;
+  
+  listFoldersPathsValueNotifier.value.remove(folderPath);
+  listPathsDeleted.value.add(folderPath);
+  
+  for (var folderPath in listPathsDeleted.value){
+    listPaths.value.removeWhere((element) => element.contains(folderPath));
+    List<Metadata> tempAux = musicDataService.musicsValueNotifier.value['objects'];
+    tempAux.removeWhere((element) => element.filePath!.contains(folderPath));
+    musicDataService.musicsValueNotifier.value['objects'] = tempAux;
+    // musicsValueNotifier.value.removeWhere((key, value) => key[1].contains()
+    // 
+  // )}
   }
+  musicsValueNotifier.value['status'] = TableStatus.ready;
+  musicsValueNotifier.notifyListeners();
+}
+
 
   Future<void> loadMusicsDatas() async{
     musicsValueNotifier.value['status'] = TableStatus.loading;
@@ -126,9 +143,10 @@ class MusicDataService{
       count++;
       if(count == 50){
         count = 0;
-        musicsValueNotifier.notifyListeners();
       }
     }
+    
+    musicsValueNotifier.notifyListeners();
     // print(musicsValueNotifier.value['objects']);
     musicsValueNotifier.value['status'] = TableStatus.ready;
     

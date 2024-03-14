@@ -62,6 +62,8 @@ class ConfigScreen extends StatelessWidget {
                       
                       if (folder != null) {
                         print('Pasta selecionada: $folder');
+                        settingsService.saveSettings();
+                        musicDataService.removeFolderPath(folder);
                         
                       } else {
                         print('Nenhuma pasta selecionada.');
