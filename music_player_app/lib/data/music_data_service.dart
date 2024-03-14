@@ -16,6 +16,8 @@ class MusicDataService{
     'objects': <Metadata>[]
   });
 
+  ValueNotifier<Metadata> actualPlayingMusic = ValueNotifier(Metadata());
+
   setFoldersPath(List<String> listFoldersPaths) async{
     listFoldersPathsValueNotifier.value = listFoldersPaths;
     foldersPathToFilesPath(listFoldersPathsValueNotifier.value);

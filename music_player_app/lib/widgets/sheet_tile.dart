@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
+import 'package:music_player_app/data/music_data_service.dart';
 
 class SheetTile extends StatelessWidget {
-  final Metadata? music;
-  const SheetTile({super.key, this.music});
+  const SheetTile({super.key});
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      
-      leading: IconButton(
-        icon: Icon(
-          Icons.play_arrow,
-          ),
-        onPressed: () {
+    return ValueListenableBuilder(
+      valueListenable: musicDataService.actualPlayingMusic,
+      builder: (context, value, child) {
+        return ListTile(
           
-        },
-      ),
-      title: Text("title"),
-      subtitle: Text("Album e artista"),
-      onTap: () {
-        
-      },
+          leading: IconButton(
+            icon: Icon(
+              Icons.play_arrow,
+              ),
+            onPressed: () {
+              
+            },
+          ),
+          title: Text("${value.trackName}", style: TextStyle(fontSize: 20),),
+          subtitle: Text("${value.albumArtistName} - ${value.albumName}", style: TextStyle(fontSize: 15)),
+          onTap: () {
+            
+          },
+        );
+      }
     );
   }
 }

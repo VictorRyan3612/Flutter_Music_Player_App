@@ -23,7 +23,12 @@ class ListMusics extends StatelessWidget {
               return ListView.builder(
                 itemCount:value['objects'].length,
                 itemBuilder: (context, index) {
-                  return MusicTile(music: value['objects'][index],);
+                  return InkWell(
+                    child: MusicTile(music: value['objects'][index]),
+                    onTap: () {
+                      musicDataService.actualPlayingMusic.value = value['objects'][index];
+                    },
+                  );
                 }
               );
           } return Container();
