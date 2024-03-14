@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:music_player_app/view/list_music.dart';
+import 'package:music_player_app/widgets/sheet_tile.dart';
 
 
 class DesktopHomeScreen extends StatelessWidget {
@@ -15,7 +17,21 @@ class DesktopHomeScreen extends StatelessWidget {
             Navigator.pushNamed(context, '/configs');
           },),
       ),
-      body: ListMusics()
+      body: Column(
+        children: [
+          Expanded(
+            child: ListMusics()
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+
+            SheetTile()
+
+            ] )
+        ],
+      )
     );
   }
 }
