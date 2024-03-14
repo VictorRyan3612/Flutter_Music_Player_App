@@ -1,6 +1,7 @@
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:music_player_app/data/music_data_service.dart';
 
 
 class PlayButton extends StatefulWidget {
@@ -29,7 +30,6 @@ class PlayButtonState extends State<PlayButton> {
     });
   }
   
-
   Future<void> _init() async {
     sessionFunction();
     // Inform the operating system of our app's audio attributes etc.
@@ -37,7 +37,7 @@ class PlayButtonState extends State<PlayButton> {
     // Try to load audio from a source and catch any errors.
     try {
       // AAC example: https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.aac
-      await _player.setAudioSource(AudioSource.file('C:/Off/As coisas de Victor/Musicas/A-B/Arcane (SoundTrack) - Enemy (Trump Cover).mp3'));
+      await _player.setAudioSource(AudioSource.file(musicDataService.actualPlayingMusic.value.filePath as String));
     } catch (e) {
       print("Error loading audio source: $e");
     }
@@ -78,41 +78,50 @@ class ControlButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<PlayerState>(
-          stream: player.playerStateStream,
-          builder: (context, snapshot) {
-            final playerState = snapshot.data;
-            final processingState = playerState?.processingState;
-            final playing = playerState?.playing;
-            if (processingState == ProcessingState.loading ||
-                processingState == ProcessingState.buffering) {
-              return Container(
-                margin: const EdgeInsets.all(8.0),
-                // width: 64.0,
-                // height: 64.0,
-                child: const CircularProgressIndicator(),
-              );
-            } else if (playing != true) {
-              return IconButton(
-                icon: const Icon(Icons.play_arrow),
-                // iconSize: 64.0,
-                onPressed: player.play,
-              );
-            } else if (processingState != ProcessingState.completed) {
-              return IconButton(
-                icon: const Icon(Icons.pause),
-                // iconSize: 64.0,
-                onPressed: player.pause,
-              );
-            } else {
-              return IconButton(
-                icon: const Icon(Icons.replay),
-                // iconSize: 64.0,
-                onPressed: () => player.seek(Duration.zero),
-              );
-            }
-          },
-        );
+    return ValueListenableBuilder(
+      valueListenable: musicDataService.actualPlayingMusic,
+      builder: (context, value, child) {
+        if(value.filePath !=null){
+          
+          player.setAudioSource(AudioSource.file((value.filePath as String)));
+        }
+        return StreamBuilder<PlayerState>(
+              stream: player.playerStateStream,
+              builder: (context, snapshot) {
+                final playerState = snapshot.data;
+                final processingState = playerState?.processingState;
+                final playing = playerState?.playing;
+                if (processingState == ProcessingState.loading ||
+                    processingState == ProcessingState.buffering) {
+                  return Container(
+                    margin: const EdgeInsets.all(8.0),
+                    // width: 64.0,
+                    // height: 64.0,
+                    child: const CircularProgressIndicator(),
+                  );
+                } else if (playing != true) {
+                  return IconButton(
+                    icon: const Icon(Icons.play_arrow),
+                    // iconSize: 64.0,
+                    onPressed: player.play,
+                  );
+                } else if (processingState != ProcessingState.completed) {
+                  return IconButton(
+                    icon: const Icon(Icons.pause),
+                    // iconSize: 64.0,
+                    onPressed: player.pause,
+                  );
+                } else {
+                  return IconButton(
+                    icon: const Icon(Icons.replay),
+                    // iconSize: 64.0,
+                    onPressed: () => player.seek(Duration.zero),
+                  );
+                }
+              },
+            );
+      }
+    );
         // Opens speed slider dialog
       
   }

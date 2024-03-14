@@ -66,7 +66,9 @@ class MusicDataService{
       musicsValueNotifier.value['status'] = TableStatus.error;
     }
   }
-
+  getAMP(){
+    return actualPlayingMusic.value.filePath;
+  }
   String finalNamePath({required Directory directoryFolder, required String musicPath}){
     
     String nameMusic = musicPath!.split('\\').last;
