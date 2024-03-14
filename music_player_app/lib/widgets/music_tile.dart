@@ -34,9 +34,9 @@ class MusicTile extends StatelessWidget {
       leading: Builder(
         builder: (context) {
           try {
-            return Image.memory(music.albumArt!);
+            return Image.memory(music.albumArt!,width: 50, height: 50);
           } catch (e) {
-            return Icon(Icons.music_note);
+            return Icon(Icons.music_note,weight:50, size: 50);
           }
         },
       ),

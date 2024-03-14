@@ -143,6 +143,7 @@ class MusicDataService{
       count++;
       if(count == 50){
         count = 0;
+        musicsValueNotifier.notifyListeners();
       }
     }
     
