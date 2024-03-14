@@ -9,33 +9,24 @@ class ListMusics extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: FutureBuilder(
-        future: musicDataService.loadMusicsDatas(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('Erro: ${snapshot.error}');
-          } else {
-            return ValueListenableBuilder(
-              valueListenable: musicDataService.musicsValueNotifier,
-              builder: (context, value, child) {
-                switch (value['status']) {
-                  case TableStatus.loading:
-                    return Center(child: CircularProgressIndicator());
-                  case TableStatus.error:
-                  return Center(
-                    child: Text("Error"),
-                  );
-                  case TableStatus.ready:
-                    return ListView.builder(
-                      itemCount:value['objects'].length,
-                      itemBuilder: (context, index) {
-                        return MusicTile(music: value['objects'][index],);
-                      }
-                    );
-                } return Container();
-              }
+      child: ValueListenableBuilder(
+        valueListenable: musicDataService.musicsValueNotifier,
+        builder: (context, value, child) {
+          switch (value['status']) {
+            case TableStatus.loading:
+              return Center(child: CircularProgressIndicator());
+            case TableStatus.error:
+            return Center(
+              child: Text("Error"),
             );
-          }
+            case TableStatus.ready:
+              return ListView.builder(
+                itemCount:value['objects'].length,
+                itemBuilder: (context, index) {
+                  return MusicTile(music: value['objects'][index],);
+                }
+              );
+          } return Container();
         }
       )
     );

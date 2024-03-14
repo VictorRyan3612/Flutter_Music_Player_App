@@ -104,10 +104,10 @@ class MusicDataService{
 
   Future<void> loadMusicsDatas() async{
     musicsValueNotifier.value['status'] = TableStatus.loading;
+    var count = 0;
     for (var singlePath in listPaths.value) {
       try {
         var metadata = await MetadataRetriever.fromFile(File(singlePath));
-
         if(metadata.bitrate == null){
           String musicCopiedpath = await copyErrorMusic(metadata.filePath!);
           listMusicsError.value.add(musicCopiedpath);
@@ -118,12 +118,18 @@ class MusicDataService{
         else{
           musicsValueNotifier.value['objects'].add(metadata);
         }
+        
       } catch (error) {
         print('Erro ao obter metadados do arquivo: $error');
         musicsValueNotifier.value['status'] = TableStatus.error;
       }
-
+      count++;
+      if(count == 50){
+        count = 0;
+        musicsValueNotifier.notifyListeners();
+      }
     }
+    // print(musicsValueNotifier.value['objects']);
     musicsValueNotifier.value['status'] = TableStatus.ready;
     
   }
