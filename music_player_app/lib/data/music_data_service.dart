@@ -17,7 +17,7 @@ class MusicDataService{
   });
 
   ValueNotifier<Metadata> actualPlayingMusic = ValueNotifier(Metadata());
-
+  List<Metadata> originalList = [];
   setFoldersPath(List<String> listFoldersPaths) async{
     listFoldersPathsValueNotifier.value = listFoldersPaths;
     foldersPathToFilesPath(listFoldersPathsValueNotifier.value);
@@ -150,7 +150,7 @@ class MusicDataService{
         musicsValueNotifier.notifyListeners();
       }
     }
-    
+    originalList = musicsValueNotifier.value['objects'];
     musicsValueNotifier.notifyListeners();
     // print(musicsValueNotifier.value['objects']);
     musicsValueNotifier.value['status'] = TableStatus.ready;
@@ -168,6 +168,43 @@ class MusicDataService{
     return '$minutesStr:$secondsStr';
   }
 
+  String stringNonNull(String? stringInitial){
+    var string = '';
+    if (stringInitial != null){
+      string = stringInitial;
+    }
+    return string;
+  }
+
+  void filterCurrentState(String filtrar) {
+    List<Metadata> objectsOriginals = originalList;
+    if (objectsOriginals.isEmpty) return;
+
+    List<Metadata> objectsFiltered = [];
+    if (filtrar != '') {
+      for (var objetoInd in objectsOriginals) {
+        if (
+            stringNonNull(objetoInd.trackName).toLowerCase().contains(filtrar.toLowerCase()) ||
+            stringNonNull(objetoInd.albumArtistName).toLowerCase().contains(filtrar.toLowerCase()) ||
+            stringNonNull(objetoInd.albumName).toLowerCase().contains(filtrar.toLowerCase()) ||
+            stringNonNull(objetoInd.genre).toLowerCase().contains(filtrar.toLowerCase()) 
+          ) {
+          objectsFiltered.add(objetoInd);
+        }
+      }
+    } else {
+      objectsFiltered = objectsOriginals;
+    }
+    
+
+    issueFilteredState(objectsFiltered);
+  }
+  void issueFilteredState(List<Metadata> objectsFiltered) {
+    var state = Map<String, dynamic>.from(musicsValueNotifier.value);
+    state['objects'] = objectsFiltered;
+    musicsValueNotifier.value = state;
+    print("s");
+  }
 }
 
 MusicDataService musicDataService = MusicDataService();

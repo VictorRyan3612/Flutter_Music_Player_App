@@ -20,8 +20,21 @@ class DesktopHomeScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
+          TextField(
+            onChanged: (value) {
+              musicDataService.filterCurrentState(value);
+            },
+            decoration: InputDecoration(
+              hintText: "filtrar",
+            ),
+          ),
           Expanded(
-            child: ListMusics()
+            child: ValueListenableBuilder(
+              valueListenable: musicDataService.musicsValueNotifier,
+              builder: (context, value, child) {
+                return ListMusics();
+              }
+            )
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
