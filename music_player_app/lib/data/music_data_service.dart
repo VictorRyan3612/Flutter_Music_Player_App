@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
@@ -18,6 +19,11 @@ class MusicDataService{
 
   ValueNotifier<Metadata> actualPlayingMusic = ValueNotifier(Metadata());
   List<Metadata> originalList = [];
+
+  Set<String> setAlbumName = {};
+  Set<String> setAlbumArtistName = {};
+  Set<String> setGenders = {};
+
   setFoldersPath(List<String> listFoldersPaths) async{
     listFoldersPathsValueNotifier.value = listFoldersPaths;
     foldersPathToFilesPath(listFoldersPathsValueNotifier.value);
@@ -122,6 +128,11 @@ class MusicDataService{
   musicsValueNotifier.notifyListeners();
 }
 
+  void setsTags(Metadata metadata){
+    setAlbumName.add(stringNonNull(metadata.albumName));
+    setGenders.add(stringNonNull(metadata. genre));
+    setAlbumArtistName.add(stringNonNull(metadata. genre));
+  }
 
   Future<void> loadMusicsDatas() async{
     musicsValueNotifier.value['status'] = TableStatus.loading;
@@ -133,13 +144,11 @@ class MusicDataService{
           String musicCopiedpath = await copyErrorMusic(metadata.filePath!);
           listMusicsError.value.add(musicCopiedpath);
           
-          var metadata2 = await MetadataRetriever.fromFile(File(musicCopiedpath));
-          musicsValueNotifier.value['objects'].add(metadata2);
+          metadata = await MetadataRetriever.fromFile(File(musicCopiedpath));
         }
-        else{
-          musicsValueNotifier.value['objects'].add(metadata);
-        }
-        
+        musicsValueNotifier.value['objects'].add(metadata);
+        setsTags(metadata);
+
       } catch (error) {
         print('Erro ao obter metadados do arquivo: $error');
         musicsValueNotifier.value['status'] = TableStatus.error;
