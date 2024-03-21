@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:music_player_app/data/music_data_service.dart';
 import 'package:music_player_app/widgets/play_button.dart';
 
@@ -91,9 +92,13 @@ class ScreenMusic extends StatelessWidget {
           
                   IconButton(
                     icon: Icon(Icons.skip_next),
-                    onPressed: () {
+                    onPressed: () async{
                       musicDataService.nextMusic();
-                      
+                      if(musicDataService.player.playing){
+                        musicDataService.player.stop();
+                      }
+                      await musicDataService.player.setAudioSource(AudioSource.file(musicDataService.actualPlayingMusic.value.filePath as String));
+                      await musicDataService.player.play();
                   }),
                 ],
               )
