@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:music_player_app/data/music_data_service.dart';
 import 'package:music_player_app/widgets/music_tile.dart';
 
@@ -25,8 +26,14 @@ class ListMusics extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return InkWell(
                     child: MusicTile(music: value['objects'][index]),
-                    onTap: () {
+                    onTap: () async{
                       musicDataService.actualPlayingMusic.value = value['objects'][index];
+
+                      if(musicDataService.player.playing){
+                        musicDataService.player.stop();
+                      }
+                      await musicDataService.player.setAudioSource(AudioSource.file(musicDataService.actualPlayingMusic.value.filePath as String));
+                      await musicDataService.player.play();
                     },
                   );
                 }

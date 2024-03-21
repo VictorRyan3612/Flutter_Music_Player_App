@@ -12,7 +12,7 @@ class PlayButton extends StatefulWidget {
 }
 
 class PlayButtonState extends State<PlayButton> {
-  final _player = AudioPlayer();
+  final _player = musicDataService.player;
 
   @override
   void initState() {

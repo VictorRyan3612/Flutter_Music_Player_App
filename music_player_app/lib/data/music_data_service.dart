@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:path_provider/path_provider.dart';
 
 enum TableStatus {idle, loading, ready, error}
@@ -24,6 +25,8 @@ class MusicDataService{
   Set<String> setAlbumArtistName = {};
   Set<String> setGenders = {};
 
+
+  final player = AudioPlayer();
   setFoldersPath(List<String> listFoldersPaths) async{
     listFoldersPathsValueNotifier.value = listFoldersPaths;
     foldersPathToFilesPath(listFoldersPathsValueNotifier.value);
@@ -165,7 +168,7 @@ class MusicDataService{
     musicsValueNotifier.value['status'] = TableStatus.ready;
     
   }
-  
+
   nextMusic(){
     int lenghtMusics= musicsValueNotifier.value['objects'].length;
     int number = Random().nextInt(lenghtMusics -1);
