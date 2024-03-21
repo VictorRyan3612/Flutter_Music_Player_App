@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:music_player_app/data/music_data_service.dart';
+import 'package:music_player_app/widgets/play_button.dart';
 
 class MusicPlayingScreen extends StatelessWidget {
   late Offset _initialPosition;
@@ -73,6 +74,25 @@ class ScreenMusic extends StatelessWidget {
               padding: const EdgeInsets.all(50.0),
               child: Image.memory(musicDataService.actualPlayingMusic.value.albumArt!, width: 400, height: 400,),
             ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(
+                icon: Icon(Icons.skip_previous),
+                onPressed: () {
+                  
+              }),
+
+              PlayButton(),
+
+              IconButton(
+                icon: Icon(Icons.skip_next),
+                onPressed: () {
+                  musicDataService.nextMusic();
+                  
+              }),
+            ],
           )
         ],
       ),

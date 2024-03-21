@@ -165,6 +165,12 @@ class MusicDataService{
     musicsValueNotifier.value['status'] = TableStatus.ready;
     
   }
+  
+  nextMusic(){
+    int lenghtMusics= musicsValueNotifier.value['objects'].length;
+    int number = Random().nextInt(lenghtMusics -1);
+    actualPlayingMusic.value = musicsValueNotifier.value['objects'][number];
+  }
 
   String formatMilliseconds(int milliseconds) {
     Duration duration = Duration(milliseconds: milliseconds);
