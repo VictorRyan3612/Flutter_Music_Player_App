@@ -54,47 +54,52 @@ class ScreenMusic extends StatelessWidget {
             }),
         ],
       ),
-      body: Column(
-        children: [
-          Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('${musicDataService.actualPlayingMusic.value.trackName}', style: TextStyle(fontSize: 22),),
-                  Text('${musicDataService.actualPlayingMusic.value.albumArtistName} - ${musicDataService.actualPlayingMusic.value.albumName}'),
-                ],
-              ),
-            ),
-          ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(50.0),
-              child: Image.memory(musicDataService.actualPlayingMusic.value.albumArt!, width: 400, height: 400,),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+      body: ValueListenableBuilder(
+        valueListenable: musicDataService.actualPlayingMusic,
+        builder: (context, value, child) {
+          return Column(
             children: [
-              IconButton(
-                icon: Icon(Icons.skip_previous),
-                onPressed: () {
-                  
-              }),
-
-              PlayButton(),
-
-              IconButton(
-                icon: Icon(Icons.skip_next),
-                onPressed: () {
-                  musicDataService.nextMusic();
-                  
-              }),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('${value.trackName}', style: TextStyle(fontSize: 22),),
+                      Text('${value.albumArtistName} - ${value.albumName}'),
+                    ],
+                  ),
+                ),
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(50.0),
+                  child: Image.memory(value.albumArt!, width: 400, height: 400,),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.skip_previous),
+                    onPressed: () {
+                      
+                  }),
+          
+                  PlayButton(),
+          
+                  IconButton(
+                    icon: Icon(Icons.skip_next),
+                    onPressed: () {
+                      musicDataService.nextMusic();
+                      
+                  }),
+                ],
+              )
             ],
-          )
-        ],
+          );
+        }
       ),
     );
   }
