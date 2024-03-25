@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:music_player_app/data/music_data_service.dart';
 import 'package:music_player_app/widgets/music_tile.dart';
@@ -8,6 +9,36 @@ class ListMusics extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void showContextMenu(BuildContext context, Metadata music, Offset position) {
+      showMenu(
+        context: context,
+        position: RelativeRect.fromLTRB(position.dx, position.dy, position.dx, position.dy),
+        elevation: 8.0,
+        items: <PopupMenuEntry>[
+          PopupMenuItem(
+            value: 0,
+            child: ListTile(
+              leading: Icon(Icons.edit),
+              title: Text('Opção 1'),
+            ),
+            onTap: () {
+              
+            },
+          ),
+          PopupMenuItem(
+            value: 1,
+            child: ListTile(
+              leading: Icon(Icons.delete),
+              title: Text('Opção 2'),
+            ),
+            onTap: () {
+              
+            },
+          ),
+        ],
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ValueListenableBuilder(
@@ -25,6 +56,9 @@ class ListMusics extends StatelessWidget {
                 itemCount:value['objects'].length,
                 itemBuilder: (context, index) {
                   return InkWell(
+                    onSecondaryTapDown: (details) {
+                      showContextMenu(context, value['objects'][index], details.globalPosition);
+                    },
                     child: MusicTile(music: value['objects'][index]),
                     onTap: () async{
                       musicDataService.actualPlayingMusic.value = value['objects'][index];
@@ -44,4 +78,3 @@ class ListMusics extends StatelessWidget {
     );
   }
 }
-
