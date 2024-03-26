@@ -19,7 +19,9 @@ class PlayButton extends StatelessWidget {
           if (event.processingState == ProcessingState.ready && isStopped == false){
             musicDataService.player.play();
           }
-          
+          if (event.processingState == ProcessingState.completed) {
+            musicDataService.nextMusicAutomatic();
+          }
         });
 
         final playerState = snapshot.data;
