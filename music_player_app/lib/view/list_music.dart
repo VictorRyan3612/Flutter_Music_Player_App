@@ -61,13 +61,7 @@ class ListMusics extends StatelessWidget {
                     },
                     child: MusicTile(music: value['objects'][index]),
                     onTap: () async{
-                      musicDataService.actualPlayingMusic.value = value['objects'][index];
-
-                      if(musicDataService.player.playing){
-                        musicDataService.player.stop();
-                      }
-                      await musicDataService.player.setAudioSource(AudioSource.file(musicDataService.actualPlayingMusic.value.filePath as String));
-                      await musicDataService.player.play();
+                      musicDataService.playMusicFromMetadata(value['objects'][index]);
                     },
                   );
                 }

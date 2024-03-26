@@ -182,6 +182,16 @@ class MusicDataService{
     int number = Random().nextInt(lenghtMusics -1);
     actualPlayingMusic.value = musicsValueNotifier.value['objects'][number];
   }
+  
+  playMusicFromMetadata(Metadata metadata) async{
+    musicDataService.actualPlayingMusic.value = metadata;
+    
+    if(musicDataService.player.playing){
+      musicDataService.player.stop();
+    }
+    await musicDataService.player.setAudioSource(AudioSource.file(metadata.filePath as String));
+    await musicDataService.player.play();
+  }
 
   String formatMilliseconds(int milliseconds) {
     Duration duration = Duration(milliseconds: milliseconds);
