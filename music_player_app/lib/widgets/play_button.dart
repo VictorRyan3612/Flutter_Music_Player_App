@@ -11,13 +11,14 @@ class PlayButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isStopped = false;
+    bool firstPlay = true;
     return StreamBuilder<PlayerState>(
       stream: musicDataService.player.playerStateStream,
       builder: (context, snapshot) {
         musicDataService.player.playerStateStream.listen((event) {
-          if (event.processingState == ProcessingState.ready && isStopped == false){
+          if (firstPlay == true){
             musicDataService.player.play();
+            firstPlay = false;
           }
           if (event.processingState == ProcessingState.completed) {
             musicDataService.nextMusicAutomatic();
@@ -40,7 +41,7 @@ class PlayButton extends StatelessWidget {
             icon: const Icon(Icons.play_arrow),
             // iconSize: 64.0,
             onPressed: (){
-              isStopped = false;
+              // isStopped = false;
               musicDataService.player.play();
 
             }
@@ -50,7 +51,7 @@ class PlayButton extends StatelessWidget {
             icon: const Icon(Icons.pause),
             // iconSize: 64.0,
             onPressed: (){
-              isStopped = true;
+              // isStopped = true;
               musicDataService.player.pause();
             }
           );
