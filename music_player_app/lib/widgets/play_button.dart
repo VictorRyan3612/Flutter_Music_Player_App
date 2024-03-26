@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
@@ -9,9 +11,17 @@ class PlayButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isStopped = false;
     return StreamBuilder<PlayerState>(
       stream: musicDataService.player.playerStateStream,
       builder: (context, snapshot) {
+        musicDataService.player.playerStateStream.listen((event) {
+          if (event.processingState == ProcessingState.ready && isStopped == false){
+            musicDataService.player.play();
+          }
+          
+        });
+
         final playerState = snapshot.data;
         final processingState = playerState?.processingState;
         final playing = playerState?.playing;
@@ -23,17 +33,24 @@ class PlayButton extends StatelessWidget {
             // height: 64.0,
             child: const CircularProgressIndicator(),
           );
-        } else if (playing != true) {
+        } else if (playing != true && processingState != ProcessingState.completed) {
           return IconButton(
             icon: const Icon(Icons.play_arrow),
             // iconSize: 64.0,
-            onPressed: musicDataService.player.play,
+            onPressed: (){
+              isStopped = false;
+              musicDataService.player.play();
+
+            }
           );
         } else if (processingState != ProcessingState.completed) {
           return IconButton(
             icon: const Icon(Icons.pause),
             // iconSize: 64.0,
-            onPressed: musicDataService.player.pause,
+            onPressed: (){
+              isStopped = true;
+              musicDataService.player.pause();
+            }
           );
         } else {
           return IconButton(
