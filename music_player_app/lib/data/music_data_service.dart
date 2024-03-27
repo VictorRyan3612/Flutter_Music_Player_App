@@ -182,10 +182,22 @@ class MusicDataService{
   }
 
   nextMusic(){
-    int lenghtMusics= musicsValueNotifier.value['objects'].length;
-    int number = Random().nextInt(lenghtMusics -1);
-    actualPlayingMusic.value = musicsValueNotifier.value['objects'][number];
-    addPlaylist(actualPlayingMusic.value);
+    int index = actualPlaylist.value['index'];
+    int length = actualPlaylist.value['playlist'].length -1;
+
+    if(index < length){
+      index += 1;
+      actualPlayingMusic.value = actualPlaylist.value['playlist'][index];
+      actualPlaylist.value['index'] = index;
+    }
+    else{
+      int lenghtMusics= musicsValueNotifier.value['objects'].length;
+      int number = Random().nextInt(lenghtMusics -1);
+      actualPlayingMusic.value = musicsValueNotifier.value['objects'][number];
+      addPlaylist(actualPlayingMusic.value);
+
+    }
+
   }
   
   playMusicFromMetadata(Metadata metadata) async{
@@ -202,7 +214,6 @@ class MusicDataService{
   addPlaylist(Metadata metadata){
     actualPlaylist.value['playlist'].add(metadata);
     actualPlaylist.value['index'] +=1;
-    print(actualPlaylist.value);
   }
   previousMusic(){
     if(actualPlaylist.value['index'] >=1){
