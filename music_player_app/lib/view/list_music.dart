@@ -18,21 +18,11 @@ class ListMusics extends StatelessWidget {
           PopupMenuItem(
             value: 0,
             child: ListTile(
-              leading: Icon(Icons.edit),
-              title: Text('Opção 1'),
+              leading: Icon(Icons.skip_next_sharp),
+              title: Text('Reproduzir em seguida'),
             ),
             onTap: () {
-              
-            },
-          ),
-          PopupMenuItem(
-            value: 1,
-            child: ListTile(
-              leading: Icon(Icons.delete),
-              title: Text('Opção 2'),
-            ),
-            onTap: () {
-              
+              musicDataService.addNextPlaylist(music);
             },
           ),
         ],

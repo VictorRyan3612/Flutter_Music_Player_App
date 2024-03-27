@@ -215,6 +215,11 @@ class MusicDataService{
     actualPlaylist.value['playlist'].add(metadata);
     actualPlaylist.value['index'] +=1;
   }
+
+  addNextPlaylist(Metadata metadata){
+    actualPlaylist.value['playlist'].insert(actualPlaylist.value['index']+1,metadata);
+  }
+
   previousMusic(){
     if(actualPlaylist.value['index'] >=1){
       player.stop();
