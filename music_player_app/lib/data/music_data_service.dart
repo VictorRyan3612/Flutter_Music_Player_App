@@ -169,12 +169,9 @@ class MusicDataService{
     
   }
   nextMusicAutomatic(){
-    int lenghtMusics= musicDataService.musicsValueNotifier.value['objects'].length;
-    int number = Random().nextInt(lenghtMusics -1);
-    String filePath = musicDataService.musicsValueNotifier.value['objects'][number].filePath;
-    musicDataService.player.setAudioSource(AudioSource.file(filePath));
-    musicDataService.actualPlayingMusic.value = musicDataService.musicsValueNotifier.value['objects'][number];
-    musicDataService.player.play();
+    nextMusic();
+    player.setAudioSource(AudioSource.file(actualPlayingMusic.value.filePath!));
+    player.play();
   }
 
   nextMusic(){
