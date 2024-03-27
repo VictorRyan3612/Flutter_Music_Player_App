@@ -95,11 +95,6 @@ class ScreenMusic extends StatelessWidget {
                     icon: Icon(Icons.skip_next),
                     onPressed: () async{
                       musicDataService.nextMusic();
-                      if(musicDataService.player.playing){
-                        musicDataService.player.stop();
-                      }
-                      await musicDataService.player.setAudioSource(AudioSource.file(musicDataService.actualPlayingMusic.value.filePath as String));
-                      await musicDataService.player.play();
                   }),
                 ],
               )

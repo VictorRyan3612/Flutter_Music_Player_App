@@ -18,10 +18,11 @@ class PlayButton extends StatelessWidget {
         firstPlay = false;
       }
       if (event.processingState == ProcessingState.completed) {
-        musicDataService.nextMusicAutomatic();
+        musicDataService.nextMusic();
       }
     });
     
+
     return StreamBuilder<PlayerState>(
       stream: musicDataService.player.playerStateStream,
       builder: (context, snapshot) {

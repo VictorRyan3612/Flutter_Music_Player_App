@@ -175,16 +175,15 @@ class MusicDataService{
     
   }
 
-  nextMusicAutomatic(){
-    nextMusic();
-    player.setAudioSource(AudioSource.file(actualPlayingMusic.value.filePath!));
-    player.play();
-  }
 
   nextMusic(){
     int index = actualPlaylist.value['index'];
     int length = actualPlaylist.value['playlist'].length -1;
 
+    if(musicDataService.player.playing){
+      musicDataService.player.stop();
+    }
+    
     if(index < length){
       index += 1;
       actualPlayingMusic.value = actualPlaylist.value['playlist'][index];
@@ -197,7 +196,8 @@ class MusicDataService{
       addPlaylist(actualPlayingMusic.value);
 
     }
-
+    player.setAudioSource(AudioSource.file(actualPlayingMusic.value.filePath!));
+    player.play();
   }
   
   playMusicFromMetadata(Metadata metadata) async{
