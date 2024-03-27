@@ -86,6 +86,7 @@ class ScreenMusic extends StatelessWidget {
                     icon: Icon(Icons.skip_previous),
                     onPressed: () {
                       
+                      musicDataService.previousMusic();
                   }),
           
                   PlayButton(),

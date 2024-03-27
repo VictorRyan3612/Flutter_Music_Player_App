@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:just_audio/just_audio.dart';
@@ -16,6 +17,11 @@ class MusicDataService{
   ValueNotifier<Map<String,dynamic>> musicsValueNotifier = ValueNotifier({
     'status': TableStatus.idle,
     'objects': <Metadata>[]
+  });
+
+  ValueNotifier<Map<String,dynamic>> actualPlaylist = ValueNotifier({
+    'index': -1,
+    'playlist': <Metadata>[]
   });
 
   ValueNotifier<Metadata> actualPlayingMusic = ValueNotifier(Metadata());
@@ -168,6 +174,7 @@ class MusicDataService{
     musicsValueNotifier.value['status'] = TableStatus.ready;
     
   }
+
   nextMusicAutomatic(){
     nextMusic();
     player.setAudioSource(AudioSource.file(actualPlayingMusic.value.filePath!));
@@ -178,6 +185,7 @@ class MusicDataService{
     int lenghtMusics= musicsValueNotifier.value['objects'].length;
     int number = Random().nextInt(lenghtMusics -1);
     actualPlayingMusic.value = musicsValueNotifier.value['objects'][number];
+    addPlaylist(actualPlayingMusic.value);
   }
   
   playMusicFromMetadata(Metadata metadata) async{
@@ -188,8 +196,26 @@ class MusicDataService{
     }
     await musicDataService.player.setAudioSource(AudioSource.file(metadata.filePath as String));
     await musicDataService.player.play();
+    addPlaylist(metadata);
   }
-
+  
+  addPlaylist(Metadata metadata){
+    actualPlaylist.value['playlist'].add(metadata);
+    actualPlaylist.value['index'] +=1;
+    print(actualPlaylist.value);
+  }
+  previousMusic(){
+    if(actualPlaylist.value['index'] >=1){
+      player.stop();
+      actualPlaylist.value['index'] -=1;
+      int index = actualPlaylist.value['index'];
+      
+      Metadata music = actualPlaylist.value['playlist'][index];
+      actualPlayingMusic.value = music;
+      player.setAudioSource(AudioSource.file(music.filePath!));
+      player.play();
+    }
+  }
   String formatMilliseconds(int milliseconds) {
     Duration duration = Duration(milliseconds: milliseconds);
     int minutes = duration.inMinutes;
