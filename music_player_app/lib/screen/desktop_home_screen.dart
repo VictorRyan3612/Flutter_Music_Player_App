@@ -23,6 +23,8 @@ class DesktopHomeScreen extends StatelessWidget {
                 title: Text("Home"), 
                 onTap: (){
                   settingsService.listingTags.value = false;
+                  musicDataService.musicsValueNotifier.value['objects'] = musicDataService.originalList;
+                  settingsService.tag.value = '';
                 }
               ),
               ExtensibleLateralBarItem(
