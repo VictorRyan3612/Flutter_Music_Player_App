@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:music_player_app/config/settings_data_service.dart';
 import 'package:music_player_app/data/music_data_service.dart';
 import 'package:music_player_app/view/list_music.dart';
+import 'package:music_player_app/view/list_tag.dart';
 import 'package:music_player_app/widgets/lateral_bar.dart';
 
 import 'package:music_player_app/widgets/sheet_tile.dart';
@@ -19,17 +21,25 @@ class DesktopHomeScreen extends StatelessWidget {
               ExtensibleLateralBarItem(
                 icon: Icon(Icons.home), 
                 title: Text("Home"), 
-                onTap: (){}
+                onTap: (){
+                  settingsService.listingTags.value = false;
+                }
               ),
               ExtensibleLateralBarItem(
                 icon: Icon(Icons.people), 
                 title: Text("Artistas"), 
-                onTap: (){}
+                onTap: (){
+                  settingsService.listingTags.value = true;
+                  musicDataService.actualTag.value = musicDataService.setAlbumArtistName;
+                }
               ),
               ExtensibleLateralBarItem(
                 icon: Icon(Icons.library_music), 
                 title: Text("Albums"), 
-                onTap: (){}
+                onTap: (){
+                  settingsService.listingTags.value = true;
+                  musicDataService.actualTag.value = musicDataService.setAlbumName;
+                }
               )
             ],
             trailingItems: [
@@ -58,9 +68,19 @@ class DesktopHomeScreen extends StatelessWidget {
                 ),
                 Expanded(
                   child: ValueListenableBuilder(
-                    valueListenable: musicDataService.musicsValueNotifier,
+                    valueListenable: settingsService.listingTags,
                     builder: (context, value, child) {
-                      return ListMusics();
+                      if(!value){ 
+                        return ValueListenableBuilder(
+                          valueListenable: musicDataService.musicsValueNotifier,
+                          builder: (context, value, child) {
+                            return ListMusics();
+                          }
+                        );
+                      }
+                      else{
+                        return ListTag();
+                      }
                     }
                   )
                 ),

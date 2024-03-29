@@ -30,6 +30,7 @@ class MusicDataService{
   Set<String> setAlbumName = {};
   Set<String> setAlbumArtistName = {};
   Set<String> setGenders = {};
+  ValueNotifier<Set<String>> actualTag = ValueNotifier({});
 
 
   final player = AudioPlayer();
@@ -139,8 +140,8 @@ class MusicDataService{
 
   void setsTags(Metadata metadata){
     setAlbumName.add(stringNonNull(metadata.albumName));
-    setGenders.add(stringNonNull(metadata. genre));
-    setAlbumArtistName.add(stringNonNull(metadata. genre));
+    setGenders.add(stringNonNull(metadata.genre));
+    setAlbumArtistName.add(stringNonNull(metadata.albumArtistName));
   }
 
   Future<void> loadMusicsDatas() async{

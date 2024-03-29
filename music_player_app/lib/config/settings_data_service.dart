@@ -7,7 +7,8 @@ class SettingsService{
   ValueNotifier<bool> isDarkMode = ValueNotifier(true);
   ValueNotifier<String> colorName = ValueNotifier('Blue');
   ValueNotifier<List<String>> listFoldersPaths = ValueNotifier([]);
-
+  ValueNotifier<bool> listingTags = ValueNotifier(false);
+  
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
     final isDarkMode = prefs.getBool('isDarkMode') ?? settingsService.isDarkMode.value;
