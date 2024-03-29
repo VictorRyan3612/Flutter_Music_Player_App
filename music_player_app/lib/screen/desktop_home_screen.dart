@@ -42,7 +42,15 @@ class DesktopHomeScreen extends StatelessWidget {
                   settingsService.listingTags.value = true;
                   musicDataService.actualTag.value = musicDataService.setAlbumName;
                 }
-              )
+              ),
+              ExtensibleLateralBarItem(
+                icon: Icon(Icons.music_note), 
+                title: Text("Generos"), 
+                onTap: (){
+                  settingsService.listingTags.value = true;
+                  musicDataService.actualTag.value = musicDataService.setGenders;
+                }
+              ),
             ],
             trailingItems: [
               ExtensibleLateralBarItem(

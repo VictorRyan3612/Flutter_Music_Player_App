@@ -279,7 +279,6 @@ class MusicDataService{
     var state = Map<String, dynamic>.from(musicsValueNotifier.value);
     state['objects'] = objectsFiltered;
     musicsValueNotifier.value = state;
-    print("s");
   }
 }
 
