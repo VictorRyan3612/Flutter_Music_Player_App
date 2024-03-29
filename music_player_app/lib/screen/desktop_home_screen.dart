@@ -15,10 +15,37 @@ class DesktopHomeScreen extends StatelessWidget {
       body: Row(
         children: [
           ExtensibleLateralBar(
-            items: [ExtensibleLateralBarItem(icon: Icon(Icons.home), title: Text("Home"), onTap: (){})],
+            items: [
+              ExtensibleLateralBarItem(
+                icon: Icon(Icons.home), 
+                title: Text("Home"), 
+                onTap: (){}
+              ),
+              ExtensibleLateralBarItem(
+                icon: Icon(Icons.people), 
+                title: Text("Artistas"), 
+                onTap: (){}
+              ),
+              ExtensibleLateralBarItem(
+                icon: Icon(Icons.library_music), 
+                title: Text("Albums"), 
+                onTap: (){}
+              )
+            ],
+            trailingItems: [
+              ExtensibleLateralBarItem(
+                  icon: Icon(Icons.settings),
+                  title: Text("Configuracoes"),
+                  onTap: () {
+                    Navigator.pushNamed(context, '/configs');
+                  },
+                )
+
+            ],
+            
           ),
           Expanded(
-            flex: 9,
+            flex: 12,
             child: Column(
               children: [
                 TextField(
