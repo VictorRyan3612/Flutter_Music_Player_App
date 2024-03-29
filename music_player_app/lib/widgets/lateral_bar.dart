@@ -43,7 +43,14 @@ class ExtensibleLateralBar extends HookWidget {
                     onTap: () {
                       
                     },
-                  )
+                  ),
+                  Divider(),
+                  ListTile(
+                    leading: Icon(Icons.settings),
+                    title: Text("Configuracoes"),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/configs');
+                    },)
                 ],
               ),
             ),
@@ -79,6 +86,14 @@ class ExtensibleLateralBar extends HookWidget {
                       
                     },
                   ),
+                  Divider(),
+
+                  IconButton(
+                    icon: Icon(Icons.settings),
+                    onPressed: (){
+                      Navigator.pushNamed(context, '/configs');
+                      },
+                    )
                 ]
               ),
             ),
