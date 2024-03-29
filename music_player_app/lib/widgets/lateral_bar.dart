@@ -1,98 +1,62 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
+class ExtensibleLateralBarItem{
+  final Icon icon;
+  final Text title;
+  final Function onTap;
+
+  const ExtensibleLateralBarItem({required this.icon, required this.title, required this.onTap});
+}
+
 class ExtensibleLateralBar extends HookWidget {
-  const ExtensibleLateralBar({super.key});
+  final List<ExtensibleLateralBarItem> items;
+  const ExtensibleLateralBar({super.key, required this.items});
 
   @override
   Widget build(BuildContext context) {
     Color colorContainer = Theme.of(context).brightness == Brightness.dark ? Colors.black : Colors.white;
-    var isOpen = useState(false);
+    var isOpen = useState(true);
     return Expanded(
-      flex: isOpen.value == true ? 2 : 0,
+      flex: isOpen.value == true ? 2 : 1,
       child: Container(
         color: colorContainer,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Builder(
             builder: (context) {
-              if(isOpen.value == true){
-                return Column(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.menu),
-                      onPressed: () {
-                        isOpen.value = !isOpen.value;
-                      }, 
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.home_filled),
-                      title: Text("Inicio"),
-                      onTap: () {
-                        
+              return Column(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.menu),
+                    onPressed: () {
+                      isOpen.value = !isOpen.value;
+                    }, 
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: items.length,
+                      itemBuilder: (context, index) {
+                        if(isOpen.value == true){
+                          return ListTile(
+                            leading: items[index].icon,
+                            title: items[index].title,
+                            onTap: items[index].onTap()
+                          );
+                        }
+                        else{
+                          return IconButton(
+                            onPressed: items[index].onTap(),
+                            icon: items[index].icon,
+                            tooltip: items[index].title.data,
+                          );
+                        }
                       },
                     ),
-                    ListTile(
-                      leading: Icon(Icons.people),
-                      title: Text("Artistas"),
-                      onTap: () {
-                        
-                      },
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.library_music),
-                      title: Text("Albums"),
-                      onTap: () {
-                        
-                      },
-                    ),
-                    Divider(),
-                    ListTile(
-                      leading: Icon(Icons.settings),
-                      title: Text("Configuracoes"),
-                      onTap: () {
-                        Navigator.pushNamed(context, '/configs');
-                      },
-                    )
-                  ]
-                );
-              }
-              else{
-                return Column(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.menu),
-                      onPressed: () {
-                        isOpen.value = !isOpen.value;
-                      }, 
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.home_filled),
-                      onPressed: () {
-                        
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.people),
-                      onPressed: () {
-                        
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.library_music),
-                      onPressed: () {
-                        
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.settings),
-                      onPressed: (){
-                        Navigator.pushNamed(context, '/configs');
-                      },
-                    )
-                  ]
-                );
-              }
+                  ),
+                ],
+              );
             }
           ),
         ),

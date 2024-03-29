@@ -14,7 +14,9 @@ class DesktopHomeScreen extends StatelessWidget {
     return Scaffold(
       body: Row(
         children: [
-          ExtensibleLateralBar(),
+          ExtensibleLateralBar(
+            items: [ExtensibleLateralBarItem(icon: Icon(Icons.home), title: Text("Home"), onTap: (){})],
+          ),
           Expanded(
             flex: 9,
             child: Column(
