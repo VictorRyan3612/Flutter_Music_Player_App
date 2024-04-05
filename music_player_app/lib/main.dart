@@ -10,6 +10,9 @@ import 'package:music_player_app/screen/config_screen.dart';
 
 
 void main() {
+  settingsService.loadSettings().whenComplete(() {
+      musicDataService.setFoldersPath(settingsService.listFoldersPaths.value);
+    });
   runApp(const MainApp());
 }
 
@@ -20,14 +23,10 @@ class MainApp extends HookWidget {
   @override
   Widget build(BuildContext context) {
     // base states 
-    final currentIsDarkMode = useState(true); //Theme
-    final currentColor = useState('Blue'); // Accent color
+    final currentIsDarkMode = useState(settingsService.isDarkMode.value); //Theme
+    final currentColor = useState(settingsService.colorName.value); // Accent color
 
-    settingsService.loadSettings().whenComplete(() {
-      currentIsDarkMode.value = settingsService.isDarkMode.value;
-      currentColor.value = settingsService.colorName.value;
-      musicDataService.setFoldersPath(settingsService.listFoldersPaths.value);
-    });
+    
       
 
     final finalTheme = setTheme(currentIsDarkMode.value, currentColor.value);
