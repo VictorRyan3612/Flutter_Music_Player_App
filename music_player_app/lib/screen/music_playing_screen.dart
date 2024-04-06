@@ -34,30 +34,40 @@ class ScreenMusic extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var color = useState(musicDataService.shuffle == true ? Theme.of(context).primaryColor : Colors.grey);
+    var colorShuffle = useState(musicDataService.shuffle == true ? Theme.of(context).primaryColor : Colors.grey);
+    var colorRepeat = useState(musicDataService.repeat == true ? Theme.of(context).primaryColor : Colors.grey);
+
+    void iconColor(ValueNotifier<Color> color, bool bool){
+      if (bool) {
+        color.value = Theme.of(context).primaryColor;
+      } else {
+        color.value = Colors.grey;
+      }
+    }
     return Scaffold(
       appBar: AppBar(
 
         actions: [
           IconButton(
-            color: color.value,
+            color: colorShuffle.value,
             icon: Icon(Icons.shuffle),
             onPressed: () {
               musicDataService.toggleShuffle();
-              if (musicDataService.shuffle) {
-                color.value = Theme.of(context).primaryColor;
-              } else {
-                color.value = Colors.grey;
-              }
-            }),IconButton(
-            icon: Icon(Icons.repeat),
-            onPressed: () {
-
-            }),IconButton(
-            icon: Icon(Icons.more_vert),
-            onPressed: () {
-
+              iconColor(colorShuffle, musicDataService.shuffle);
             }),
+            IconButton(
+              color: colorRepeat.value,
+              icon: Icon(Icons.repeat),
+              onPressed: () {
+                musicDataService.toggleRepeat();
+                iconColor(colorRepeat, musicDataService.repeat);
+              }),
+            IconButton(
+              icon: Icon(Icons.more_vert),
+              onPressed: () {
+
+              }
+            ),
         ],
       ),
       body: ValueListenableBuilder(
