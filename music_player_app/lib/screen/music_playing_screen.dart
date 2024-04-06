@@ -1,23 +1,20 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:just_audio/just_audio.dart';
+
 import 'package:music_player_app/data/music_data_service.dart';
 import 'package:music_player_app/widgets/play_button.dart';
 
-class MusicPlayingScreen extends StatelessWidget {
-  late Offset _initialPosition;
 
+class MusicPlayingScreen extends StatelessWidget {
   static const double _minSwipeDistance = 100.0;
 
   MusicPlayingScreen({super.key});
 
+
   @override
   Widget build(BuildContext context) {
+  late Offset _initialPosition;
     return GestureDetector(
       child: ScreenMusic(),
-
-      
       onVerticalDragStart: (details) {
         _initialPosition = details.globalPosition;
       },

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
-import 'package:just_audio/just_audio.dart';
+
 import 'package:music_player_app/data/music_data_service.dart';
 import 'package:music_player_app/widgets/music_tile.dart';
 
