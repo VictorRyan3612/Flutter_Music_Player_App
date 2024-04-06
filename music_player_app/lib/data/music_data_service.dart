@@ -30,6 +30,7 @@ class MusicDataService{
   Set<String> setGenders = {};
   ValueNotifier<Set<String>> actualTag = ValueNotifier({});
 
+  bool shuffle = true;
 
   final player = AudioPlayer();
   
@@ -187,16 +188,25 @@ class MusicDataService{
       actualPlaylist.value['index'] = index;
     }
     else{
-      int lenghtMusics= musicsValueNotifier.value['objects'].length;
-      int number = Random().nextInt(lenghtMusics -1);
-      actualPlayingMusic.value = musicsValueNotifier.value['objects'][number];
+      int index;
+      if (shuffle) {
+        int lenghtMusics= musicsValueNotifier.value['objects'].length;
+        index = Random().nextInt(lenghtMusics -1);
+      } else {
+        index = musicsValueNotifier.value['objects'].indexOf(actualPlayingMusic.value) +1;
+      }
+      actualPlayingMusic.value = musicsValueNotifier.value['objects'][index];
       addPlaylist(actualPlayingMusic.value);
-
     }
+    
     player.setAudioSource(AudioSource.file(actualPlayingMusic.value.filePath!));
     player.play();
   }
   
+  void toggleShuffle(){
+    shuffle = !shuffle;
+  }
+
   void playMusicFromMetadata(Metadata metadata) async{
     musicDataService.actualPlayingMusic.value = metadata;
     

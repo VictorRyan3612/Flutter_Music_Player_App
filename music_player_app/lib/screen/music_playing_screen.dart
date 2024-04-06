@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:music_player_app/data/music_data_service.dart';
 import 'package:music_player_app/widgets/play_button.dart';
@@ -28,19 +29,26 @@ class MusicPlayingScreen extends StatelessWidget {
     );
   }
 }
-class ScreenMusic extends StatelessWidget {
+class ScreenMusic extends HookWidget {
   const ScreenMusic({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var color = useState(musicDataService.shuffle == true ? Theme.of(context).primaryColor : Colors.grey);
     return Scaffold(
       appBar: AppBar(
 
         actions: [
           IconButton(
+            color: color.value,
             icon: Icon(Icons.shuffle),
             onPressed: () {
-
+              musicDataService.toggleShuffle();
+              if (musicDataService.shuffle) {
+                color.value = Theme.of(context).primaryColor;
+              } else {
+                color.value = Colors.grey;
+              }
             }),IconButton(
             icon: Icon(Icons.repeat),
             onPressed: () {

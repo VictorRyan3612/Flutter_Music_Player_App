@@ -33,6 +33,7 @@ ThemeData setTheme(bool isDarkMode, colorName) {
       ),
       brightness: Brightness.dark,
       primarySwatch: colorColors,
+      primaryColor: colorColors,
       inputDecorationTheme: const InputDecorationTheme(
         hoverColor: Colors.transparent,
         filled:true,
@@ -60,6 +61,7 @@ ThemeData setTheme(bool isDarkMode, colorName) {
       ),
       brightness: Brightness.light,
       primarySwatch: colorColors,
+      primaryColor: colorColors,
       inputDecorationTheme: const InputDecorationTheme(
         hoverColor: Colors.transparent,
         filled:true,
