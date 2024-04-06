@@ -32,25 +32,24 @@ class MusicDataService{
 
 
   final player = AudioPlayer();
-  setFoldersPath(List<String> listFoldersPaths) async{
+  
+  void setFoldersPath(List<String> listFoldersPaths) async{
     listFoldersPathsValueNotifier.value = listFoldersPaths;
     foldersPathToFilesPath(listFoldersPathsValueNotifier.value);
     loadMusicsDatas();
   }
 
-  isMp3(String file){
+  bool isMp3(String file){
     String format = file.split('.').last.toLowerCase();
     return format == 'mp3';
   }
 
-  foldersPathToFilesPath(List<String> listPathFolders){
+  void foldersPathToFilesPath(List<String> listPathFolders){
     for (var pathFolder in listPathFolders){
       Directory directory = Directory(pathFolder);
       directory.listSync().forEach((entity) {
-
         if(isMp3(entity.path)){
           listPaths.value.add(entity.path);
-
         }
       });
     }
@@ -80,9 +79,8 @@ class MusicDataService{
       musicsValueNotifier.value['status'] = TableStatus.error;
     }
   }
-  getAMP(){
-    return actualPlayingMusic.value.filePath;
-  }
+
+
   String finalNamePath({required Directory directoryFolder, required String musicPath}){
     
     String nameMusic = musicPath!.split('\\').last;
@@ -111,30 +109,30 @@ class MusicDataService{
     return pathFinal;
   }
 
-  addFolderPath(String folderPath) async {
+  void addFolderPath(String folderPath) async {
     listFoldersPathsValueNotifier.value.add(folderPath);
     foldersPathToFilesPath([folderPath]);
     loadMusicsDatas();
   }
   
   Future<void> removeFolderPath(String folderPath) async {
-  musicsValueNotifier.value['status'] = TableStatus.loading;
-  
-  listFoldersPathsValueNotifier.value.remove(folderPath);
-  listPathsDeleted.value.add(folderPath);
-  
-  for (var folderPath in listPathsDeleted.value){
-    listPaths.value.removeWhere((element) => element.contains(folderPath));
-    List<Metadata> tempAux = musicDataService.musicsValueNotifier.value['objects'];
-    tempAux.removeWhere((element) => element.filePath!.contains(folderPath));
-    musicDataService.musicsValueNotifier.value['objects'] = tempAux;
-    // musicsValueNotifier.value.removeWhere((key, value) => key[1].contains()
-    // 
-  // )}
+    musicsValueNotifier.value['status'] = TableStatus.loading;
+    
+    listFoldersPathsValueNotifier.value.remove(folderPath);
+    listPathsDeleted.value.add(folderPath);
+    
+    for (var folderPath in listPathsDeleted.value){
+      listPaths.value.removeWhere((element) => element.contains(folderPath));
+      List<Metadata> tempAux = musicDataService.musicsValueNotifier.value['objects'];
+      tempAux.removeWhere((element) => element.filePath!.contains(folderPath));
+      musicDataService.musicsValueNotifier.value['objects'] = tempAux;
+      // musicsValueNotifier.value.removeWhere((key, value) => key[1].contains()
+      // 
+    // )}
+    }
+    musicsValueNotifier.value['status'] = TableStatus.ready;
+    musicsValueNotifier.notifyListeners();
   }
-  musicsValueNotifier.value['status'] = TableStatus.ready;
-  musicsValueNotifier.notifyListeners();
-}
 
   void setsTags(Metadata metadata){
     setAlbumName.add(stringNonNull(metadata.albumName));
@@ -175,7 +173,7 @@ class MusicDataService{
   }
 
 
-  nextMusic(){
+  void nextMusic(){
     int index = actualPlaylist.value['index'];
     int length = actualPlaylist.value['playlist'].length -1;
 
@@ -199,7 +197,7 @@ class MusicDataService{
     player.play();
   }
   
-  playMusicFromMetadata(Metadata metadata) async{
+  void playMusicFromMetadata(Metadata metadata) async{
     musicDataService.actualPlayingMusic.value = metadata;
     
     if(musicDataService.player.playing){
@@ -210,16 +208,16 @@ class MusicDataService{
     addPlaylist(metadata);
   }
   
-  addPlaylist(Metadata metadata){
+  void addPlaylist(Metadata metadata){
     actualPlaylist.value['playlist'].add(metadata);
     actualPlaylist.value['index'] +=1;
   }
 
-  addNextPlaylist(Metadata metadata){
+  void addNextPlaylist(Metadata metadata){
     actualPlaylist.value['playlist'].insert(actualPlaylist.value['index']+1,metadata);
   }
 
-  previousMusic(){
+  void previousMusic(){
     if(actualPlaylist.value['index'] >=1){
       player.stop();
       actualPlaylist.value['index'] -=1;
@@ -247,7 +245,7 @@ class MusicDataService{
     if (stringInitial != null){
       string = stringInitial;
     }
-    return string;
+    return string.trim();
   }
 
   void filterCurrentState(String filtrar) {
