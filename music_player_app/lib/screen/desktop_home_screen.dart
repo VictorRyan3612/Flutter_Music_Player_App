@@ -54,6 +54,13 @@ class DesktopHomeScreen extends StatelessWidget {
                   musicDataService.actualTag.value = musicDataService.setGenders;
                 }
               ),
+              ExtensibleLateralBarItem(
+                icon: Icon(Icons.playlist_play), 
+                title: Text("Playlist"), 
+                onTap: (){
+                  
+                }
+              ),
             ],
             trailingItems: [
               ExtensibleLateralBarItem(

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -22,6 +23,13 @@ class MusicDataService{
     'playlist': <Metadata>[]
   });
 
+  ValueNotifier<List<Map<String,dynamic>>> playlists = ValueNotifier([
+    {
+      'name': '',
+      'playlist': <Metadata>[]
+    }
+  ]);
+
   ValueNotifier<Metadata> actualPlayingMusic = ValueNotifier(Metadata());
   List<Metadata> originalList = [];
 
@@ -38,6 +46,36 @@ class MusicDataService{
     listFoldersPathsValueNotifier.value = listFoldersPaths;
     foldersPathToFilesPath(listFoldersPathsValueNotifier.value);
     loadMusicsDatas();
+    loadPlaylists();
+  }
+
+
+  void createPlaylist(String name, List<Metadata> list) async{
+    Directory directoryApp = await getApplicationSupportDirectory();
+    directoryApp = Directory('${directoryApp.path}/Playlists');
+    directoryApp.createSync();
+
+    File file = File('${directoryApp.path}/$name.dat');
+    String jsonString = json.encode(list);
+    
+    file.writeAsStringSync(jsonString);
+  }
+
+  void loadPlaylists() async {
+    Directory directoryApp = await getApplicationSupportDirectory();
+    directoryApp = Directory('${directoryApp.path}/Playlists');
+    directoryApp.createSync();
+
+    directoryApp.listSync().forEach((element) { 
+      File file = File(element.path);
+      String name = file.path.split('//').last;
+      String content = file.readAsStringSync();
+      List<dynamic> listMetada = json.decode(content);
+      playlists.value.add({'name': name, 'playlist': listMetada});
+
+    });
+
+    // File file = File('${directoryApp.path}/Playlists/notas.dat');
   }
 
   bool isMp3(String file){
@@ -263,6 +301,15 @@ class MusicDataService{
     }
     return string.trim();
   }
+
+  // void sortMusic(String field){
+  //   List<Metadata> listMusic = musicsValueNotifier.value['objects'];
+  //   listMusic.sort((a, b) {
+  //     a.${field}
+  //     return 
+  //   },);
+
+  // }
 
   void filterCurrentState(String filtrar) {
     List<Metadata> objectsOriginals = originalList;

@@ -65,7 +65,7 @@ class ScreenMusic extends HookWidget {
             IconButton(
               icon: Icon(Icons.more_vert),
               onPressed: () {
-
+                // musicDataService.createPlaylist('teste', musicDataService.actualPlaylist.value['playlist']);
               }
             ),
         ],
