@@ -41,7 +41,9 @@ class MusicDataService{
   bool shuffle = true;
   bool repeat = false;
   final player = AudioPlayer();
-  
+  bool firstPlay = true;
+
+
   void setFoldersPath(List<String> listFoldersPaths) async{
     listFoldersPathsValueNotifier.value = listFoldersPaths;
     foldersPathToFilesPath(listFoldersPathsValueNotifier.value);
@@ -230,15 +232,16 @@ class MusicDataService{
       if (shuffle && !repeat) {
         int lenghtMusics= musicsValueNotifier.value['objects'].length;
         index = Random().nextInt(lenghtMusics -1);
+        addPlaylist(actualPlayingMusic.value);
       } 
       else if (repeat){
         index = musicsValueNotifier.value['objects'].indexOf(actualPlayingMusic.value);
+        addPlaylist(actualPlayingMusic.value);
       }
       else {
         index = musicsValueNotifier.value['objects'].indexOf(actualPlayingMusic.value) +1;
       }
       actualPlayingMusic.value = musicsValueNotifier.value['objects'][index];
-      addPlaylist(actualPlayingMusic.value);
     }
     
     player.setAudioSource(AudioSource.file(actualPlayingMusic.value.filePath!));

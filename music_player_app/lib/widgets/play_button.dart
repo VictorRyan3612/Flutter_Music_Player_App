@@ -9,11 +9,10 @@ class PlayButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool firstPlay = true;
     musicDataService.player.playerStateStream.listen((event) {
-      if (firstPlay == true){
+      if (musicDataService.firstPlay == true){
         musicDataService.player.play();
-        firstPlay = false;
+        musicDataService.firstPlay = false;
       }
       if (event.processingState == ProcessingState.completed && musicDataService.player.playing == false) {
         musicDataService.nextMusic();
