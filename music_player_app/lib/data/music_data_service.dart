@@ -207,6 +207,7 @@ class MusicDataService{
       }
     }
     originalList = musicsValueNotifier.value['objects'];
+    sortMusic();
     musicsValueNotifier.notifyListeners();
     // print(musicsValueNotifier.value['objects']);
     musicsValueNotifier.value['status'] = TableStatus.ready;
@@ -305,14 +306,21 @@ class MusicDataService{
     return string.trim();
   }
 
-  // void sortMusic(String field){
-  //   List<Metadata> listMusic = musicsValueNotifier.value['objects'];
-  //   listMusic.sort((a, b) {
-  //     a.${field}
-  //     return 
-  //   },);
+  returnValuebyField(Metadata music, String field){
+    return music.toJson()[field];
+  }
 
-  // }
+  void sortMusic([String field = 'trackName']){
+    List<Metadata> listMusic = musicsValueNotifier.value['objects'];
+    listMusic.sort((a, b) {
+      
+      String valueA = a.toJson()[field];
+      String valueB = b.toJson()[field];
+      return valueA.compareTo(valueB);
+    },);
+    musicsValueNotifier.value['objects'] = listMusic;
+    musicsValueNotifier.notifyListeners();
+  }
 
   void filterCurrentState(String filtrar) {
     List<Metadata> objectsOriginals = originalList;
