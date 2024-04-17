@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:music_player_app/config/settings_data_service.dart';
-import 'package:music_player_app/screen/desktop_home_screen.dart';
-import 'package:music_player_app/screen/mobile_home_screen.dart';
+
 
 class LayoutDecider extends StatelessWidget {
-  const LayoutDecider({Key? key}) : super(key: key);
+  final ValueNotifier<bool> isMobile;
+  final Widget option1;
+  final Widget option2;
+
+  const LayoutDecider({Key? key, required this.isMobile, required this.option1, required this.option2}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints){
-        settingsService.isMobile.value = constraints.maxWidth < 600;
-        return settingsService.isMobile.value ? MobileHomeScreen() : DesktopHomeScreen();        
+        isMobile.value = constraints.maxWidth < 600;
+        return isMobile.value ? option1 : option2;        
       },
     );
   }

@@ -6,6 +6,8 @@ import 'package:music_player_app/config/theme_config.dart';
 import 'package:music_player_app/data/music_data_service.dart';
 import 'package:music_player_app/layout/layout.dart';
 import 'package:music_player_app/screen/config_screen.dart';
+import 'package:music_player_app/screen/desktop_home_screen.dart';
+import 'package:music_player_app/screen/mobile_home_screen.dart';
 
 
 
@@ -40,7 +42,13 @@ class MainApp extends HookWidget {
 
       initialRoute: '/',
       routes: {
-        '/': (context) => LayoutDecider(),
+        // '/': (context) => LayoutDecididor2(),
+        
+        '/': (context) => LayoutDecider(
+          isMobile: settingsService.isMobile,
+          option1: MobileHomeScreen(),
+          option2: DesktopHomeScreen(),
+        ),
         '/configs': (context) => ConfigScreen(
           currentIsDarkMode: currentIsDarkMode,
           currentColor: currentColor,
