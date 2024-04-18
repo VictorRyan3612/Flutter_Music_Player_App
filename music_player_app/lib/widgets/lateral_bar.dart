@@ -40,8 +40,8 @@ class ExtensibleLateralBar extends HookWidget {
       }
     }
 
-    return Expanded(
-      flex: isOpen.value == true ? 2 : 1,
+    return SizedBox(
+      width: isOpen.value == true ? 200 : 80,
       child: Material(
         color: colorContainer,
         child: Padding(
