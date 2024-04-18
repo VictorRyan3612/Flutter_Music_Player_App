@@ -172,7 +172,7 @@ class MusicDataService{
     // )}
     }
     musicsValueNotifier.value['status'] = TableStatus.ready;
-    musicsValueNotifier.notifyListeners();
+    saveValueNotifier(musicsValueNotifier.value['data']);
   }
 
   void setsTags(Metadata metadata){
@@ -203,12 +203,12 @@ class MusicDataService{
       count++;
       if(count == 50){
         count = 0;
-        musicsValueNotifier.notifyListeners();
+        saveValueNotifier(musicsValueNotifier.value['data']);
       }
     }
     originalList = musicsValueNotifier.value['data'];
     sortMusic();
-    musicsValueNotifier.notifyListeners();
+    saveValueNotifier(musicsValueNotifier.value['data']);
     // print(musicsValueNotifier.value['data']);
     musicsValueNotifier.value['status'] = TableStatus.ready;
     
@@ -319,7 +319,7 @@ class MusicDataService{
       return valueA.compareTo(valueB);
     },);
     musicsValueNotifier.value['data'] = listMusic;
-    musicsValueNotifier.notifyListeners();
+    saveValueNotifier(musicsValueNotifier.value['data']);
   }
 
   void filterCurrentState(String filtrar) {
@@ -343,11 +343,11 @@ class MusicDataService{
     }
     
 
-    issueFilteredState(objectsFiltered);
+    saveValueNotifier(objectsFiltered);
   }
-  void issueFilteredState(List<Metadata> objectsFiltered) {
+  void saveValueNotifier(List<Metadata> listMetadata) {
     var state = Map<String, dynamic>.from(musicsValueNotifier.value);
-    state['data'] = objectsFiltered;
+    state['data'] = listMetadata;
     musicsValueNotifier.value = state;
   }
 }
