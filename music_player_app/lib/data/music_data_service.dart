@@ -15,7 +15,7 @@ class MusicDataService{
   ValueNotifier<List<String>> listMusicsError = ValueNotifier([]);
   ValueNotifier<Map<String,dynamic>> musicsValueNotifier = ValueNotifier({
     'status': TableStatus.idle,
-    'objects': <Metadata>[]
+    'data': <Metadata>[]
   });
 
   ValueNotifier<Map<String,dynamic>> actualPlaylist = ValueNotifier({
@@ -164,9 +164,9 @@ class MusicDataService{
     
     for (var folderPath in listPathsDeleted.value){
       listPaths.value.removeWhere((element) => element.contains(folderPath));
-      List<Metadata> tempAux = musicDataService.musicsValueNotifier.value['objects'];
+      List<Metadata> tempAux = musicDataService.musicsValueNotifier.value['data'];
       tempAux.removeWhere((element) => element.filePath!.contains(folderPath));
-      musicDataService.musicsValueNotifier.value['objects'] = tempAux;
+      musicDataService.musicsValueNotifier.value['data'] = tempAux;
       // musicsValueNotifier.value.removeWhere((key, value) => key[1].contains()
       // 
     // )}
@@ -193,7 +193,7 @@ class MusicDataService{
           
           metadata = await MetadataRetriever.fromFile(File(musicCopiedpath));
         }
-        musicsValueNotifier.value['objects'].add(metadata);
+        musicsValueNotifier.value['data'].add(metadata);
         setsTags(metadata);
 
       } catch (error) {
@@ -206,10 +206,10 @@ class MusicDataService{
         musicsValueNotifier.notifyListeners();
       }
     }
-    originalList = musicsValueNotifier.value['objects'];
+    originalList = musicsValueNotifier.value['data'];
     sortMusic();
     musicsValueNotifier.notifyListeners();
-    // print(musicsValueNotifier.value['objects']);
+    // print(musicsValueNotifier.value['data']);
     musicsValueNotifier.value['status'] = TableStatus.ready;
     
   }
@@ -231,18 +231,18 @@ class MusicDataService{
     else{
       int index;
       if (shuffle && !repeat) {
-        int lenghtMusics= musicsValueNotifier.value['objects'].length;
+        int lenghtMusics= musicsValueNotifier.value['data'].length;
         index = Random().nextInt(lenghtMusics -1);
         addPlaylist(actualPlayingMusic.value);
       } 
       else if (repeat){
-        index = musicsValueNotifier.value['objects'].indexOf(actualPlayingMusic.value);
+        index = musicsValueNotifier.value['data'].indexOf(actualPlayingMusic.value);
         addPlaylist(actualPlayingMusic.value);
       }
       else {
-        index = musicsValueNotifier.value['objects'].indexOf(actualPlayingMusic.value) +1;
+        index = musicsValueNotifier.value['data'].indexOf(actualPlayingMusic.value) +1;
       }
-      actualPlayingMusic.value = musicsValueNotifier.value['objects'][index];
+      actualPlayingMusic.value = musicsValueNotifier.value['data'][index];
     }
     
     player.setAudioSource(AudioSource.file(actualPlayingMusic.value.filePath!));
@@ -311,14 +311,14 @@ class MusicDataService{
   }
 
   void sortMusic([String field = 'trackName']){
-    List<Metadata> listMusic = musicsValueNotifier.value['objects'];
+    List<Metadata> listMusic = musicsValueNotifier.value['data'];
     listMusic.sort((a, b) {
       
       String valueA = a.toJson()[field];
       String valueB = b.toJson()[field];
       return valueA.compareTo(valueB);
     },);
-    musicsValueNotifier.value['objects'] = listMusic;
+    musicsValueNotifier.value['data'] = listMusic;
     musicsValueNotifier.notifyListeners();
   }
 
@@ -347,7 +347,7 @@ class MusicDataService{
   }
   void issueFilteredState(List<Metadata> objectsFiltered) {
     var state = Map<String, dynamic>.from(musicsValueNotifier.value);
-    state['objects'] = objectsFiltered;
+    state['data'] = objectsFiltered;
     musicsValueNotifier.value = state;
   }
 }

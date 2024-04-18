@@ -43,15 +43,15 @@ class ListMusics extends StatelessWidget {
             );
             case TableStatus.ready:
               return ListView.builder(
-                itemCount:value['objects'].length,
+                itemCount:value['data'].length,
                 itemBuilder: (context, index) {
                   return InkWell(
                     onSecondaryTapDown: (details) {
-                      showContextMenu(context, value['objects'][index], details.globalPosition);
+                      showContextMenu(context, value['data'][index], details.globalPosition);
                     },
-                    child: MusicTile(music: value['objects'][index]),
+                    child: MusicTile(music: value['data'][index]),
                     onTap: () async{
-                      musicDataService.playMusicFromMetadata(value['objects'][index]);
+                      musicDataService.playMusicFromMetadata(value['data'][index]);
                     },
                   );
                 }
