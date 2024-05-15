@@ -39,6 +39,26 @@ class ConfigScreen extends StatelessWidget {
                   ),
                   Divider(),
                   ListTile(
+                    title: Text("Repetição da musica na fila de reprodução se em loop"),
+                    subtitle: Text("Com loop ativado, a música deve aparecer mais uma vez na fila de reprodução"),
+                    trailing: ValueListenableBuilder(
+                      valueListenable: settingsService.addRepeat,
+                      builder: (context, valueAddRepeat, child) {
+                        return Switch(
+                          value: valueAddRepeat, 
+                          onChanged: (valueOnChanged) {
+                            settingsService.addRepeat.value = valueOnChanged;
+                            musicDataService.addRepeat = valueOnChanged;
+                            print('settings: ${settingsService.addRepeat.value}\ndata:${musicDataService.addRepeat}');
+                            settingsService.saveSettings();
+                          },
+                        );
+                      }
+                    ),
+                    
+                  ),
+                  Divider(),
+                  ListTile(
                     title: Text("Selecionar Pastas"),
                     onTap: () async {
                       String? folder = await FilePicker.platform.getDirectoryPath();
