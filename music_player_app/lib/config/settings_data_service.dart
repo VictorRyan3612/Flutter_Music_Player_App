@@ -9,14 +9,30 @@ class SettingsService{
   ValueNotifier<List<String>> listFoldersPaths = ValueNotifier([]);
   ValueNotifier<bool> listingTags = ValueNotifier(false);
   ValueNotifier<String> tag = ValueNotifier('');
+
+  ValueNotifier<bool> shuffle = ValueNotifier(true);
+  ValueNotifier<bool> repeat = ValueNotifier(false);
+  ValueNotifier<bool> addRepeat = ValueNotifier(false);
+  
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
+
     final isDarkMode = prefs.getBool('isDarkMode') ?? settingsService.isDarkMode.value;
     settingsService.isDarkMode.value = isDarkMode;
 
-    
     final colorTheme = prefs.getString('colorTheme') ?? settingsService.colorName.value;
     settingsService.colorName.value = colorTheme;
+
+
+    final shuffle = prefs.getBool('shuffle') ?? settingsService.shuffle.value;
+    settingsService.shuffle.value = shuffle;
+
+    final repeat = prefs.getBool('repeat') ?? settingsService.repeat.value;
+    settingsService.repeat.value = repeat;
+
+    final addRepeat = prefs.getBool('addRepeat') ?? settingsService.addRepeat.value;
+    settingsService.addRepeat.value = addRepeat;
+    
 
     final listFoldersPaths = prefs.getStringList('listFoldersPaths') ?? settingsService.listFoldersPaths.value;
     settingsService.listFoldersPaths.value = listFoldersPaths;
@@ -27,6 +43,9 @@ class SettingsService{
     
     prefs.setBool('isDarkMode', isDarkMode.value);
     prefs.setString('colorTheme', colorName.value);
+    prefs.setBool('addRepeat', addRepeat.value);
+    prefs.setBool('repeat', repeat.value);
+    prefs.setBool('shuffle', shuffle.value);
     prefs.setStringList('listFoldersPaths', listFoldersPaths.value);
   }
   

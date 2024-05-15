@@ -42,8 +42,21 @@ class MusicDataService{
   bool repeat = false;
   final player = AudioPlayer();
   bool firstPlay = true;
+  bool addRepeat = false;
 
+  setConfigs({
+    required List<String> listFoldersPaths, 
+    required bool addRepeat, 
+    required bool repeat,
+    required bool shuffle})
+    {
+  
+    addRepeat = addRepeat;
+    repeat = repeat;
+    shuffle = shuffle;
+    setFoldersPath(listFoldersPaths);
 
+  }
   void setFoldersPath(List<String> listFoldersPaths) async{
     listFoldersPathsValueNotifier.value = listFoldersPaths;
     foldersPathToFilesPath(listFoldersPathsValueNotifier.value);

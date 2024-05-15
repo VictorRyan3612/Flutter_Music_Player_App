@@ -13,7 +13,12 @@ import 'package:music_player_app/screen/mobile_home_screen.dart';
 
 void main() {
   settingsService.loadSettings().whenComplete(() {
-      musicDataService.setFoldersPath(settingsService.listFoldersPaths.value);
+      musicDataService.setConfigs(
+        listFoldersPaths: settingsService.listFoldersPaths.value,
+        repeat: settingsService.repeat.value,
+        addRepeat: settingsService.addRepeat.value,
+        shuffle: settingsService.shuffle.value
+      );
     });
   runApp(const MainApp());
 }
