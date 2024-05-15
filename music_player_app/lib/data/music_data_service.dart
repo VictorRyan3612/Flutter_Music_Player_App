@@ -251,7 +251,9 @@ class MusicDataService{
       } 
       else if (repeat){
         index = musicsValueNotifier.value['data'].indexOf(actualPlayingMusic.value);
-        addPlaylist(actualPlayingMusic.value);
+        if(addRepeat){
+          addPlaylist(actualPlayingMusic.value);
+        }
       }
       else {
         index = musicsValueNotifier.value['data'].indexOf(actualPlayingMusic.value) +1;
