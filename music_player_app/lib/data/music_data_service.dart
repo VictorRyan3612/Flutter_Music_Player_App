@@ -203,6 +203,7 @@ class MusicDataService{
       count++;
       if(count == 50){
         count = 0;
+        sortMusic();
         saveValueNotifier(musicsValueNotifier.value['data']);
       }
     }
@@ -306,9 +307,6 @@ class MusicDataService{
     return string.trim();
   }
 
-  returnValuebyField(Metadata music, String field){
-    return music.toJson()[field];
-  }
 
   void sortMusic([String field = 'trackName']){
     List<Metadata> listMusic = musicsValueNotifier.value['data'];
@@ -322,6 +320,14 @@ class MusicDataService{
     saveValueNotifier(musicsValueNotifier.value['data']);
   }
 
+  bool seachInFields (Metadata objetoInd, String filtrar){
+    final bool =
+      stringNonNull(objetoInd.trackName).toLowerCase().contains(filtrar.toLowerCase()) ||
+      stringNonNull(objetoInd.albumArtistName).toLowerCase().contains(filtrar.toLowerCase()) ||
+      stringNonNull(objetoInd.albumName).toLowerCase().contains(filtrar.toLowerCase()) ||
+      stringNonNull(objetoInd.genre).toLowerCase().contains(filtrar.toLowerCase());
+    return bool;
+  }
   void filterCurrentState(String filtrar) {
     List<Metadata> objectsOriginals = originalList;
     if (objectsOriginals.isEmpty) return;
@@ -329,12 +335,7 @@ class MusicDataService{
     List<Metadata> objectsFiltered = [];
     if (filtrar != '') {
       for (var objetoInd in objectsOriginals) {
-        if (
-            stringNonNull(objetoInd.trackName).toLowerCase().contains(filtrar.toLowerCase()) ||
-            stringNonNull(objetoInd.albumArtistName).toLowerCase().contains(filtrar.toLowerCase()) ||
-            stringNonNull(objetoInd.albumName).toLowerCase().contains(filtrar.toLowerCase()) ||
-            stringNonNull(objetoInd.genre).toLowerCase().contains(filtrar.toLowerCase()) 
-          ) {
+        if (seachInFields(objetoInd, filtrar)) {
           objectsFiltered.add(objetoInd);
         }
       }
