@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 
 import 'package:music_player_app/data/music_data_service.dart';
@@ -30,7 +31,7 @@ class ListMusics extends StatelessWidget {
   }
 }
 
-class ListViewMusic extends StatelessWidget {
+class ListViewMusic extends HookWidget {
   final List<Metadata> listMusics;
 
 
@@ -43,7 +44,9 @@ class ListViewMusic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selectedColor = Colors.blue;
-
+    final listSelected = useState([]);
+    final isSelecting = useState(false);
+    final selectedItem = useState<int>(-1);
     void showContextMenu(BuildContext context, Metadata music, Offset position) {
       showMenu(
         context: context,
@@ -66,25 +69,45 @@ class ListViewMusic extends StatelessWidget {
     return ListView.builder(
       itemCount:listMusics.length,
       itemBuilder: (context, index) {
-        return InkWell(
-          onSecondaryTapDown: (details) {
-            showContextMenu(context, listMusics[index], details.globalPosition);
+        return MouseRegion(
+          onEnter: (_) {
+            selectedItem.value = index;
           },
-          onTap: () async{
-            musicDataService.playMusicFromMetadata(listMusics[index]);
+          onExit: (_) {
+            selectedItem.value = -1;
           },
-    
-          child: ValueListenableBuilder(
-            valueListenable: musicDataService.actualPlayingMusic,
-            builder: (context, actualPlaying, child) {
-              final music = listMusics[index];
-              final isActualPlaying = musicDataService.actualPlayingMusic.value == music;
-              return MusicTile(
-                music: music,
-                color: isActualPlaying  ? selectedColor : null,);
-            }
+          child: Container(
+            color: listSelected.value.contains(listMusics[index]) ? selectedColor : null,
+            child: InkWell(
+              onLongPress: () {
+                isSelecting.value =true;
+                listSelected.value.add(listMusics[index]);
+              },
+              onSecondaryTapDown: (details) {
+                showContextMenu(context, listMusics[index], details.globalPosition);
+              },
+              onTap: () async{
+                if (isSelecting.value) {
+                  listSelected.value.add(listMusics[index]);
+                } else {
+                  musicDataService.playMusicFromMetadata(listMusics[index]);
+                  
+                }
+              },
+                
+              child: ValueListenableBuilder(
+                valueListenable: musicDataService.actualPlayingMusic,
+                builder: (context, actualPlaying, child) {
+                  final music = listMusics[index];
+                  final isActualPlaying = musicDataService.actualPlayingMusic.value == music;
+                  return MusicTile(
+                    music: music,
+                    color: isActualPlaying  ? selectedColor : null,);
+                }
+              ),
+              
+            ),
           ),
-          
         );
       }
     );
