@@ -9,6 +9,39 @@ class ListMusics extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ValueListenableBuilder(
+        valueListenable: musicDataService.musicsValueNotifier,
+        builder: (context, value, child) {
+          switch (value['status']) {
+            case TableStatus.loading:
+              return Center(child: CircularProgressIndicator());
+            case TableStatus.error:
+            return Center(
+              child: Text("Error"),
+            );
+            case TableStatus.ready:
+              return ListViewMusic(listMusics: value['data'],);
+          } return Container();
+        }
+      )
+    );
+  }
+}
+
+class ListViewMusic extends StatelessWidget {
+  final List<Metadata> listMusics;
+
+
+  const ListViewMusic({
+    super.key,
+    required this.listMusics,
+  });
+
+
+  @override
+  Widget build(BuildContext context) {
     final selectedColor = Colors.blue;
 
     void showContextMenu(BuildContext context, Metadata music, Offset position) {
@@ -30,48 +63,30 @@ class ListMusics extends StatelessWidget {
         ],
       );
     }
-
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ValueListenableBuilder(
-        valueListenable: musicDataService.musicsValueNotifier,
-        builder: (context, value, child) {
-          switch (value['status']) {
-            case TableStatus.loading:
-              return Center(child: CircularProgressIndicator());
-            case TableStatus.error:
-            return Center(
-              child: Text("Error"),
-            );
-            case TableStatus.ready:
-              return ListView.builder(
-                itemCount:value['data'].length,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onSecondaryTapDown: (details) {
-                      showContextMenu(context, value['data'][index], details.globalPosition);
-                    },
-                    onTap: () async{
-                      musicDataService.playMusicFromMetadata(value['data'][index]);
-                    },
-
-                    child: ValueListenableBuilder(
-                      valueListenable: musicDataService.actualPlayingMusic,
-                      builder: (context, actualPlaying, child) {
-                        final music = value['data'][index];
-                        final isActualPlaying = musicDataService.actualPlayingMusic.value == music;
-                        return MusicTile(
-                          music: music,
-                          color: isActualPlaying  ? selectedColor : null,);
-                      }
-                    ),
-                    
-                  );
-                }
-              );
-          } return Container();
-        }
-      )
+    return ListView.builder(
+      itemCount:listMusics.length,
+      itemBuilder: (context, index) {
+        return InkWell(
+          onSecondaryTapDown: (details) {
+            showContextMenu(context, listMusics[index], details.globalPosition);
+          },
+          onTap: () async{
+            musicDataService.playMusicFromMetadata(listMusics[index]);
+          },
+    
+          child: ValueListenableBuilder(
+            valueListenable: musicDataService.actualPlayingMusic,
+            builder: (context, actualPlaying, child) {
+              final music = listMusics[index];
+              final isActualPlaying = musicDataService.actualPlayingMusic.value == music;
+              return MusicTile(
+                music: music,
+                color: isActualPlaying  ? selectedColor : null,);
+            }
+          ),
+          
+        );
+      }
     );
   }
 }
