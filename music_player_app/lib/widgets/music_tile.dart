@@ -4,13 +4,15 @@ import 'package:music_player_app/data/music_data_service.dart';
 
 class MusicTile extends StatelessWidget {
   final Metadata music;
+  final MaterialColor? color;
   const MusicTile({
-    super.key, required this.music,
+    super.key, required this.music, required this.color,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      tileColor: color,
       title: Text("${music.trackName}", style: TextStyle(fontSize: 20),),
       subtitle: Text("${music.albumArtistName} - ${music.albumName}", style: TextStyle(fontSize: 15)),
       trailing: Column(

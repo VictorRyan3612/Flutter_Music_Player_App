@@ -9,6 +9,8 @@ class ListMusics extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final selectedColor = Colors.blue;
+
     void showContextMenu(BuildContext context, Metadata music, Offset position) {
       showMenu(
         context: context,
@@ -49,10 +51,21 @@ class ListMusics extends StatelessWidget {
                     onSecondaryTapDown: (details) {
                       showContextMenu(context, value['data'][index], details.globalPosition);
                     },
-                    child: MusicTile(music: value['data'][index]),
                     onTap: () async{
                       musicDataService.playMusicFromMetadata(value['data'][index]);
                     },
+
+                    child: ValueListenableBuilder(
+                      valueListenable: musicDataService.actualPlayingMusic,
+                      builder: (context, actualPlaying, child) {
+                        final music = value['data'][index];
+                        final isActualPlaying = musicDataService.actualPlayingMusic.value == music;
+                        return MusicTile(
+                          music: music,
+                          color: isActualPlaying  ? selectedColor : null,);
+                      }
+                    ),
+                    
                   );
                 }
               );
