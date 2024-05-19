@@ -80,6 +80,49 @@ class DesktopHomeScreen extends StatelessWidget {
               children: [
                 Row(
                   children: [
+                    ValueListenableBuilder (
+                      valueListenable: settingsService.isSelecting,
+                      builder: (context, value, child) {
+                        if (value) {
+                          return IconButton(
+                            tooltip: 'Criar nova playlist',
+                            onPressed: () {
+                              final controller = TextEditingController();
+                              showDialog(
+                                context: context, builder: (context) {
+                                  return AlertDialog(
+                                    title: Text('Titulo'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed:(){
+                                          Navigator.of(context).pop();
+                                        }, 
+                                        child: Text('Cancelar')
+                                      ),
+                                      TextButton(
+                                        onPressed:(){
+                                          musicDataService.createPlaylist(controller.text, musicDataService.newplaylist.value);
+                                          musicDataService.newplaylist.value = [];
+                                          Navigator.of(context).pop();
+                                        }, 
+                                        child: Text('Confirmar')
+                                      )
+                                    ],
+                                    content: Form(child: TextField(
+                                      controller: controller,
+                                      autofocus: true,
+                                    )),
+                                  );
+                                },);
+                              // musicDataService.newplaylist.value.forEach((element) {print(element.trackName);});
+                            }, 
+                            icon: Icon(Icons.playlist_add)
+                          );
+                        } else {
+                          return Container();
+                        }
+                      }
+                    ),
                     Expanded(
                       child: DropdownWidget()
                     ),
