@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 
@@ -76,37 +77,60 @@ class ListViewMusic extends HookWidget {
           onExit: (_) {
             selectedItem.value = -1;
           },
-          child: Container(
-            color: listSelected.value.contains(listMusics[index]) ? selectedColor : null,
-            child: InkWell(
-              onLongPress: () {
-                isSelecting.value =true;
-                listSelected.value.add(listMusics[index]);
-              },
-              onSecondaryTapDown: (details) {
-                showContextMenu(context, listMusics[index], details.globalPosition);
-              },
-              onTap: () async{
-                if (isSelecting.value) {
-                  listSelected.value.add(listMusics[index]);
-                } else {
-                  musicDataService.playMusicFromMetadata(listMusics[index]);
+          child: ValueListenableBuilder(
+            valueListenable: listSelected,
+            builder: (context, listSelectedValue, child) {
+              return Container(
+                color: listSelectedValue.contains(listMusics[index]) ? selectedColor : null,
+                child: InkWell(
+                  onLongPress: () {
+                    isSelecting.value =true;
+                    listSelectedValue.add(listMusics[index]);
+                  },
+                  onSecondaryTapDown: (details) {
+                    showContextMenu(context, listMusics[index], details.globalPosition);
+                  },
+                  onTap: () async{
+                    if (isSelecting.value) {
+                      listSelectedValue.add(listMusics[index]);
+                    } else {
+                      musicDataService.playMusicFromMetadata(listMusics[index]);
+                      
+                    }
+                  },
+                    
+                  child: Row(
+                    children: [
+                      selectedItem.value == index ? Checkbox(
+                        activeColor: listSelectedValue.contains(listMusics[index]) ? Colors.red : null,
+                        value: listSelectedValue.contains(listMusics[index]), 
+                        onChanged: (newValue) {
+                          if (newValue!) {
+                            listSelectedValue.add(listMusics[index]);
+                          } else {
+                            listSelectedValue.remove(listMusics[index]);
+                          }
+                          selectedItem.value = index;
+                        },
+                      ) : Container(),
+                      Expanded(
+                        child: ValueListenableBuilder(
+                          valueListenable: musicDataService.actualPlayingMusic,
+                          builder: (context, actualPlaying, child) {
+                            final music = listMusics[index];
+                            final isActualPlaying = musicDataService.actualPlayingMusic.value == music;
+                            return MusicTile(
+                              music: music,
+                              color: isActualPlaying  ? selectedColor : null,);
+                          }
+                        ),
+                      ),
+                    ],
+                  ),
                   
-                }
-              },
-                
-              child: ValueListenableBuilder(
-                valueListenable: musicDataService.actualPlayingMusic,
-                builder: (context, actualPlaying, child) {
-                  final music = listMusics[index];
-                  final isActualPlaying = musicDataService.actualPlayingMusic.value == music;
-                  return MusicTile(
-                    music: music,
-                    color: isActualPlaying  ? selectedColor : null,);
-                }
-              ),
-              
-            ),
+                ),
+              );
+            }
           ),
         );
       }
