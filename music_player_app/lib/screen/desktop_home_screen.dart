@@ -26,7 +26,9 @@ class DesktopHomeScreen extends StatelessWidget {
                 title: Text("Home"), 
                 onTap: (){
                   settingsService.listingTags.value = false;
+                  settingsService.listingPlaylist = false;
                   musicDataService.musicsValueNotifier.value['data'] = musicDataService.originalList;
+                  
                   settingsService.tag.value = '';
                 }
               ),
@@ -35,6 +37,7 @@ class DesktopHomeScreen extends StatelessWidget {
                 title: Text("Artistas"), 
                 onTap: (){
                   settingsService.listingTags.value = true;
+                  settingsService.listingPlaylist = false;
                   musicDataService.actualTag.value = musicDataService.setAlbumArtistName;
                 }
               ),
@@ -43,6 +46,7 @@ class DesktopHomeScreen extends StatelessWidget {
                 title: Text("Albums"), 
                 onTap: (){
                   settingsService.listingTags.value = true;
+                  settingsService.listingPlaylist = false;
                   musicDataService.actualTag.value = musicDataService.setAlbumName;
                 }
               ),
@@ -51,6 +55,7 @@ class DesktopHomeScreen extends StatelessWidget {
                 title: Text("Generos"), 
                 onTap: (){
                   settingsService.listingTags.value = true;
+                  settingsService.listingPlaylist = false;
                   musicDataService.actualTag.value = musicDataService.setGenders;
                 }
               ),
@@ -58,6 +63,9 @@ class DesktopHomeScreen extends StatelessWidget {
                 icon: Icon(Icons.playlist_play), 
                 title: Text("Playlist"), 
                 onTap: (){
+                  settingsService.listingTags.value = true;
+                  settingsService.listingPlaylist = true;
+                  musicDataService.actualTag.value = musicDataService.setPlaylistsNames;
                   
                 }
               ),

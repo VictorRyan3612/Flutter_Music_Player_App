@@ -86,6 +86,7 @@ class MusicDataService{
     
     file.writeAsStringSync(jsonString);
     playlists.value.add(mapPlaylist);
+    setPlaylistsNames.add(mapPlaylist['name']);
   }
 
   void loadPlaylists() async {
@@ -101,6 +102,22 @@ class MusicDataService{
       setPlaylistsNames.add(listMetada['name']);
 
     });
+  }
+
+  void listplaylist(int index){
+    List<Metadata> objectsOriginals = originalList;
+    if (objectsOriginals.isEmpty) return;
+
+    List<Metadata> objectsFiltered = [];
+    List test = playlists.value[index+1]['playlist'];
+    
+    for (var objetoInd in objectsOriginals) {
+      if (test.contains(objetoInd.filePath)) {
+          objectsFiltered.add(objetoInd);
+      }
+    }
+
+    saveValueNotifier(objectsFiltered);
   }
 
   bool isMp3(String file){

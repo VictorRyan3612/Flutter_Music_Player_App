@@ -30,8 +30,14 @@ class ListTag extends StatelessWidget {
                   return ListTile(
                     title: Text(listTag[index]),
                     onTap: () {
-                      musicDataService.filterCurrentState(listTag[index]);
-                      settingsService.tag.value = listTag[index];
+                      if (settingsService.listingPlaylist) {
+                        settingsService.tag.value = listTag[index];
+                        musicDataService.listplaylist(index);
+                      } else {
+                        musicDataService.filterCurrentState(listTag[index]);
+                        settingsService.tag.value = listTag[index];
+                        
+                      }
                     },
                   );
                 },
