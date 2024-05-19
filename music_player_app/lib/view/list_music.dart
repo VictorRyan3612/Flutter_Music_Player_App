@@ -67,6 +67,12 @@ class ListViewMusic extends HookWidget {
         ],
       );
     }
+    void modifyList(Metadata metadata, Function(List<Metadata> list, Metadata metadata) function){
+      final lista = List<Metadata>.from(listSelected.value);
+      function(lista, metadata);
+      listSelected.value = lista;
+    }
+
     return ListView.builder(
       itemCount:listMusics.length,
       itemBuilder: (context, index) {
@@ -85,14 +91,14 @@ class ListViewMusic extends HookWidget {
                 child: InkWell(
                   onLongPress: () {
                     isSelecting.value =true;
-                    listSelectedValue.add(listMusics[index]);
+                    modifyList(listMusics[index], (list, metadata) => list.add(metadata));
                   },
                   onSecondaryTapDown: (details) {
                     showContextMenu(context, listMusics[index], details.globalPosition);
                   },
                   onTap: () async{
                     if (isSelecting.value) {
-                      listSelectedValue.add(listMusics[index]);
+                      modifyList(listMusics[index], (list, metadata) => list.add(metadata));
                     } else {
                       musicDataService.playMusicFromMetadata(listMusics[index]);
                       
@@ -106,9 +112,9 @@ class ListViewMusic extends HookWidget {
                         value: listSelectedValue.contains(listMusics[index]), 
                         onChanged: (newValue) {
                           if (newValue!) {
-                            listSelectedValue.add(listMusics[index]);
+                            modifyList(listMusics[index], (list, metadata) => list.add(metadata));
                           } else {
-                            listSelectedValue.remove(listMusics[index]);
+                            modifyList(listMusics[index], (list, metadata) => list.remove(metadata));
                           }
                           selectedItem.value = index;
                         },
