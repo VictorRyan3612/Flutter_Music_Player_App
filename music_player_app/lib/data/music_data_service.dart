@@ -26,7 +26,7 @@ class MusicDataService{
   ValueNotifier<List<Map<String,dynamic>>> playlists = ValueNotifier([
     {
       'name': '',
-      'playlist': <Metadata>[]
+      'playlist': []
     }
   ]);
   ValueNotifier<List<Metadata>> newplaylist = ValueNotifier([]);
@@ -37,6 +37,8 @@ class MusicDataService{
   Set<String> setAlbumName = {};
   Set<String> setAlbumArtistName = {};
   Set<String> setGenders = {};
+  Set<String> setPlaylistsNames = {};
+
   ValueNotifier<Set<String>> actualTag = ValueNotifier({});
 
   bool shuffle = true;
@@ -72,9 +74,18 @@ class MusicDataService{
     directoryApp.createSync();
 
     File file = File('${directoryApp.path}/$name.dat');
-    String jsonString = json.encode(list);
+    List<String> listPath =[];
+    list.forEach((element) {
+      listPath.add(element.filePath!);
+    });
+    Map<String,dynamic> mapPlaylist = {
+      'name': name,
+      'playlist': listPath
+    };
+    String jsonString = json.encode(mapPlaylist);
     
     file.writeAsStringSync(jsonString);
+    playlists.value.add(mapPlaylist);
   }
 
   void loadPlaylists() async {
@@ -84,14 +95,12 @@ class MusicDataService{
 
     directoryApp.listSync().forEach((element) { 
       File file = File(element.path);
-      String name = file.path.split('//').last;
       String content = file.readAsStringSync();
-      List<dynamic> listMetada = json.decode(content);
-      playlists.value.add({'name': name, 'playlist': listMetada});
+      var listMetada = json.decode(content);
+      playlists.value.add({'name': listMetada['name'], 'playlist': listMetada['playlist']});
+      setPlaylistsNames.add(listMetada['name']);
 
     });
-
-    // File file = File('${directoryApp.path}/Playlists/notas.dat');
   }
 
   bool isMp3(String file){
