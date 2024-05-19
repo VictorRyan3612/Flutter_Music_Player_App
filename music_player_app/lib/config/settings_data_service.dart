@@ -13,6 +13,7 @@ class SettingsService{
   ValueNotifier<bool> shuffle = ValueNotifier(true);
   ValueNotifier<bool> repeat = ValueNotifier(false);
   ValueNotifier<bool> addRepeat = ValueNotifier(false);
+  ValueNotifier<bool> isSelecting = ValueNotifier(false);
   
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();

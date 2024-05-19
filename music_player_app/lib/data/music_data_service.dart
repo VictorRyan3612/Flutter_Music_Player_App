@@ -29,7 +29,8 @@ class MusicDataService{
       'playlist': <Metadata>[]
     }
   ]);
-
+  ValueNotifier<List<Metadata>> newplaylist = ValueNotifier([]);
+  
   ValueNotifier<Metadata> actualPlayingMusic = ValueNotifier(Metadata());
   List<Metadata> originalList = [];
 

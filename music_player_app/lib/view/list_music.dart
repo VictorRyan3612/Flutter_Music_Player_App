@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
+import 'package:music_player_app/config/settings_data_service.dart';
 
 import 'package:music_player_app/data/music_data_service.dart';
 import 'package:music_player_app/widgets/music_tile.dart';
@@ -24,7 +25,10 @@ class ListMusics extends StatelessWidget {
               child: Text("Error"),
             );
             case TableStatus.ready:
-              return ListViewMusic(listMusics: value['data'],);
+              return ListViewMusic(listMusics: value['data'],
+              isSelecting: settingsService.isSelecting,
+              playlist: musicDataService.newplaylist,
+              );
           } return Container();
         }
       )
@@ -34,19 +38,21 @@ class ListMusics extends StatelessWidget {
 
 class ListViewMusic extends HookWidget {
   final List<Metadata> listMusics;
-
-
+  final ValueNotifier<bool>? isSelecting;
+  final ValueNotifier<List<Metadata>>? playlist;
   const ListViewMusic({
     super.key,
     required this.listMusics,
+    this.isSelecting,
+    this.playlist
   });
 
 
   @override
   Widget build(BuildContext context) {
     final selectedColor = Colors.blue;
-    final listSelected = useState([]);
-    final isSelecting = useState(false);
+    final listSelected = playlist ?? useState([]);
+    final isSelectingState = isSelecting ?? useState(false);
     final selectedItem = useState<int>(-1);
     void showContextMenu(BuildContext context, Metadata music, Offset position) {
       showMenu(
@@ -90,15 +96,18 @@ class ListViewMusic extends HookWidget {
                 color: listSelectedValue.contains(listMusics[index]) ? selectedColor : null,
                 child: InkWell(
                   onLongPress: () {
-                    isSelecting.value =true;
+                    isSelectingState.value =true;
                     modifyList(listMusics[index], (list, metadata) => list.add(metadata));
                   },
                   onSecondaryTapDown: (details) {
                     showContextMenu(context, listMusics[index], details.globalPosition);
                   },
                   onTap: () async{
-                    if (isSelecting.value) {
+                    if (isSelectingState.value) {
                       modifyList(listMusics[index], (list, metadata) => list.add(metadata));
+                      if (listSelected.value.isEmpty) {
+                        isSelectingState.value = false;
+                      }
                     } else {
                       musicDataService.playMusicFromMetadata(listMusics[index]);
                       
@@ -111,10 +120,14 @@ class ListViewMusic extends HookWidget {
                         activeColor: listSelectedValue.contains(listMusics[index]) ? Colors.red : null,
                         value: listSelectedValue.contains(listMusics[index]), 
                         onChanged: (newValue) {
+                          isSelectingState.value = true;
                           if (newValue!) {
                             modifyList(listMusics[index], (list, metadata) => list.add(metadata));
                           } else {
                             modifyList(listMusics[index], (list, metadata) => list.remove(metadata));
+                          }
+                          if (listSelected.value.isEmpty) {
+                            isSelectingState.value = false;
                           }
                           selectedItem.value = index;
                         },
