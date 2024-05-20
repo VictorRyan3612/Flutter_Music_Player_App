@@ -5,6 +5,7 @@ import 'package:music_player_app/config/settings_data_service.dart';
 import 'package:music_player_app/data/music_data_service.dart';
 import 'package:music_player_app/view/list_music.dart';
 import 'package:music_player_app/view/list_tag.dart';
+import 'package:music_player_app/widgets/app_bar_buttons.dart';
 import 'package:music_player_app/widgets/dropdown.dart';
 import 'package:music_player_app/widgets/lateral_bar.dart';
 
@@ -27,7 +28,7 @@ class DesktopHomeScreen extends StatelessWidget {
                 onTap: (){
                   settingsService.listingTags.value = false;
                   settingsService.listingPlaylist = false;
-                  musicDataService.musicsValueNotifier.value['data'] = musicDataService.originalList;
+                  musicDataService.saveValueNotifier(musicDataService.originalList);
                   
                   settingsService.tag.value = '';
                 }
@@ -86,6 +87,7 @@ class DesktopHomeScreen extends StatelessWidget {
             flex: 12,
             child: Column(
               children: [
+                AppBarButtons(),
                 Row(
                   children: [
                     ValueListenableBuilder (
