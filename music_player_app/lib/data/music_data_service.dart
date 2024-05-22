@@ -249,12 +249,12 @@ class MusicDataService{
       count++;
       if(count == 50){
         count = 0;
-        sortMusic();
+        sortMusicByField();
         saveValueNotifier(musicsValueNotifier.value['data']);
       }
     }
     originalList = musicsValueNotifier.value['data'];
-    sortMusic();
+    sortMusicByField();
     saveValueNotifier(musicsValueNotifier.value['data']);
     // print(musicsValueNotifier.value['data']);
     musicsValueNotifier.value['status'] = TableStatus.ready;
@@ -356,7 +356,7 @@ class MusicDataService{
   }
 
 
-  void sortMusic([String field = 'trackName']){
+  void sortMusicByField([String field = 'trackName']){
     List<Metadata> listMusic = musicsValueNotifier.value['data'];
     listMusic.sort((a, b) {
       

@@ -51,8 +51,8 @@ class ListViewRadioSort extends HookWidget {
             groupValue: currentOption.value,
             onChanged: (value) {
               currentOption.value = value!;
+              musicDataService.sortMusicByField(value);
               musicDataService.ordenableFieldActual = currentOption.value;
-              musicDataService.sortMusic(musicDataService.ordenableFieldActual);
               Navigator.of(context).pop();
             },
           );

@@ -28,7 +28,7 @@ class DropdownWidget extends HookWidget {
         if (newValue != null) {
           textValue.value = newValue;
         }
-        musicDataService.sortMusic(newValue!);
+        musicDataService.sortMusicByField(newValue!);
       },
       items: dropdownMenuItems,
     );
