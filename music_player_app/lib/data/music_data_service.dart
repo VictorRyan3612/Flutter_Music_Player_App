@@ -31,6 +31,12 @@ class MusicDataService{
   ]);
   ValueNotifier<List<Metadata>> newplaylist = ValueNotifier([]);
   
+  var ordenableField = <String>[
+    'trackName',
+    'albumName',
+    'albumArtistName'
+  ];
+  var ordenableFieldActual = '';
   ValueNotifier<Metadata> actualPlayingMusic = ValueNotifier(Metadata());
   List<Metadata> originalList = [];
 

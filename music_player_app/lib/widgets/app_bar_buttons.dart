@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:music_player_app/data/music_data_service.dart';
 
 class AppBarButtons extends StatelessWidget implements PreferredSizeWidget{
@@ -12,6 +13,51 @@ class AppBarButtons extends StatelessWidget implements PreferredSizeWidget{
     return AppBar(
       backgroundColor: Colors.black26,
       title: NumberMusics(),
+      actions: [
+        IconButton(
+          tooltip: 'Ordenar',
+          icon: Icon(Icons.sort_by_alpha_outlined),  
+          onPressed: () {
+            showDialog(context: context, 
+              builder: (context) {
+                return AlertDialog(
+                  content: ListViewRadioSort(),
+                );
+              },
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class ListViewRadioSort extends HookWidget {
+  const ListViewRadioSort({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    var currentOption = useState(musicDataService.ordenableFieldActual);
+
+    return SizedBox(
+      width: double.minPositive, 
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: musicDataService.ordenableField.length,
+        itemBuilder: (context, index) {
+          return RadioListTile(
+            title: Text(musicDataService.ordenableField[index]),
+            value: musicDataService.ordenableField[index],
+            groupValue: currentOption.value,
+            onChanged: (value) {
+              currentOption.value = value!;
+              musicDataService.ordenableFieldActual = currentOption.value;
+              musicDataService.sortMusic(musicDataService.ordenableFieldActual);
+              Navigator.of(context).pop();
+            },
+          );
+        },
+      ),
     );
   }
 }
