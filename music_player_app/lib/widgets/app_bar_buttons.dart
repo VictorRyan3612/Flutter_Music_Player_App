@@ -22,6 +22,20 @@ class AppBarButtons extends StatelessWidget implements PreferredSizeWidget{
               builder: (context) {
                 return AlertDialog(
                   content: ListViewRadioSort(),
+                  actions: [
+                    TextButton(
+                    onPressed:(){
+                      Navigator.of(context).pop();
+                    }, 
+                    child: Text('Cancelar')
+                  ),
+                  TextButton(
+                    onPressed:(){
+                      musicDataService.sortMusicByField(musicDataService.ordenableFieldActual);
+                    }, 
+                    child: Text('Inverter')
+                  )
+                  ],
                 );
               },
             );

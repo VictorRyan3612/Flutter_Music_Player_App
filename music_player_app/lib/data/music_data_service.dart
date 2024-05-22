@@ -52,7 +52,8 @@ class MusicDataService{
   final player = AudioPlayer();
   bool firstPlay = true;
   bool addRepeat = false;
-
+  bool isSorted = false;
+  
   setConfigs({
     required List<String> listFoldersPaths, 
     required bool addRepeat, 
@@ -358,12 +359,22 @@ class MusicDataService{
 
   void sortMusicByField([String field = 'trackName']){
     List<Metadata> listMusic = musicsValueNotifier.value['data'];
-    listMusic.sort((a, b) {
-      
-      String valueA = a.toJson()[field];
-      String valueB = b.toJson()[field];
-      return valueA.compareTo(valueB);
-    },);
+
+    if (field != ordenableFieldActual) {
+      isSorted = false;
+    }
+
+    if (isSorted) {
+      listMusic = List.from(listMusic.reversed);
+    } 
+    else {
+      listMusic.sort((a, b) {
+        String valueA = a.toJson()[field];
+        String valueB = b.toJson()[field];
+        return valueA.compareTo(valueB);
+      });
+      isSorted = true;
+    }
     musicsValueNotifier.value['data'] = listMusic;
     saveValueNotifier(musicsValueNotifier.value['data']);
   }
