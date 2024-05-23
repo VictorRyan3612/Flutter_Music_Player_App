@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
+import 'package:flutter_vicr_widgets/flutter_vicr_widgets.dart';
 import 'package:music_player_app/config/settings_data_service.dart';
 
 import 'package:music_player_app/data/music_data_service.dart';
@@ -25,10 +26,15 @@ class ListMusics extends StatelessWidget {
               child: Text("Error"),
             );
             case TableStatus.ready:
-              return ListViewMusic(listMusics: value['data'],
-              isSelecting: settingsService.isSelecting,
-              playlist: musicDataService.newplaylist,
-              );
+            return DataTableWidget(
+              columns: [],
+              objects: [],
+              columnsNames: [],
+            );
+              // return ListViewMusic(listMusics: value['data'],
+              // isSelecting: settingsService.isSelecting,
+              // playlist: musicDataService.newplaylist,
+              // );
           } return Container();
         }
       )
@@ -116,7 +122,9 @@ class ListViewMusic extends HookWidget {
                     
                   child: Row(
                     children: [
-                      selectedItem.value == index ? Checkbox(
+                      SizedBox(
+                        width: 25,
+                        child: selectedItem.value == index ? Checkbox(
                         activeColor: listSelectedValue.contains(listMusics[index]) ? Colors.red : null,
                         value: listSelectedValue.contains(listMusics[index]), 
                         onChanged: (newValue) {
@@ -132,6 +140,7 @@ class ListViewMusic extends HookWidget {
                           selectedItem.value = index;
                         },
                       ) : Container(),
+                      ),
                       Expanded(
                         child: ValueListenableBuilder(
                           valueListenable: musicDataService.actualPlayingMusic,
