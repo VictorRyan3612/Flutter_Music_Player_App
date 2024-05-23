@@ -1,15 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:music_player_app/config/settings_data_service.dart';
 import 'package:music_player_app/data/music_data_service.dart';
 import 'package:music_player_app/view/list_music.dart';
 import 'package:music_player_app/view/list_tag.dart';
 import 'package:music_player_app/widgets/app_bar_buttons.dart';
 import 'package:music_player_app/widgets/dropdown.dart';
-import 'package:music_player_app/widgets/lateral_bar.dart';
-
 import 'package:music_player_app/widgets/sheet_tile.dart';
+
+import 'package:flutter_vicr_widgets/flutter_vicr_widgets.dart';
 
 
 class DesktopHomeScreen extends StatelessWidget {
