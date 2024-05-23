@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_vicr_widgets/flutter_vicr_widgets.dart';
 
 import 'package:music_player_app/config/settings_data_service.dart';
 import 'package:music_player_app/data/music_data_service.dart';
@@ -68,19 +67,6 @@ class DesktopHomeScreen extends StatelessWidget {
                           return Container();
                         }
                       }
-                    ),
-                    Expanded(
-                      child: DropdownWidget(
-                        onChanged: (newValue) {
-                          print(newValue);
-                          musicDataService.sortMusicByField(newValue!);
-                        },
-                        menuItems: [
-                          'trackName',
-                          'albumName',
-                          'albumArtistName'
-                        ],
-                      )
                     ),
                     Expanded(
                       child: TextField(
