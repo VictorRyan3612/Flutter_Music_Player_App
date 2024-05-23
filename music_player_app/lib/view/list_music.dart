@@ -26,23 +26,33 @@ class ListMusics extends StatelessWidget {
               child: Text("Error"),
             );
             case TableStatus.ready:
-            return SingleChildScrollView(
-              child: DataTableWidget(
-                accessCallback: (obj, property) {
-                  return obj.toJson()[property];
-                },
-                columns: musicDataService.ordenableField,
-                objects: musicDataService.musicsValueNotifier.value['data'],
-                sortCallback: (value){
-                  musicDataService.sortMusicByField(value);
-                },
-                // columnsNames: [],
-              ),
+            return ValueListenableBuilder(
+              valueListenable: settingsService.isTable,
+              builder: (context, valueIsTable, child) {
+                if (valueIsTable) {
+                  return SingleChildScrollView(
+                  child: DataTableWidget(
+                    accessCallback: (obj, property) {
+                      return obj.toJson()[property];
+                    },
+                    columns: musicDataService.ordenableField,
+                    objects: musicDataService.musicsValueNotifier.value['data'],
+                    sortCallback: (value){
+                      musicDataService.sortMusicByField(value);
+                    },
+                    // columnsNames: [],
+                  ),
+                );
+                } else {
+                  return ListViewMusic(
+                    listMusics: value['data'],
+                    isSelecting: settingsService.isSelecting,
+                    playlist: musicDataService.newplaylist,
+                  );
+                }
+                
+              }
             );
-              // return ListViewMusic(listMusics: value['data'],
-              // isSelecting: settingsService.isSelecting,
-              // playlist: musicDataService.newplaylist,
-              // );
           } return Container();
         }
       )
