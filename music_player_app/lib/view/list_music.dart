@@ -26,10 +26,18 @@ class ListMusics extends StatelessWidget {
               child: Text("Error"),
             );
             case TableStatus.ready:
-            return DataTableWidget(
-              columns: [],
-              objects: [],
-              columnsNames: [],
+            return SingleChildScrollView(
+              child: DataTableWidget(
+                accessCallback: (obj, property) {
+                  return obj.toJson()[property];
+                },
+                columns: musicDataService.ordenableField,
+                objects: musicDataService.musicsValueNotifier.value['data'],
+                sortCallback: (value){
+                  musicDataService.sortMusicByField(value);
+                },
+                // columnsNames: [],
+              ),
             );
               // return ListViewMusic(listMusics: value['data'],
               // isSelecting: settingsService.isSelecting,
