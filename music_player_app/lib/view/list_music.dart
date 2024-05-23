@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
-import 'package:flutter_vicr_widgets/flutter_vicr_widgets.dart';
-import 'package:music_player_app/config/settings_data_service.dart';
 
+import 'package:music_player_app/config/settings_data_service.dart';
 import 'package:music_player_app/data/music_data_service.dart';
 import 'package:music_player_app/widgets/music_tile.dart';
+
+import 'package:flutter_vicr_widgets/flutter_vicr_widgets.dart';
 
 class ListMusics extends StatelessWidget {
   const ListMusics({super.key});
@@ -32,6 +32,9 @@ class ListMusics extends StatelessWidget {
                 if (valueIsTable) {
                   return SingleChildScrollView(
                   child: DataTableWidget(
+                    onTapRow: (item) {
+                      musicDataService.playMusicFromMetadata(item);
+                    },
                     accessCallback: (obj, property) {
                       return obj.toJson()[property];
                     },
