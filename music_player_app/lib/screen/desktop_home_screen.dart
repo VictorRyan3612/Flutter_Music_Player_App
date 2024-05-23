@@ -6,9 +6,8 @@ import 'package:music_player_app/view/list_music.dart';
 import 'package:music_player_app/view/list_tag.dart';
 import 'package:music_player_app/widgets/app_bar_buttons.dart';
 import 'package:music_player_app/widgets/dropdown.dart';
+import 'package:music_player_app/widgets/lateral_bar.dart';
 import 'package:music_player_app/widgets/sheet_tile.dart';
-
-import 'package:flutter_vicr_widgets/flutter_vicr_widgets.dart';
 
 
 class DesktopHomeScreen extends StatelessWidget {
@@ -19,69 +18,7 @@ class DesktopHomeScreen extends StatelessWidget {
     return Scaffold(
       body: Row(
         children: [
-          ExtensibleLateralBar(
-            items: [
-              ExtensibleLateralBarItem(
-                icon: Icon(Icons.home), 
-                title: Text("Home"), 
-                onTap: (){
-                  settingsService.listingTags.value = false;
-                  settingsService.listingPlaylist = false;
-                  musicDataService.saveValueNotifier(musicDataService.originalList);
-                  
-                  settingsService.tag.value = '';
-                }
-              ),
-              ExtensibleLateralBarItem(
-                icon: Icon(Icons.people), 
-                title: Text("Artistas"), 
-                onTap: (){
-                  settingsService.listingTags.value = true;
-                  settingsService.listingPlaylist = false;
-                  musicDataService.actualTag.value = musicDataService.setAlbumArtistName;
-                }
-              ),
-              ExtensibleLateralBarItem(
-                icon: Icon(Icons.library_music), 
-                title: Text("Albums"), 
-                onTap: (){
-                  settingsService.listingTags.value = true;
-                  settingsService.listingPlaylist = false;
-                  musicDataService.actualTag.value = musicDataService.setAlbumName;
-                }
-              ),
-              ExtensibleLateralBarItem(
-                icon: Icon(Icons.music_note), 
-                title: Text("Generos"), 
-                onTap: (){
-                  settingsService.listingTags.value = true;
-                  settingsService.listingPlaylist = false;
-                  musicDataService.actualTag.value = musicDataService.setGenders;
-                }
-              ),
-              ExtensibleLateralBarItem(
-                icon: Icon(Icons.playlist_play), 
-                title: Text("Playlist"), 
-                onTap: (){
-                  settingsService.listingTags.value = true;
-                  settingsService.listingPlaylist = true;
-                  musicDataService.actualTag.value = musicDataService.setPlaylistsNames;
-                  
-                }
-              ),
-            ],
-            trailingItems: [
-              ExtensibleLateralBarItem(
-                  icon: Icon(Icons.settings),
-                  title: Text("Configuracoes"),
-                  onTap: () {
-                    Navigator.pushNamed(context, '/configs');
-                  },
-                )
-
-            ],
-            
-          ),
+          LateralBar(),
           Expanded(
             flex: 12,
             child: Column(
