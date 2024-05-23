@@ -39,6 +39,23 @@ class ConfigScreen extends StatelessWidget {
                   ),
                   Divider(),
                   ListTile(
+                    title: Text("Modo de Visualização em Tabela"),
+                    trailing: ValueListenableBuilder(
+                      valueListenable: settingsService.isTable,
+                      builder: (context, valueIsTable, child) {
+                        return Switch(
+                          value: valueIsTable, 
+                          onChanged: (valueOnChanged) {
+                            settingsService.isTable.value = valueOnChanged;
+                            settingsService.saveSettings();
+                          },
+                        );
+                      }
+                    ),
+                    
+                  ),
+                  Divider(),
+                  ListTile(
                     title: Text("Repetição da musica na fila de reprodução se em loop"),
                     subtitle: Text("Com loop ativado, a música deve aparecer mais uma vez na fila de reprodução"),
                     trailing: ValueListenableBuilder(

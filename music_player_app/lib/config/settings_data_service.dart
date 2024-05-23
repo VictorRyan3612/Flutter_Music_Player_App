@@ -15,6 +15,8 @@ class SettingsService{
   ValueNotifier<bool> repeat = ValueNotifier(false);
   ValueNotifier<bool> addRepeat = ValueNotifier(false);
   ValueNotifier<bool> isSelecting = ValueNotifier(false);
+  ValueNotifier<bool> isTable = ValueNotifier(false);
+
 
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
@@ -35,6 +37,8 @@ class SettingsService{
     final addRepeat = prefs.getBool('addRepeat') ?? settingsService.addRepeat.value;
     settingsService.addRepeat.value = addRepeat;
     
+    final isTable = prefs.getBool('isTable') ?? settingsService.isTable.value;
+    settingsService.isTable.value = isTable;
 
     final listFoldersPaths = prefs.getStringList('listFoldersPaths') ?? settingsService.listFoldersPaths.value;
     settingsService.listFoldersPaths.value = listFoldersPaths;
@@ -48,6 +52,7 @@ class SettingsService{
     prefs.setBool('addRepeat', addRepeat.value);
     prefs.setBool('repeat', repeat.value);
     prefs.setBool('shuffle', shuffle.value);
+    prefs.setBool('isTable', isTable.value);
     prefs.setStringList('listFoldersPaths', listFoldersPaths.value);
   }
   
