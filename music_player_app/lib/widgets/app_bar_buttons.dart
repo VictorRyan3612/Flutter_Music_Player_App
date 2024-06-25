@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:music_player_app/config/settings_data_service.dart';
 import 'package:music_player_app/data/music_data_service.dart';
 
 class AppBarButtons extends StatelessWidget implements PreferredSizeWidget{
@@ -14,6 +15,21 @@ class AppBarButtons extends StatelessWidget implements PreferredSizeWidget{
       backgroundColor: Colors.black26,
       title: NumberMusics(),
       actions: [
+        IconButton(
+          tooltip: 'Selecionar tudo',
+          icon: Icon(Icons.select_all),
+          onPressed: () {
+            if (settingsService.isSelecting.value && musicDataService.newplaylist.value == musicDataService.musicsValueNotifier.value['data']) {
+              musicDataService.newplaylist.value = [];
+              settingsService.isSelecting.value = false;
+            } else {
+              settingsService.isSelecting.value = true;
+              musicDataService.newplaylist.value = musicDataService.musicsValueNotifier.value['data'];
+              
+            }
+
+          },
+        ),
         IconButton(
           tooltip: 'Ordenar',
           icon: Icon(Icons.sort_by_alpha_outlined),  
