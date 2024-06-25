@@ -30,6 +30,34 @@ class AppBarButtons extends StatelessWidget implements PreferredSizeWidget{
 
           },
         ),
+        ValueListenableBuilder(
+          valueListenable: settingsService.isSelecting, 
+          builder: (context, value, child) {
+            if (value) {
+              return IconButton(
+                icon: Icon(Icons.all_out),
+                onPressed: () {
+                  if (musicDataService.musicsValueNotifier.value['data'] == musicDataService.newplaylist.value) {
+                    musicDataService.newplaylist.value = [];
+                    settingsService.isSelecting.value = false;
+                  } else {
+                    musicDataService.musicsValueNotifier.value['data'].forEach((element) {
+                    if(musicDataService.newplaylist.value.contains(element)){
+                      musicDataService.newplaylist.value.remove(element);
+                    }
+                    else{
+                      musicDataService.newplaylist.value.add(element);
+                    }
+                  });
+                  }
+                  
+                },
+              );
+            } else {
+              return Container();
+            }
+          },
+        ),
         IconButton(
           tooltip: 'Ordenar',
           icon: Icon(Icons.sort_by_alpha_outlined),  
