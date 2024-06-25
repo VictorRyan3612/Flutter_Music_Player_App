@@ -321,8 +321,13 @@ class MusicDataService{
     actualPlaylist.value['index'] +=1;
   }
 
-  void addNextPlaylist(Metadata metadata){
-    actualPlaylist.value['playlist'].insert(actualPlaylist.value['index']+1,metadata);
+  void addNextPlaylist(List<Metadata> listMetadata){
+    int index = 1;
+    listMetadata.forEach((element) {
+      actualPlaylist.value['playlist'].insert(actualPlaylist.value['index']+index,element);
+      index ++;
+    });
+    // actualPlaylist.value['playlist'].insert(actualPlaylist.value['index']+1,metadata);
   }
 
   void previousMusic(){

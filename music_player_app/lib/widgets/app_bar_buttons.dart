@@ -74,6 +74,13 @@ class AppBarButtons extends StatelessWidget implements PreferredSizeWidget{
                                       });
                                     },
                                   ),
+                                  ListTile(
+                                    title: Text('Reproduzir em seguida'),
+                                    onTap: () {
+                                      musicDataService.addNextPlaylist(musicDataService.newplaylist.value);
+                                      Navigator.of(context).pop();
+                                    },
+                                  )
                                   
                                 ],
                               ),

@@ -94,7 +94,7 @@ class ListViewMusic extends HookWidget {
               title: Text('Reproduzir em seguida'),
             ),
             onTap: () {
-              musicDataService.addNextPlaylist(music);
+              musicDataService.addNextPlaylist([music]);
             },
           ),
         ],
