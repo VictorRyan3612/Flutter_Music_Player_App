@@ -51,8 +51,8 @@ class MainApp extends HookWidget {
         
         '/': (context) => LayoutDecider(
           isMobile: settingsService.isMobile,
-          option1: MobileHomeScreen(),
-          option2: DesktopHomeScreen(),
+          optionMobile: MobileHomeScreen(),
+          optionDesktop: DesktopHomeScreen(),
         ),
         '/configs': (context) => ConfigScreen(
           currentIsDarkMode: currentIsDarkMode,
