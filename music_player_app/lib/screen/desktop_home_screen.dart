@@ -23,20 +23,13 @@ class DesktopHomeScreen extends StatelessWidget {
             child: Column(
               children: [
                 AppBarButtons(),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        onChanged: (value) {
-                          musicDataService.filterCurrentState(value);
-                        },
-                        decoration: InputDecoration(
-                          hintText: "filtrar",
-                        ),
-                      ),
-                    )
-
-                  ],
+                TextField(
+                  onChanged: (value) {
+                    musicDataService.filterCurrentState(value);
+                  },
+                  decoration: InputDecoration(
+                    hintText: "filtrar",
+                  ),
                 ),
                 Expanded(
                   child: ValueListenableBuilder(
@@ -56,14 +49,7 @@ class DesktopHomeScreen extends StatelessWidget {
                     }
                   )
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-            
-                  SheetTile()
-            
-                  ] )
+                SheetTile()
               ],
             ),
           ),
