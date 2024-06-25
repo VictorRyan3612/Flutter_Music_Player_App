@@ -34,24 +34,56 @@ class AppBarButtons extends StatelessWidget implements PreferredSizeWidget{
           valueListenable: settingsService.isSelecting, 
           builder: (context, value, child) {
             if (value) {
-              return IconButton(
-                icon: Icon(Icons.all_out),
-                onPressed: () {
-                  if (musicDataService.musicsValueNotifier.value['data'] == musicDataService.newplaylist.value) {
-                    musicDataService.newplaylist.value = [];
-                    settingsService.isSelecting.value = false;
-                  } else {
-                    musicDataService.musicsValueNotifier.value['data'].forEach((element) {
-                    if(musicDataService.newplaylist.value.contains(element)){
-                      musicDataService.newplaylist.value.remove(element);
+              return Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.all_out),
+                    onPressed: () {
+                      if (musicDataService.musicsValueNotifier.value['data'] == musicDataService.newplaylist.value) {
+                        musicDataService.newplaylist.value = [];
+                        settingsService.isSelecting.value = false;
+                      } else {
+                        musicDataService.musicsValueNotifier.value['data'].forEach((element) {
+                        if(musicDataService.newplaylist.value.contains(element)){
+                          musicDataService.newplaylist.value.remove(element);
+                        }
+                        else{
+                          musicDataService.newplaylist.value.add(element);
+                        }
+                      });
+                      }
+                      
+                    },
+                  ),
+                  IconButton(
+                    tooltip: 'Ações',
+                    icon: Icon(Icons.more_vert),
+                    onPressed: () {
+                      showDialog(
+                        context: context, builder: (context) {
+                          return AlertDialog(
+                            content: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  ListTile(
+                                    title: Text('Adicionar a playlist'),
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                      showDialog(context: context, builder: (context) {
+                                        return NewPlaylistAlertDialog();
+                                      });
+                                    },
+                                  ),
+                                  
+                                ],
+                              ),
+                            )
+                          );
+                        }
+                      );
                     }
-                    else{
-                      musicDataService.newplaylist.value.add(element);
-                    }
-                  });
-                  }
-                  
-                },
+                  ),
+                ],
               );
             } else {
               return Container();
@@ -141,6 +173,44 @@ class NumberMusics extends StatelessWidget {
 
             }
           },
+        );
+      }
+    );
+  }
+}
+
+class NewPlaylistAlertDialog extends StatelessWidget {
+  const NewPlaylistAlertDialog({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Builder(
+      builder: (context) {
+        final controller = TextEditingController();
+        return AlertDialog(
+          title: Text('Titulo'),
+          actions: [
+            TextButton(
+              onPressed:(){
+                Navigator.of(context).pop();
+              }, 
+              child: Text('Cancelar')
+            ),
+            TextButton(
+              onPressed:(){
+                musicDataService.createPlaylist(controller.text, musicDataService.newplaylist.value);
+                musicDataService.newplaylist.value = [];
+                Navigator.of(context).pop();
+              }, 
+              child: Text('Confirmar')
+            )
+          ],
+          content: Form(child: TextField(
+            controller: controller,
+            autofocus: true,
+          )),
         );
       }
     );
