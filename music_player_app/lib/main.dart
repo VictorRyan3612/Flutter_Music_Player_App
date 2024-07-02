@@ -15,9 +15,9 @@ void main() {
   settingsService.loadSettings().whenComplete(() {
       musicDataService.setConfigs(
         listFoldersPaths: settingsService.listFoldersPaths.value,
-        repeat: settingsService.repeat.value,
+        repeat: settingsService.repeat,
         addRepeat: settingsService.addRepeat.value,
-        shuffle: settingsService.shuffle.value
+        shuffle: settingsService.shuffle
       );
     });
   runApp(const MainApp());
