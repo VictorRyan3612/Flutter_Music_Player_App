@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SettingsService{
   ValueNotifier<bool> isMobile = ValueNotifier(false);
   // ValueNotifier<bool> isDarkMode = ValueNotifier(true);
-  ValueNotifier<String> colorName = ValueNotifier('Blue');
+  // ValueNotifier<String> colorName = ValueNotifier('Blue');
   ValueNotifier<List<String>> listFoldersPaths = ValueNotifier([]);
   ValueNotifier<bool> listingTags = ValueNotifier(false);
   ValueNotifier<String> tag = ValueNotifier('');
@@ -24,8 +24,8 @@ class SettingsService{
     // final isDarkMode = prefs.getBool('isDarkMode') ?? settingsService.isDarkMode.value;
     // settingsService.isDarkMode.value = isDarkMode;
 
-    final colorTheme = prefs.getString('colorTheme') ?? settingsService.colorName.value;
-    settingsService.colorName.value = colorTheme;
+    // final colorTheme = prefs.getString('colorTheme') ?? settingsService.colorName.value;
+    // settingsService.colorName.value = colorTheme;
 
 
     final shuffle = prefs.getBool('shuffle') ?? settingsService.shuffle;
@@ -48,7 +48,7 @@ class SettingsService{
     final prefs = await SharedPreferences.getInstance();
     
     // prefs.setBool('isDarkMode', isDarkMode.value);
-    prefs.setString('colorTheme', colorName.value);
+    // prefs.setString('colorTheme', colorName.value);
     prefs.setBool('addRepeat', addRepeat.value);
     prefs.setBool('repeat', repeat);
     prefs.setBool('shuffle', shuffle);
