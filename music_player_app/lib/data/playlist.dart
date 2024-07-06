@@ -19,7 +19,12 @@ class PlaylistService{
     'playlist': <Metadata>[]
   });
   ValueNotifier<List<Metadata>> newplaylist = ValueNotifier([]);
-  Future<bool> createPlaylist(String name, List<Metadata> list) async{
+
+  Future<bool> createPlaylist(String name, {List<Metadata>? listMetadata, List<String>? listPaths}) async{
+    if (listMetadata == null && listPaths == null) {
+    throw ArgumentError('Pelo menos um dos parâmetros opcionais (list ou listPaths) deve ser fornecido.');
+  }
+
     Directory directoryApp = await getApplicationSupportDirectory();
     directoryApp = Directory('${directoryApp.path}/Playlists');
     directoryApp.createSync();
@@ -30,13 +35,18 @@ class PlaylistService{
       return true;
     }
 
-    List<String> listPath =[];
-    list.forEach((element) {
-      listPath.add(element.filePath!);
-    });
+    List<String> listPathFinal =  listPaths ?? [];
+    // listMetadata ??= [];
+    listPaths ??= [];
+    if (listMetadata != null){
+      listMetadata.forEach((element) {
+        listPathFinal.add(element.filePath!);
+      });
+
+    }
     Map<String,dynamic> mapPlaylist = {
       'name': name,
-      'playlist': listPath
+      'playlist': listPathFinal
     };
     String jsonString = json.encode(mapPlaylist);
     
@@ -59,6 +69,30 @@ class PlaylistService{
       setPlaylistsNames.add(listMetada['name']);
 
     });
+  }
+  void renamePlaylist(String oldName, String newName) {
+    if (setPlaylistsNames.contains(oldName)) {
+      setPlaylistsNames.remove(oldName);
+      setPlaylistsNames.add(newName);
+    }
+
+    for (var playlist in playlists.value) {
+      if (playlist['name'] == oldName) {
+        playlist['name'] = newName;
+        createPlaylist(newName, listPaths: List.from(playlist['playlist']));
+        
+      }
+    }
+    removePlaylist(oldName);
+  }
+  void removePlaylist(String name)async{
+    Directory directoryApp = await getApplicationSupportDirectory();
+    directoryApp = Directory('${directoryApp.path}/Playlists');
+    directoryApp.createSync();
+    File file = File('${directoryApp.path}/$name.dat');
+
+    file.deleteSync();
+    loadPlaylists();
   }
 
   void listplaylist(String name){

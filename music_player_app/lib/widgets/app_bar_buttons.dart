@@ -209,7 +209,10 @@ class NewPlaylistAlertDialog extends StatelessWidget {
             ),
             TextButton(
               onPressed:() async{
-                var error = await musicDataService.playlistsService.createPlaylist(nameNewPlaylistController.text, musicDataService.playlistsService.newplaylist.value);
+                var error = await musicDataService.playlistsService.createPlaylist(
+                  nameNewPlaylistController.text, 
+                  listMetadata: musicDataService.playlistsService.newplaylist.value
+                );
                 if (error) {
                   Navigator.of(context).pop();
                   showDialog(
