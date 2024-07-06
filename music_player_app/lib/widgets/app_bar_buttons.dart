@@ -3,6 +3,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:music_player_app/config/settings_data_service.dart';
 import 'package:music_player_app/data/music_data_service.dart';
 
+final nameNewPlaylistController = TextEditingController();
+
 class AppBarButtons extends StatelessWidget implements PreferredSizeWidget{
   const AppBarButtons({super.key});
 
@@ -186,6 +188,7 @@ class NumberMusics extends StatelessWidget {
   }
 }
 
+
 class NewPlaylistAlertDialog extends StatelessWidget {
   const NewPlaylistAlertDialog({
     super.key,
@@ -195,7 +198,6 @@ class NewPlaylistAlertDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Builder(
       builder: (context) {
-        final controller = TextEditingController();
         return AlertDialog(
           title: Text('Titulo'),
           actions: [
@@ -206,16 +208,46 @@ class NewPlaylistAlertDialog extends StatelessWidget {
               child: Text('Cancelar')
             ),
             TextButton(
-              onPressed:(){
-                musicDataService.createPlaylist(controller.text, musicDataService.newplaylist.value);
-                musicDataService.newplaylist.value = [];
+              onPressed:() async{
+                var error = await musicDataService.createPlaylist(nameNewPlaylistController.text, musicDataService.newplaylist.value);
+                if (error) {
+                  Navigator.of(context).pop();
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('Já há uma playlist com esse nome'),
+                        actions: [
+                          TextButton(
+                          onPressed:(){
+                            Navigator.of(context).pop();
+                            return;
+                          }, 
+                          child: Text('Cancelar')
+                        ),
+                        TextButton(
+                          onPressed:(){
+                            Navigator.of(context).pop();
+                            showDialog(context: context, builder: (context) {
+                              return NewPlaylistAlertDialog();
+                            });
+                          }, 
+                          child: Text('Mudar o nome')
+                        )
+                        ],
+                      );
+                    },
+                  );
+                } else {
+                  musicDataService.newplaylist.value = [];
                 Navigator.of(context).pop();
+                }
               }, 
               child: Text('Confirmar')
             )
           ],
           content: Form(child: TextField(
-            controller: controller,
+            controller: nameNewPlaylistController,
             autofocus: true,
           )),
         );

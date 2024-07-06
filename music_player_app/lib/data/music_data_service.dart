@@ -75,12 +75,17 @@ class MusicDataService{
   }
 
 
-  void createPlaylist(String name, List<Metadata> list) async{
+  Future<bool> createPlaylist(String name, List<Metadata> list) async{
     Directory directoryApp = await getApplicationSupportDirectory();
     directoryApp = Directory('${directoryApp.path}/Playlists');
     directoryApp.createSync();
 
     File file = File('${directoryApp.path}/$name.dat');
+    if (file.existsSync()){
+      print("já existe Playlist com esse nome ");
+      return true;
+    }
+
     List<String> listPath =[];
     list.forEach((element) {
       listPath.add(element.filePath!);
@@ -94,6 +99,7 @@ class MusicDataService{
     file.writeAsStringSync(jsonString);
     playlists.value.add(mapPlaylist);
     setPlaylistsNames.add(mapPlaylist['name']);
+    return false;
   }
 
   void loadPlaylists() async {
