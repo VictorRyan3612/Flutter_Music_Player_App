@@ -20,19 +20,7 @@ class MusicDataService{
     'data': <Metadata>[]
   });
 
-  ValueNotifier<Map<String,dynamic>> actualPlaylist = ValueNotifier({
-    'index': -1,
-    'playlist': <Metadata>[]
-  });
 
-  ValueNotifier<List<Map<String,dynamic>>> playlists = ValueNotifier([
-    {
-      'name': '',
-      'playlist': []
-    }
-  ]);
-  ValueNotifier<List<Metadata>> newplaylist = ValueNotifier([]);
-  
   var ordenableField = <String>[
     'trackName',
     'albumName',
@@ -45,7 +33,7 @@ class MusicDataService{
   Set<String> setAlbumName = {};
   Set<String> setAlbumArtistName = {};
   Set<String> setGenders = {};
-  Set<String> setPlaylistsNames = {};
+
 
   ValueNotifier<Set<String>> actualTag = ValueNotifier({});
 
@@ -226,8 +214,8 @@ class MusicDataService{
 
 
   void nextMusic(){
-    int index = actualPlaylist.value['index'];
-    int length = actualPlaylist.value['playlist'].length -1;
+    int index = playlistsService.actualPlaylist.value['index'];
+    int length = playlistsService.actualPlaylist.value['playlist'].length -1;
 
     if(musicDataService.player.playing){
       musicDataService.player.stop();
@@ -235,8 +223,8 @@ class MusicDataService{
     
     if(index < length){
       index += 1;
-      actualPlayingMusic.value = actualPlaylist.value['playlist'][index];
-      actualPlaylist.value['index'] = index;
+      actualPlayingMusic.value = playlistsService.actualPlaylist.value['playlist'][index];
+      playlistsService.actualPlaylist.value['index'] = index;
     }
     else{
       int index;
@@ -279,26 +267,26 @@ class MusicDataService{
   }
   
   void addPlaylist(Metadata metadata){
-    actualPlaylist.value['playlist'].add(metadata);
-    actualPlaylist.value['index'] +=1;
+    playlistsService.actualPlaylist.value['playlist'].add(metadata);
+    playlistsService.actualPlaylist.value['index'] +=1;
   }
 
   void addNextPlaylist(List<Metadata> listMetadata){
     int index = 1;
     listMetadata.forEach((element) {
-      actualPlaylist.value['playlist'].insert(actualPlaylist.value['index']+index,element);
+      playlistsService.actualPlaylist.value['playlist'].insert(playlistsService.actualPlaylist.value['index']+index,element);
       index ++;
     });
     // actualPlaylist.value['playlist'].insert(actualPlaylist.value['index']+1,metadata);
   }
 
   void previousMusic(){
-    if(actualPlaylist.value['index'] >=1){
+    if(playlistsService.actualPlaylist.value['index'] >=1){
       player.stop();
-      actualPlaylist.value['index'] -=1;
-      int index = actualPlaylist.value['index'];
+      playlistsService.actualPlaylist.value['index'] -=1;
+      int index = playlistsService.actualPlaylist.value['index'];
       
-      Metadata music = actualPlaylist.value['playlist'][index];
+      Metadata music = playlistsService.actualPlaylist.value['playlist'][index];
       actualPlayingMusic.value = music;
       player.setAudioSource(AudioSource.file(music.filePath!));
       player.play();

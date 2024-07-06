@@ -50,7 +50,7 @@ class ListMusics extends StatelessWidget {
                   return ListViewMusic(
                     listMusics: value['data'],
                     isSelecting: settingsService.isSelecting,
-                    playlist: musicDataService.newplaylist,
+                    playlist: musicDataService.playlistsService.newplaylist,
                   );
                 }
                 

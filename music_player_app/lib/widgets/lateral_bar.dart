@@ -54,7 +54,7 @@ class LateralBar extends StatelessWidget {
           onTap: (){
             settingsService.listingTags.value = true;
             settingsService.listingPlaylist = true;
-            musicDataService.actualTag.value = musicDataService.setPlaylistsNames;
+            musicDataService.actualTag.value = musicDataService.playlistsService.setPlaylistsNames;
             
           }
         ),

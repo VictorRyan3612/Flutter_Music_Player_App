@@ -21,12 +21,12 @@ class AppBarButtons extends StatelessWidget implements PreferredSizeWidget{
           tooltip: 'Selecionar tudo',
           icon: Icon(Icons.select_all),
           onPressed: () {
-            if (settingsService.isSelecting.value && musicDataService.newplaylist.value == musicDataService.musicsValueNotifier.value['data']) {
-              musicDataService.newplaylist.value = [];
+            if (settingsService.isSelecting.value && musicDataService.playlistsService.newplaylist.value == musicDataService.musicsValueNotifier.value['data']) {
+              musicDataService.playlistsService.newplaylist.value = [];
               settingsService.isSelecting.value = false;
             } else {
               settingsService.isSelecting.value = true;
-              musicDataService.newplaylist.value = musicDataService.musicsValueNotifier.value['data'];
+              musicDataService.playlistsService.newplaylist.value = musicDataService.musicsValueNotifier.value['data'];
               
             }
 
@@ -41,16 +41,16 @@ class AppBarButtons extends StatelessWidget implements PreferredSizeWidget{
                   IconButton(
                     icon: Icon(Icons.all_out),
                     onPressed: () {
-                      if (musicDataService.musicsValueNotifier.value['data'] == musicDataService.newplaylist.value) {
-                        musicDataService.newplaylist.value = [];
+                      if (musicDataService.musicsValueNotifier.value['data'] == musicDataService.playlistsService.newplaylist.value) {
+                        musicDataService.playlistsService.newplaylist.value = [];
                         settingsService.isSelecting.value = false;
                       } else {
                         musicDataService.musicsValueNotifier.value['data'].forEach((element) {
-                        if(musicDataService.newplaylist.value.contains(element)){
-                          musicDataService.newplaylist.value.remove(element);
+                        if(musicDataService.playlistsService.newplaylist.value.contains(element)){
+                          musicDataService.playlistsService.newplaylist.value.remove(element);
                         }
                         else{
-                          musicDataService.newplaylist.value.add(element);
+                          musicDataService.playlistsService.newplaylist.value.add(element);
                         }
                       });
                       }
@@ -79,7 +79,7 @@ class AppBarButtons extends StatelessWidget implements PreferredSizeWidget{
                                   ListTile(
                                     title: Text('Reproduzir em seguida'),
                                     onTap: () {
-                                      musicDataService.addNextPlaylist(musicDataService.newplaylist.value);
+                                      musicDataService.addNextPlaylist(musicDataService.playlistsService.newplaylist.value);
                                       Navigator.of(context).pop();
                                     },
                                   )
@@ -172,7 +172,7 @@ class NumberMusics extends StatelessWidget {
       valueListenable: musicDataService.musicsValueNotifier,
       builder: (context, musicsValueNotifier, child) {
         return ValueListenableBuilder(
-          valueListenable: musicDataService.newplaylist,
+          valueListenable: musicDataService.playlistsService.newplaylist,
           builder: (context, newplaylist, child) {
             if (newplaylist.isEmpty){
               return Text('${musicsValueNotifier['data'].length}');
@@ -209,7 +209,7 @@ class NewPlaylistAlertDialog extends StatelessWidget {
             ),
             TextButton(
               onPressed:() async{
-                var error = await musicDataService.playlistsService.createPlaylist(nameNewPlaylistController.text, musicDataService.newplaylist.value);
+                var error = await musicDataService.playlistsService.createPlaylist(nameNewPlaylistController.text, musicDataService.playlistsService.newplaylist.value);
                 if (error) {
                   Navigator.of(context).pop();
                   showDialog(
@@ -239,7 +239,7 @@ class NewPlaylistAlertDialog extends StatelessWidget {
                     },
                   );
                 } else {
-                  musicDataService.newplaylist.value = [];
+                  musicDataService.playlistsService.newplaylist.value = [];
                 Navigator.of(context).pop();
                 }
               }, 

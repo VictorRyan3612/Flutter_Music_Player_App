@@ -1,12 +1,24 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:music_player_app/data/music_data_service.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PlaylistService{
-  
+  Set<String> setPlaylistsNames = {};
+  ValueNotifier<List<Map<String,dynamic>>> playlists = ValueNotifier([
+    {
+      'name': '',
+      'playlist': []
+    }
+  ]);
+    ValueNotifier<Map<String,dynamic>> actualPlaylist = ValueNotifier({
+    'index': -1,
+    'playlist': <Metadata>[]
+  });
+  ValueNotifier<List<Metadata>> newplaylist = ValueNotifier([]);
   Future<bool> createPlaylist(String name, List<Metadata> list) async{
     Directory directoryApp = await getApplicationSupportDirectory();
     directoryApp = Directory('${directoryApp.path}/Playlists');
@@ -29,8 +41,8 @@ class PlaylistService{
     String jsonString = json.encode(mapPlaylist);
     
     file.writeAsStringSync(jsonString);
-    musicDataService.playlists.value.add(mapPlaylist);
-    musicDataService.setPlaylistsNames.add(mapPlaylist['name']);
+    playlists.value.add(mapPlaylist);
+    setPlaylistsNames.add(mapPlaylist['name']);
     return false;
   }
 
@@ -43,8 +55,8 @@ class PlaylistService{
       File file = File(element.path);
       String content = file.readAsStringSync();
       var listMetada = json.decode(content);
-      musicDataService.playlists.value.add({'name': listMetada['name'], 'playlist': listMetada['playlist']});
-      musicDataService.setPlaylistsNames.add(listMetada['name']);
+      playlists.value.add({'name': listMetada['name'], 'playlist': listMetada['playlist']});
+      setPlaylistsNames.add(listMetada['name']);
 
     });
   }
@@ -55,7 +67,7 @@ class PlaylistService{
 
     List<Metadata> objectsFiltered = [];
     List test =[];
-    for (var playlist in musicDataService.playlists.value){
+    for (var playlist in playlists.value){
       if (playlist['name'] == name){
         test = playlist['playlist'];
       }
