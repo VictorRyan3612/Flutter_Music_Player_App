@@ -73,4 +73,20 @@ List<Widget> listWidgets = [
 
     },
   ),
+  ListTile(
+    title: Text("Exportar Todas as playlists"),
+    onTap: () async {
+      String? folder = await FilePicker.platform.getDirectoryPath();
+      
+      if (folder != null) {
+        print('Pasta selecionada: $folder');
+        settingsService.saveSettings();
+        musicDataService.exportAllPlaylist(folder);
+        
+      } else {
+        print('Nenhuma pasta selecionada.');
+      }
+
+    },
+  ),
 ];

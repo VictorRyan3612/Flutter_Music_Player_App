@@ -136,7 +136,21 @@ class MusicDataService{
 
     saveValueNotifier(objectsFiltered);
   }
+  void exportAllPlaylist(String finalFolderPath) async{
+    Directory directoryApp = await getApplicationSupportDirectory();
+    directoryApp = Directory('${directoryApp.path}/Playlists');
+    directoryApp.createSync();
 
+    Directory directoryFinal = Directory(finalFolderPath);
+
+
+    directoryApp.listSync().forEach((element) {
+      File file = File(element.path);
+      copyFileWithData(file.path, finalNamePath(directoryFolder: directoryFinal, musicPath: file.path));
+    });
+    
+    
+  }
   bool isMp3(String file){
     String format = file.split('.').last.toLowerCase();
     return format == 'mp3';
