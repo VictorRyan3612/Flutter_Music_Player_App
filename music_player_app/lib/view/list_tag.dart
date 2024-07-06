@@ -11,7 +11,36 @@ class ListTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    showMenu(){
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  ListTile(
+                    title: Text('Reproduzir'),
+                    leading: Icon(Icons.play_arrow),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  settingsService.listingPlaylist ? ListTile(
+                    title: Text('Renomear'),
+                    leading: Icon(Icons.drive_file_rename_outline_sharp),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                  ) : Container()
+                  
+                ],
+              ),
+            )
+          );
+        },
+      );
+    }
     
     return ValueListenableBuilder(
       valueListenable: settingsService.tag, 
@@ -27,8 +56,10 @@ class ListTag extends StatelessWidget {
               return ListView.builder(
                 itemCount: listTag.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(listTag[index]),
+                  return InkWell(
+                    child: ListTile(
+                      title: Text(listTag[index]),
+                    ),
                     onTap: () {
                       if (settingsService.listingPlaylist) {
                         settingsService.tag.value = listTag[index];
@@ -38,6 +69,12 @@ class ListTag extends StatelessWidget {
                         settingsService.tag.value = listTag[index];
                         
                       }
+                    },
+                    onLongPress: () {
+                      showMenu();
+                    },
+                    onSecondaryTapDown: (details) {
+                      showMenu();
                     },
                   );
                 },
