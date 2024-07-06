@@ -129,5 +129,28 @@ class PlaylistService{
     
     
   }
+  void exportAPlaylist(String finalFolderPath, String name) async{
+    Directory directoryApp = await getApplicationSupportDirectory();
+    directoryApp = Directory('${directoryApp.path}/Playlists');
+    directoryApp.createSync();
+
+    Directory directoryFinal = Directory(finalFolderPath);
+
+
+    directoryApp.listSync().forEach((element) {
+      var file = File(element.path);
+      String stringName = '';
+      stringName = element.path.split('\\').last;
+      stringName = stringName.split('.').first;
+
+      if (stringName == name){
+      musicDataService.copyFileWithData(file.path, musicDataService.finalNamePath(directoryFolder: directoryFinal, musicPath: file.path));
+
+      }
+
+    });
+    
+    
+  }
 }
 PlaylistService playlists = PlaylistService();

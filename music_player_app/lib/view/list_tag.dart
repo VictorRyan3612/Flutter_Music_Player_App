@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player_app/config/settings_data_service.dart';
 import 'package:music_player_app/data/music_data_service.dart';
@@ -65,8 +66,24 @@ class ListTag extends StatelessWidget {
                       );
                       // musicDataService.playlistsService.rename(old);
                     },
+                  ) : Container(),
+                  settingsService.listingPlaylist ? ListTile(
+                    title: Text('Exportar'),
+                    // leading: Icon(Icons.),
+                    onTap: () async{
+                      String? folder = await FilePicker.platform.getDirectoryPath();
+      
+                      if (folder != null) {
+                        print('Pasta selecionada: $folder');
+                        settingsService.saveSettings();
+                        musicDataService.playlistsService.exportAPlaylist(folder, oldName);
+                        
+                      } else {
+                        print('Nenhuma pasta selecionada.');
+                      }
+                      // musicDataService.playlistsService.exportAPlaylist(folder, name);
+                    },
                   ) : Container()
-                  
                 ],
               ),
             )
