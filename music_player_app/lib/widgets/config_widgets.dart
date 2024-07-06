@@ -81,7 +81,7 @@ List<Widget> listWidgets = [
       if (folder != null) {
         print('Pasta selecionada: $folder');
         settingsService.saveSettings();
-        musicDataService.exportAllPlaylist(folder);
+        musicDataService.playlistsService.exportAllPlaylist(folder);
         
       } else {
         print('Nenhuma pasta selecionada.');
