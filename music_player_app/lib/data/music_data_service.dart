@@ -222,8 +222,19 @@ class MusicDataService{
   }
 
   void addFolderPath(String folderPath) async {
+    if (listFoldersPathsValueNotifier.value.contains(folderPath)) return;
     listFoldersPathsValueNotifier.value.add(folderPath);
-    foldersPathToFilesPath([folderPath]);
+    var listFoldersPaths = [folderPath];
+    Directory directoryMaster = Directory(folderPath);
+    directoryMaster.listSync().forEach((element) {
+      if (element is Directory){
+        if (listFoldersPathsValueNotifier.value.contains(element.path)) return;
+        listFoldersPathsValueNotifier.value.add(element.path);
+        listFoldersPaths.add(element.path);
+      }
+      
+    });
+    foldersPathToFilesPath(listFoldersPaths);
     loadMusicsDatas();
   }
   
