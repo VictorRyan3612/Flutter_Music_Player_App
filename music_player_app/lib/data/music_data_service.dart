@@ -111,13 +111,17 @@ class MusicDataService{
     });
   }
 
-  void listplaylist(int index){
+  void listplaylist(String name){
     List<Metadata> objectsOriginals = originalList;
     if (objectsOriginals.isEmpty) return;
 
     List<Metadata> objectsFiltered = [];
-    List test = playlists.value[index+1]['playlist'];
-    
+    List test =[];
+    for (var playlist in playlists.value){
+      if (playlist['name'] == name){
+        test = playlist['playlist'];
+      }
+    }
     for (var objetoInd in objectsOriginals) {
       if (test.contains(objetoInd.filePath)) {
           objectsFiltered.add(objetoInd);

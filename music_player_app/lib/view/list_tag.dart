@@ -32,7 +32,7 @@ class ListTag extends StatelessWidget {
                     onTap: () {
                       if (settingsService.listingPlaylist) {
                         settingsService.tag.value = listTag[index];
-                        musicDataService.listplaylist(index);
+                        musicDataService.listplaylist(listTag[index]);
                       } else {
                         musicDataService.filterCurrentState(listTag[index]);
                         settingsService.tag.value = listTag[index];
