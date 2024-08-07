@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:music_player_app/config/settings_data_service.dart';
@@ -10,7 +12,14 @@ import 'package:music_player_app/widgets/sheet_tile.dart';
 
 
 class DesktopHomeScreen extends StatelessWidget {
-  const DesktopHomeScreen({super.key});
+  final TextEditingController _controller = TextEditingController();
+  Timer? _debounce;
+
+  // @override
+  // void dispose() {
+  //   _controller.dispose();
+  //   _debounce?.cancel();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +33,12 @@ class DesktopHomeScreen extends StatelessWidget {
               children: [
                 AppBarButtons(),
                 TextField(
+                  controller: _controller,
                   onChanged: (value) {
-                    musicDataService.filterCurrentState(value);
+                    if (_debounce?.isActive ?? false) _debounce!.cancel();
+                    _debounce = Timer(const Duration(milliseconds: 500), () {
+                      musicDataService.filterCurrentState(value);
+                    });
                   },
                   decoration: InputDecoration(
                     hintText: "filtrar",
@@ -35,26 +48,25 @@ class DesktopHomeScreen extends StatelessWidget {
                   child: ValueListenableBuilder(
                     valueListenable: settingsService.listingTags,
                     builder: (context, value, child) {
-                      if(!value){ 
+                      if (!value) {
                         return ValueListenableBuilder(
                           valueListenable: musicDataService.musicsValueNotifier,
                           builder: (context, value, child) {
                             return ListMusics();
-                          }
+                          },
                         );
-                      }
-                      else{
+                      } else {
                         return ListTag();
                       }
-                    }
-                  )
+                    },
+                  ),
                 ),
-                SheetTile()
+                SheetTile(),
               ],
             ),
           ),
         ],
-      )
+      ),
     );
   }
 }
