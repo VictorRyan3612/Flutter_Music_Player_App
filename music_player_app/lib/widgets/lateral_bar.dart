@@ -8,7 +8,7 @@ class LateralBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ExtensibleLateralBar(
+    return VicrExtensibleLateralBar(
       items: [
         ExtensibleLateralBarItem(
           icon: Icon(Icons.home), 

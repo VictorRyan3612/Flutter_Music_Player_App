@@ -31,7 +31,7 @@ class ListMusics extends StatelessWidget {
               builder: (context, valueIsTable, child) {
                 if (valueIsTable) {
                   return SingleChildScrollView(
-                  child: DataTableWidget(
+                  child: VicrDataTableWidget(
                     onTapRow: (item) {
                       musicDataService.playMusicFromMetadata(item);
                     },

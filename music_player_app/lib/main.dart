@@ -19,14 +19,14 @@ void main() {
       );
     });
     
-  VictMaterialApp().loadSettings();
+  VicrMaterialApp().loadSettings();
 
-  runApp(VictMaterialApp(
+  runApp(VicrMaterialApp(
     configWidget: ConfigWidgets(
       trailingWidgets: listWidgets
     ),
     routes: {
-      '/': (context) => LayoutDecider(
+      '/': (context) => VicrLayoutDecider(
         isMobile: settingsService.isMobile,
         optionMobile: MobileHomeScreen(),
         optionDesktop: DesktopHomeScreen(),
