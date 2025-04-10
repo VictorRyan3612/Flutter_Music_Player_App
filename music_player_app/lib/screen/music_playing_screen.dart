@@ -80,11 +80,11 @@ class ScreenMusic extends HookWidget {
               fit: StackFit.expand,
               children: [
                 
-                musicDataService.actualPlayingMusic.value.albumArt != null ? Stack(
+                musicDataService.actualPlayingMusic.value['albumArt'] != null ? Stack(
                   fit: StackFit.expand,
                   children: [
                     Image.memory(
-                      musicDataService.actualPlayingMusic.value.albumArt!,
+                      musicDataService.actualPlayingMusic.value['albumArt']!,
                       fit: BoxFit.cover,
                     ),
                     Container(
@@ -109,10 +109,10 @@ class ScreenMusic extends HookWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${value.trackName}',
+                              '${value['trackName']}',
                               style: TextStyle(fontSize: 22),
                             ),
-                            Text('${value.albumArtistName} - ${value.albumName}'),
+                            Text('${value['albumArtistName']} - ${value['albumName']}'),
                           ],
                         ),
                       ),
@@ -120,8 +120,8 @@ class ScreenMusic extends HookWidget {
                     Center(
                       child: Padding(
                         padding: const EdgeInsets.all(50.0),
-                        child: value.albumArt != null ?Image.memory(
-                          value.albumArt! ,
+                        child: value['albumArt'] != null ?Image.memory(
+                          value['albumArt']! ,
                           width: 400,
                           height: 400,
                         ) : Icon(Icons.music_note, weight: 400, size: 400,),

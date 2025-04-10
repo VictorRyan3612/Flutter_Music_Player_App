@@ -16,7 +16,7 @@ class PlaylistService{
   ]);
     ValueNotifier<Map<String,dynamic>> actualPlaylist = ValueNotifier({
     'index': -1,
-    'playlist': <Metadata>[]
+    'playlist': []
   });
   ValueNotifier<List<Metadata>> newplaylist = ValueNotifier([]);
 

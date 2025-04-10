@@ -27,7 +27,7 @@ class MusicDataService{
     'albumArtistName'
   ];
   var ordenableFieldActual = '';
-  ValueNotifier<Metadata> actualPlayingMusic = ValueNotifier(Metadata());
+  ValueNotifier<Map<String,dynamic>> actualPlayingMusic = ValueNotifier({});
   List<Metadata> originalList = [];
 
   Set<String> setAlbumName = {};
@@ -186,10 +186,10 @@ class MusicDataService{
       }
     }
     print(musicsDatas);
-    // musicsValueNotifier.value['data'].addAll(musicsDatas);
+    musicsValueNotifier.value['data'].addAll(musicsDatas);
     // originalList = musicsValueNotifier.value['data'];
     // sortMusicByField();
-    // saveValueNotifier(musicsDatas);
+    saveValueNotifier(musicsDatas);
     // print(musicsValueNotifier.value['data']);
     musicsValueNotifier.value['status'] = TableStatus.ready;
     
@@ -228,7 +228,7 @@ class MusicDataService{
       actualPlayingMusic.value = musicsValueNotifier.value['data'][index];
     }
     
-    player.setAudioSource(AudioSource.file(actualPlayingMusic.value.filePath!));
+    player.setAudioSource(AudioSource.file(actualPlayingMusic.value['filePath']!));
     player.play();
   }
   void toggleRepeat(){
@@ -238,18 +238,18 @@ class MusicDataService{
     shuffle = !shuffle;
   }
 
-  void playMusicFromMetadata(Metadata metadata) async{
+  void playMusicFromMetadata(Map<String, dynamic> metadata) async{
     musicDataService.actualPlayingMusic.value = metadata;
     
     if(musicDataService.player.playing){
       musicDataService.player.stop();
     }
-    await musicDataService.player.setAudioSource(AudioSource.file(metadata.filePath as String));
+    await musicDataService.player.setAudioSource(AudioSource.file(metadata['filePath'] as String));
     await musicDataService.player.play();
     addPlaylist(metadata);
   }
   
-  void addPlaylist(Metadata metadata){
+  void addPlaylist(Map<String,dynamic> metadata){
     playlistsService.actualPlaylist.value['playlist'].add(metadata);
     playlistsService.actualPlaylist.value['index'] +=1;
   }
@@ -269,9 +269,9 @@ class MusicDataService{
       playlistsService.actualPlaylist.value['index'] -=1;
       int index = playlistsService.actualPlaylist.value['index'];
       
-      Metadata music = playlistsService.actualPlaylist.value['playlist'][index];
+      Map<String,dynamic> music = playlistsService.actualPlaylist.value['playlist'][index];
       actualPlayingMusic.value = music;
-      player.setAudioSource(AudioSource.file(music.filePath!));
+      player.setAudioSource(AudioSource.file(music['filePath']!));
       player.play();
     }
   }

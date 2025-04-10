@@ -64,7 +64,7 @@ class ListMusics extends StatelessWidget {
 }
 
 class ListViewMusic extends HookWidget {
-  final List<Metadata> listMusics;
+  final List listMusics;
   final ValueNotifier<bool>? isSelecting;
   final ValueNotifier<List<Metadata>>? playlist;
   const ListViewMusic({
