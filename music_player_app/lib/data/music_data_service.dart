@@ -54,14 +54,14 @@ class MusicDataService{
     addRepeat = addRepeat;
     repeat = repeat;
     shuffle = shuffle;
-    setFoldersPath(listFoldersPaths);
+    // setFoldersPath(listFoldersPaths);
+    playlistsService.loadPlaylists();
 
   }
   void setFoldersPath(List<String> listFoldersPaths) async{
     listFoldersPathsValueNotifier.value = listFoldersPaths;
     foldersPathToFilesPath(listFoldersPathsValueNotifier.value);
     loadMusicsDatas();
-    playlistsService.loadPlaylists();
   }
 
 
