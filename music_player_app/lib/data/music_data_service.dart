@@ -130,7 +130,7 @@ class MusicDataService{
         listFiles.add(File(entity.path));
       }
     });
-    // loadMusicsDatas();
+    loadMusicsDatas(listFiles);
   }
 
   Future<void> removeFolderPath(String folderPath) async {
@@ -158,19 +158,21 @@ class MusicDataService{
     setAlbumArtistName.add(stringNonNull(metadata.albumArtistName));
   }
 
-  Future<void> loadMusicsDatas() async{
+  Future<void> loadMusicsDatas(List<File> listFiles) async{
+    List<Map<String, dynamic>> musicsDatas = [];
     musicsValueNotifier.value['status'] = TableStatus.loading;
     var count = 0;
-    for (var singlePath in []) {
+    for (var singlePath in listFiles) {
       try {
-        var metadata = await MetadataRetriever.fromFile(File(singlePath));
+        var metadata = await MetadataRetriever.fromFile(singlePath);
         if(metadata.bitrate == null){
           String musicCopiedpath = await copyErrorMusic(metadata.filePath!);
           listMusicsError.value.add(musicCopiedpath);
           
           metadata = await MetadataRetriever.fromFile(File(musicCopiedpath));
         }
-        musicsValueNotifier.value['data'].add(metadata);
+        musicsDatas.add(metadata.toJson());
+        // musicsValueNotifier.value['data'].add(metadata);
         setsTags(metadata);
 
       } catch (error) {
@@ -180,13 +182,14 @@ class MusicDataService{
       count++;
       if(count == 50){
         count = 0;
-        sortMusicByField();
-        saveValueNotifier(musicsValueNotifier.value['data']);
+        // sortMusicByField();
+        // saveValueNotifier(musicsValueNotifier.value['data']);
       }
     }
+    print(musicsDatas);
     originalList = musicsValueNotifier.value['data'];
-    sortMusicByField();
-    saveValueNotifier(musicsValueNotifier.value['data']);
+    // sortMusicByField();
+    // saveValueNotifier(musicsValueNotifier.value['data']);
     // print(musicsValueNotifier.value['data']);
     musicsValueNotifier.value['status'] = TableStatus.ready;
     
