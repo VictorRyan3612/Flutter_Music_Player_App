@@ -171,7 +171,11 @@ class MusicDataService{
           
           metadata = await MetadataRetriever.fromFile(File(musicCopiedpath));
         }
-        musicsDatas.add(metadata.toJson());
+        print(metadata);
+        Map<String, dynamic> aux ={};
+        aux.addAll(metadata.toJson());
+        aux.addAll({'albumArt': metadata.albumArt});
+        musicsDatas.add(aux);
         setsTags(metadata);
 
       } catch (error) {
