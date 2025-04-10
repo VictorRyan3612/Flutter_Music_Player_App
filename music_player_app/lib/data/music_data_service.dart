@@ -137,21 +137,22 @@ class MusicDataService{
   }
 
   void addFolderPath(String folderPath) async {
-    if (listFoldersPathsValueNotifier.value.contains(folderPath)) return;
-    listFoldersPathsValueNotifier.value.add(folderPath);
-    var listFoldersPaths = [folderPath];
-    Directory directoryMaster = Directory(folderPath);
-    directoryMaster.listSync().forEach((element) {
-      if (element is Directory){
-        if (listFoldersPathsValueNotifier.value.contains(element.path)) return;
-        listFoldersPathsValueNotifier.value.add(element.path);
-        listFoldersPaths.add(element.path);
-      }
-      
-    });
-    foldersPathToFilesPath(listFoldersPaths);
-    loadMusicsDatas();
   }
+  //   if (listFoldersPathsValueNotifier.value.contains(folderPath)) return;
+  //   listFoldersPathsValueNotifier.value.add(folderPath);
+  //   var listFoldersPaths = [folderPath];
+  //   Directory directoryMaster = Directory(folderPath);
+  //   directoryMaster.listSync().forEach((element) {
+  //     if (element is Directory){
+  //       if (listFoldersPathsValueNotifier.value.contains(element.path)) return;
+  //       listFoldersPathsValueNotifier.value.add(element.path);
+  //       listFoldersPaths.add(element.path);
+  //     }
+      
+  //   });
+  //   foldersPathToFilesPath(listFoldersPaths);
+  //   loadMusicsDatas();
+  // }
   
   Future<void> removeFolderPath(String folderPath) async {
     musicsValueNotifier.value['status'] = TableStatus.loading;
