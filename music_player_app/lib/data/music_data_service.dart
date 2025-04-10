@@ -17,7 +17,7 @@ class MusicDataService{
   ValueNotifier<List<String>> listMusicsError = ValueNotifier([]);
   ValueNotifier<Map<String,dynamic>> musicsValueNotifier = ValueNotifier({
     'status': TableStatus.idle,
-    'data': <Metadata>[]
+    'data': []
   });
 
 
@@ -172,7 +172,6 @@ class MusicDataService{
           metadata = await MetadataRetriever.fromFile(File(musicCopiedpath));
         }
         musicsDatas.add(metadata.toJson());
-        // musicsValueNotifier.value['data'].add(metadata);
         setsTags(metadata);
 
       } catch (error) {
@@ -183,13 +182,14 @@ class MusicDataService{
       if(count == 50){
         count = 0;
         // sortMusicByField();
-        // saveValueNotifier(musicsValueNotifier.value['data']);
+        // saveValueNotifier(musicsDatas);
       }
     }
     print(musicsDatas);
-    originalList = musicsValueNotifier.value['data'];
+    // musicsValueNotifier.value['data'].addAll(musicsDatas);
+    // originalList = musicsValueNotifier.value['data'];
     // sortMusicByField();
-    // saveValueNotifier(musicsValueNotifier.value['data']);
+    // saveValueNotifier(musicsDatas);
     // print(musicsValueNotifier.value['data']);
     musicsValueNotifier.value['status'] = TableStatus.ready;
     
@@ -343,7 +343,7 @@ class MusicDataService{
 
     saveValueNotifier(objectsFiltered);
   }
-  void saveValueNotifier(List<Metadata> listMetadata) {
+  void saveValueNotifier(List listMetadata) {
     var state = Map<String, dynamic>.from(musicsValueNotifier.value);
     state['data'] = listMetadata;
     musicsValueNotifier.value = state;
