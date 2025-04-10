@@ -12,7 +12,7 @@ enum TableStatus {idle, loading, ready, error}
 class MusicDataService{
   PlaylistService playlistsService = PlaylistService();
   ValueNotifier<List<String>> listFoldersPathsValueNotifier = ValueNotifier([]);
-  ValueNotifier<List<String>> listPaths = ValueNotifier([]);
+
   ValueNotifier<List<String>> listPathsDeleted = ValueNotifier([]);
   ValueNotifier<List<String>> listMusicsError = ValueNotifier([]);
   ValueNotifier<Map<String,dynamic>> musicsValueNotifier = ValueNotifier({
@@ -58,12 +58,6 @@ class MusicDataService{
     playlistsService.loadPlaylists();
 
   }
-  void setFoldersPath(List<String> listFoldersPaths) async{
-    listFoldersPathsValueNotifier.value = listFoldersPaths;
-    foldersPathToFilesPath(listFoldersPathsValueNotifier.value);
-    loadMusicsDatas();
-  }
-
 
   
   bool isMp3(String file){
@@ -76,7 +70,7 @@ class MusicDataService{
       Directory directory = Directory(pathFolder);
       directory.listSync().forEach((entity) {
         if(isMp3(entity.path)){
-          listPaths.value.add(entity.path);
+          // listPaths.value.add(entity.path);
         }
       });
     }
@@ -161,7 +155,7 @@ class MusicDataService{
     listPathsDeleted.value.add(folderPath);
     
     for (var folderPath in listPathsDeleted.value){
-      listPaths.value.removeWhere((element) => element.contains(folderPath));
+      // listPaths.value.removeWhere((element) => element.contains(folderPath));
       List<Metadata> tempAux = musicDataService.musicsValueNotifier.value['data'];
       tempAux.removeWhere((element) => element.filePath!.contains(folderPath));
       musicDataService.musicsValueNotifier.value['data'] = tempAux;
@@ -182,7 +176,7 @@ class MusicDataService{
   Future<void> loadMusicsDatas() async{
     musicsValueNotifier.value['status'] = TableStatus.loading;
     var count = 0;
-    for (var singlePath in listPaths.value) {
+    for (var singlePath in []) {
       try {
         var metadata = await MetadataRetriever.fromFile(File(singlePath));
         if(metadata.bitrate == null){
