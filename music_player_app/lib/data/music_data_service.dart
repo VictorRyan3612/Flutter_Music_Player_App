@@ -1,12 +1,8 @@
-import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:music_player_app/data/playlist.dart';
-import 'package:path_provider/path_provider.dart';
+
 
 enum TableStatus {idle, loading, ready, error}
 
@@ -18,7 +14,7 @@ class MusicDataService{
   ValueNotifier<List<String>> listMusicsError = ValueNotifier([]);
   ValueNotifier<Map<String,dynamic>> musicsValueNotifier = ValueNotifier({
     'status': TableStatus.idle,
-    'data': []
+    'data': <List<Map<String, dynamic>>> []
   });
 
 
@@ -29,7 +25,7 @@ class MusicDataService{
   ];
   var ordenableFieldActual = '';
   ValueNotifier<Map<String,dynamic>> actualPlayingMusic = ValueNotifier({});
-  List<Metadata> originalList = [];
+  List<Map<String, dynamic>> originalList = [];
 
   Set<String> setAlbumName = {};
   Set<String> setAlbumArtistName = {};
@@ -66,10 +62,10 @@ class MusicDataService{
   Future<void> removeFolderPath(String folderPath) async {
     
   }
-  void setsTags(Metadata metadata){
-    setAlbumName.add(stringNonNull(metadata.albumName));
-    setGenders.add(stringNonNull(metadata.genre));
-    setAlbumArtistName.add(stringNonNull(metadata.albumArtistName));
+  void setsTags(Map<String,dynamic> metadata){
+    setAlbumName.add(stringNonNull(metadata['albumName']));
+    setGenders.add(stringNonNull(metadata['genre']));
+    setAlbumArtistName.add(stringNonNull(metadata['albumArtistName']));
   }
 
 
@@ -131,7 +127,7 @@ class MusicDataService{
     playlistsService.actualPlaylist.value['index'] +=1;
   }
 
-  void addNextPlaylist(List<Metadata> listMetadata){
+  void addNextPlaylist(List<Map<String, dynamic>> listMetadata){
     int index = 1;
     listMetadata.forEach((element) {
       playlistsService.actualPlaylist.value['playlist'].insert(playlistsService.actualPlaylist.value['index']+index,element);
@@ -173,7 +169,7 @@ class MusicDataService{
 
 
   void sortMusicByField([String field = 'trackName']){
-    List<Metadata> listMusic = musicsValueNotifier.value['data'];
+    List listMusic = musicsValueNotifier.value['data'];
 
     if (field != ordenableFieldActual) {
       isSorted = false;
@@ -183,30 +179,30 @@ class MusicDataService{
       listMusic = List.from(listMusic.reversed);
     } 
     else {
-      listMusic.sort((a, b) {
-        String valueA = a.toJson()[field];
-        String valueB = b.toJson()[field];
-        return valueA.compareTo(valueB);
-      });
+      // listMusic.sort((a, b) {
+      //   String valueA = a.toJson()[field];
+      //   String valueB = b.toJson()[field];
+      //   return valueA.compareTo(valueB);
+      // });
       isSorted = true;
     }
     musicsValueNotifier.value['data'] = listMusic;
     saveValueNotifier(musicsValueNotifier.value['data']);
   }
 
-  bool seachInFields (Metadata objetoInd, String filtrar){
+  bool seachInFields (Map<String, dynamic> objetoInd, String filtrar){
     final bool =
-      stringNonNull(objetoInd.trackName).toLowerCase().contains(filtrar.toLowerCase()) ||
-      stringNonNull(objetoInd.albumArtistName).toLowerCase().contains(filtrar.toLowerCase()) ||
-      stringNonNull(objetoInd.albumName).toLowerCase().contains(filtrar.toLowerCase()) ||
-      stringNonNull(objetoInd.genre).toLowerCase().contains(filtrar.toLowerCase());
+      stringNonNull(objetoInd['trackName']).toLowerCase().contains(filtrar.toLowerCase()) ||
+      stringNonNull(objetoInd['albumArtistName']).toLowerCase().contains(filtrar.toLowerCase()) ||
+      stringNonNull(objetoInd['albumName']).toLowerCase().contains(filtrar.toLowerCase()) ||
+      stringNonNull(objetoInd['genre']).toLowerCase().contains(filtrar.toLowerCase());
     return bool;
   }
   void filterCurrentState(String filtrar) {
-    List<Metadata> objectsOriginals = originalList;
+    List<Map<String, dynamic>> objectsOriginals = originalList;
     if (objectsOriginals.isEmpty) return;
 
-    List<Metadata> objectsFiltered = [];
+    List<Map<String, dynamic>> objectsFiltered = [];
     if (filtrar != '') {
       for (var objetoInd in objectsOriginals) {
         if (seachInFields(objetoInd, filtrar)) {
