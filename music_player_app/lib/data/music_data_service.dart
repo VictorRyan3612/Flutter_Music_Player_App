@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:just_audio/just_audio.dart';
@@ -151,11 +152,20 @@ class MusicDataService{
     musicsValueNotifier.value['status'] = TableStatus.ready;
     saveValueNotifier(musicsValueNotifier.value['data']);
   }
-
   void setsTags(Metadata metadata){
     setAlbumName.add(stringNonNull(metadata.albumName));
     setGenders.add(stringNonNull(metadata.genre));
     setAlbumArtistName.add(stringNonNull(metadata.albumArtistName));
+  }
+  Future<File> saveAlbumArt({required Uint8List image, required name}) async{
+    Directory directory = await getApplicationSupportDirectory();
+    Directory directoryMusicsErrosFolder = Directory('${directory.path}\\AlbumsArt');
+    print('${directoryMusicsErrosFolder.path}\\$name.jpg');
+    // path.join()
+    directoryMusicsErrosFolder.createSync();
+    var fileImage = File('${directoryMusicsErrosFolder.path}\\$name.jpg');
+    fileImage.writeAsBytesSync(image);
+    return fileImage; 
   }
 
   Future<void> loadMusicsDatas(List<File> listFiles) async{
@@ -171,10 +181,13 @@ class MusicDataService{
           
           metadata = await MetadataRetriever.fromFile(File(musicCopiedpath));
         }
-        print(metadata);
+        // print(metadata);
         Map<String, dynamic> aux ={};
         aux.addAll(metadata.toJson());
-        aux.addAll({'albumArt': metadata.albumArt});
+        if (metadata.albumArt != null) {
+          File file = await saveAlbumArt(image: metadata.albumArt!, name: metadata.albumName!);
+          aux.addAll({'albumArtPath': file.path});
+        }
         musicsDatas.add(aux);
         setsTags(metadata);
 
@@ -189,7 +202,7 @@ class MusicDataService{
         // saveValueNotifier(musicsDatas);
       }
     }
-    print(musicsDatas);
+    // print(musicsDatas);
     musicsValueNotifier.value['data'].addAll(musicsDatas);
     // originalList = musicsValueNotifier.value['data'];
     // sortMusicByField();
