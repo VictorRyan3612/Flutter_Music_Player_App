@@ -57,10 +57,29 @@ class MusicDataService{
     shuffle = shuffle;
     // setFoldersPath(listFoldersPaths);
     playlistsService.loadPlaylists();
+    loadJson();
 
   }
 
-  
+  void loadJson() async{
+    Directory directory = await getApplicationSupportDirectory();
+    print(directory);
+    File file = File('${directory.path}\\allmusics.json');
+
+    if(!file.existsSync()){
+      file.createSync();
+    } 
+    Uint8List bytes = await file.readAsBytes();
+		String jsonString = utf8.decode(bytes);
+		List<dynamic> jsonData = jsonDecode(jsonString);
+
+    // List<Map<String, dynamic>> musicList = jsonData.map((e) => Metadata.fromJson(e)).toList();
+    musicsValueNotifier.value = {
+			'status': TableStatus.ready,
+			'data': jsonData,
+		};
+    // musicsValueNotifier.value['data'] = 
+  }
   bool isMp3(String file){
     String format = file.split('.').last.toLowerCase();
     return format == 'mp3';
