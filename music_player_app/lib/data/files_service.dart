@@ -145,4 +145,34 @@ class FilesService {
   //   musicsValueNotifier.value['status'] = TableStatus.ready;
     
   // }
+  void addFolderPath(String folderPath) async {
+    // if (listFoldersPathsValueNotifier.value.contains(folderPath)) return;
+
+    Directory directory = Directory(folderPath);
+    List<File> listFiles = [];
+    directory.listSync().forEach((entity) {
+      if(isMp3(entity.path)){
+        listFiles.add(File(entity.path));
+      }
+    });
+    // loadMusicsDatas(listFiles);
+  }
+  // Future<void> removeFolderPath(String folderPath) async {
+  //   musicsValueNotifier.value['status'] = TableStatus.loading;
+    
+  //   listFoldersPathsValueNotifier.value.remove(folderPath);
+  //   listPathsDeleted.value.add(folderPath);
+    
+  //   for (var folderPath in listPathsDeleted.value){
+  //     // listPaths.value.removeWhere((element) => element.contains(folderPath));
+  //     List<Metadata> tempAux = musicDataService.musicsValueNotifier.value['data'];
+  //     tempAux.removeWhere((element) => element.filePath!.contains(folderPath));
+  //     musicDataService.musicsValueNotifier.value['data'] = tempAux;
+  //     // musicsValueNotifier.value.removeWhere((key, value) => key[1].contains()
+  //     // 
+  //   // )}
+  //   }
+  //   musicsValueNotifier.value['status'] = TableStatus.ready;
+  //   saveValueNotifier(musicsValueNotifier.value['data']);
+  // }
 }
