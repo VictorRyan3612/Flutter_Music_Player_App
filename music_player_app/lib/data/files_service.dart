@@ -55,4 +55,38 @@ class FilesService {
 
     return pathFinal;
   }
+  Future<void> copyFileWithData(String sourcePath, String destinationPath) async {
+    try {
+      File sourceFile = File(sourcePath);
+      File destinationFile = File(destinationPath);
+
+      if (await sourceFile.exists()) {
+        IOSink destinationSink = destinationFile.openWrite();
+        await sourceFile.openRead().pipe(destinationSink);
+
+        await destinationSink.flush();
+        await destinationSink.close();
+
+        // print('Arquivo copiado com sucesso de\n $sourcePath \npara\n $destinationPath');
+        
+      } else {
+        print('Arquivo de origem não encontrado: $sourcePath');
+      }
+    } catch (e) {
+      print('Erro ao copiar arquivo: $e');
+    }
+  }
+  Future<String> copyErrorMusic (String pathOrigin) async{
+    Directory directory = await folderMusicsErrors();
+    String pathFinal = finalNamePath(directoryFolder: directory, musicPath: pathOrigin);
+
+    await copyFileWithData(pathOrigin, pathFinal);
+    return pathFinal;
+  }
+  Future<Directory> folderMusicsErrors() async{
+    Directory directory = await getApplicationSupportDirectory();
+    Directory directoryMusicsErrosFolder = Directory('${directory.path}\\musicsErrosCopies');
+    directoryMusicsErrosFolder.createSync();
+    return directoryMusicsErrosFolder;
+  }
 }
