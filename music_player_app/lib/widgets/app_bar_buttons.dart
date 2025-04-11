@@ -26,7 +26,7 @@ class AppBarButtons extends StatelessWidget implements PreferredSizeWidget{
               settingsService.isSelecting.value = false;
             } else {
               settingsService.isSelecting.value = true;
-              musicDataService.playlistsService.newplaylist.value = musicDataService.musicsValueNotifier.value['data'];
+              // musicDataService.playlistsService.newplaylist.value = musicDataService.musicsValueNotifier.value['data'];
               
             }
 
@@ -79,7 +79,7 @@ class AppBarButtons extends StatelessWidget implements PreferredSizeWidget{
                                   ListTile(
                                     title: Text('Reproduzir em seguida'),
                                     onTap: () {
-                                      musicDataService.addNextPlaylist(musicDataService.playlistsService.newplaylist.value);
+                                      // musicDataService.addNextPlaylist(musicDataService.playlistsService.newplaylist.value);
                                       Navigator.of(context).pop();
                                     },
                                   )
