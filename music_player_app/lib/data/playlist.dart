@@ -20,9 +20,9 @@ class PlaylistService{
     'index': -1,
     'playlist': []
   });
-  ValueNotifier<List<Metadata>> newplaylist = ValueNotifier([]);
+  ValueNotifier<List<Map<String, dynamic>>> newplaylist = ValueNotifier([]);
 
-  Future<bool> createPlaylist(String name, {List<Metadata>? listMetadata, List<String>? listPaths}) async{
+  Future<bool> createPlaylist(String name, {List<Map<String, dynamic>>? listMetadata, List<String>? listPaths}) async{
     if (listMetadata == null && listPaths == null) {
     throw ArgumentError('Pelo menos um dos parâmetros opcionais (list ou listPaths) deve ser fornecido.');
   }
@@ -42,7 +42,7 @@ class PlaylistService{
     listPaths ??= [];
     if (listMetadata != null){
       listMetadata.forEach((element) {
-        listPathFinal.add(element.filePath!);
+        listPathFinal.add(element['filePath']!);
       });
 
     }
@@ -98,7 +98,8 @@ class PlaylistService{
   }
 
   void listplaylist(String name){
-    List<Metadata> objectsOriginals = musicDataService.originalList;
+    // Todo List<Metadata> objectsOriginals = musicDataServiceoriginalList;
+    List<Metadata> objectsOriginals = [];
     if (objectsOriginals.isEmpty) return;
 
     List<Metadata> objectsFiltered = [];
