@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -80,11 +81,11 @@ class ScreenMusic extends HookWidget {
               fit: StackFit.expand,
               children: [
                 
-                musicDataService.actualPlayingMusic.value['albumArt'] != null ? Stack(
+                musicDataService.actualPlayingMusic.value['albumArtPath'] != null ? Stack(
                   fit: StackFit.expand,
                   children: [
-                    Image.memory(
-                      musicDataService.actualPlayingMusic.value['albumArt']!,
+                    Image.file(
+                      File(musicDataService.actualPlayingMusic.value['albumArtPath']!),
                       fit: BoxFit.cover,
                     ),
                     Container(
@@ -120,8 +121,8 @@ class ScreenMusic extends HookWidget {
                     Center(
                       child: Padding(
                         padding: const EdgeInsets.all(50.0),
-                        child: value['albumArt'] != null ?Image.memory(
-                          value['albumArt']! ,
+                        child: value['albumArtPath'] != null ?Image.file(
+                          File(value['albumArtPath']!) ,
                           width: 400,
                           height: 400,
                         ) : Icon(Icons.music_note, weight: 400, size: 400,),

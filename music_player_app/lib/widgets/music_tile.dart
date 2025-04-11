@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:music_player_app/data/music_data_service.dart';
@@ -36,7 +38,8 @@ class MusicTile extends StatelessWidget {
       leading: Builder(
         builder: (context) {
           try {
-            return Image.memory(music['albumArt']!,width: 50, height: 50);
+            
+            return Image.file(File(music['albumArtPath']!),width: 50, height: 50);
           } catch (e) {
             return Icon(Icons.music_note,weight:50, size: 50);
           }
