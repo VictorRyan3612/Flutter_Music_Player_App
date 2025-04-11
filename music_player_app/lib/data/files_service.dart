@@ -89,4 +89,14 @@ class FilesService {
     directoryMusicsErrosFolder.createSync();
     return directoryMusicsErrosFolder;
   }
+  Future<File> saveAlbumArt({required Uint8List image, required name}) async{
+    Directory directory = await getApplicationSupportDirectory();
+    Directory directoryMusicsErrosFolder = Directory('${directory.path}\\AlbumsArt');
+    print('${directoryMusicsErrosFolder.path}\\$name.jpg');
+    // path.join()
+    directoryMusicsErrosFolder.createSync();
+    var fileImage = File('${directoryMusicsErrosFolder.path}\\$name.jpg');
+    fileImage.writeAsBytesSync(image);
+    return fileImage; 
+  }
 }
