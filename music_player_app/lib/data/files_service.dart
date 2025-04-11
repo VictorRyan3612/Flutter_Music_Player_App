@@ -102,7 +102,7 @@ class FilesService {
     return fileImage; 
   }
 
-  Future<void> loadMusicsDatas(List<File> listFiles) async{
+  Future<List<Map<String, dynamic>>> loadMusicsDatas(List<File> listFiles) async{
     List<Map<String, dynamic>> musicsDatas = [];
     List listMusicsError = [];
     var count = 0;
@@ -136,7 +136,8 @@ class FilesService {
         // saveValueNotifier(musicsDatas);
       }
     }
-    saveJson(musicsDatas);
+    return musicsDatas;
+    // saveJson(musicsDatas);
     // print(musicsDatas);
     // musicsValueNotifier.value['data'].addAll(musicsDatas);
     // originalList = musicsValueNotifier.value['data'];
@@ -147,17 +148,16 @@ class FilesService {
     
   }
 
-  void addFolderPath(String folderPath) async {
-    if (settingsService.listFoldersPaths.value.contains(folderPath)) return;
+  List<File> getListMp3Files({required Directory directory, Function? after})  {
+    if (settingsService.listFoldersPaths.value.contains(directory.path)) return [];
 
-    Directory directory = Directory(folderPath);
     List<File> listFiles = [];
     directory.listSync().forEach((entity) {
       if(isMp3(entity.path)){
         listFiles.add(File(entity.path));
       }
     });
-    loadMusicsDatas(listFiles);
+    return listFiles;
   }
   Future<void> removeFolderPath(String folderPath) async {
   }

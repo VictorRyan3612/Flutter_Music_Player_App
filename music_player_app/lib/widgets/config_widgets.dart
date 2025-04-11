@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:music_player_app/config/settings_data_service.dart';
@@ -49,8 +51,9 @@ List<Widget> listWidgets = [
       
       if (folder != null) {
         print('Pasta selecionada: $folder');
+        Directory directory = Directory(folder);
         settingsService.saveSettings();
-        filesService.addFolderPath(folder);
+        musicDataService.addFolderPath(directory);
       } else {
         print('Nenhuma pasta selecionada.');
       }

@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:music_player_app/data/files_service.dart';
 import 'package:music_player_app/data/playlist.dart';
 
 
@@ -14,7 +16,7 @@ class MusicDataService{
   ValueNotifier<List<String>> listMusicsError = ValueNotifier([]);
   ValueNotifier<Map<String,dynamic>> musicsValueNotifier = ValueNotifier({
     'status': TableStatus.idle,
-    'data': <List<Map<String, dynamic>>> []
+    'data':  <Map<String, dynamic>>[]
   });
 
 
@@ -55,7 +57,19 @@ class MusicDataService{
     playlistsService.loadPlaylists();
   }
 
+  void addFolderPath(Directory directory) async{
+    List<File> listMp3 = filesService.getListMp3Files(directory: directory);
+    List<Map<String, dynamic>> musics = await filesService.loadMusicsDatas(listMp3);
+    
+    var musicsActual = musicsValueNotifier.value['data'];
+    musicsActual.addAll(musics);
 
+    filesService.saveJson(musicsActual);
+    
+    musicsValueNotifier.value['status'] = TableStatus.ready;
+
+    saveValueNotifier(musicsActual);
+  }
 
   void setsTags(Map<String,dynamic> metadata){
     setAlbumName.add(stringNonNull(metadata['albumName']));
