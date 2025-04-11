@@ -3,10 +3,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
+import 'package:music_player_app/data/files_service.dart';
 import 'package:music_player_app/data/music_data_service.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PlaylistService{
+  FilesService filesService = FilesService();
   Set<String> setPlaylistsNames = {};
   ValueNotifier<List<Map<String,dynamic>>> playlists = ValueNotifier([
     {
@@ -124,7 +126,7 @@ class PlaylistService{
 
     directoryApp.listSync().forEach((element) {
       File file = File(element.path);
-      musicDataService.copyFileWithData(file.path, musicDataService.finalNamePath(directoryFolder: directoryFinal, musicPath: file.path));
+      filesService.copyFileWithData(file.path, filesService.finalNamePath(directoryFolder: directoryFinal, musicPath: file.path));
     });
     
     
@@ -144,7 +146,7 @@ class PlaylistService{
       stringName = stringName.split('.').first;
 
       if (stringName == name){
-      musicDataService.copyFileWithData(file.path, musicDataService.finalNamePath(directoryFolder: directoryFinal, musicPath: file.path));
+      filesService.copyFileWithData(file.path, filesService.finalNamePath(directoryFolder: directoryFinal, musicPath: file.path));
 
       }
 
