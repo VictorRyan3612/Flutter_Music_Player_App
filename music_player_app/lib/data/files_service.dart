@@ -157,7 +157,8 @@ class FilesService {
     });
     // loadMusicsDatas(listFiles);
   }
-  // Future<void> removeFolderPath(String folderPath) async {
+  Future<void> removeFolderPath(String folderPath) async {
+  }
   //   musicsValueNotifier.value['status'] = TableStatus.loading;
     
   //   listFoldersPathsValueNotifier.value.remove(folderPath);
@@ -176,3 +177,4 @@ class FilesService {
   //   saveValueNotifier(musicsValueNotifier.value['data']);
   // }
 }
+FilesService filesService = FilesService();

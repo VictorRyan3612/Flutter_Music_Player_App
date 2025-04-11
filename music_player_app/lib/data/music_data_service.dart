@@ -55,13 +55,8 @@ class MusicDataService{
     playlistsService.loadPlaylists();
   }
 
-  void addFolderPath(String folderPath) async {
-    
-  }
 
-  Future<void> removeFolderPath(String folderPath) async {
-    
-  }
+
   void setsTags(Map<String,dynamic> metadata){
     setAlbumName.add(stringNonNull(metadata['albumName']));
     setGenders.add(stringNonNull(metadata['genre']));
