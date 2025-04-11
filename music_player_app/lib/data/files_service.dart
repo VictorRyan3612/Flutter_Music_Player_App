@@ -22,7 +22,7 @@ class FilesService {
     // file.writeAsSync(json.encode(musicsValueNotifier.value['data']));
     file.writeAsBytesSync(teste, mode: FileMode.append);
   }
-  
+
   Future<List<Map<String,dynamic>>> loadJson() async{
     Directory directory = await getApplicationSupportDirectory();
     print(directory);
@@ -37,5 +37,22 @@ class FilesService {
 
     return jsonData;
     // musicsValueNotifier.value['data'] = 
+  }
+
+  bool isMp3(String file){
+    String format = file.split('.').last.toLowerCase();
+    return format == 'mp3';
+  }
+
+  String finalNamePath({required Directory directoryFolder, required String musicPath}){
+    
+    String nameMusic = musicPath!.split('\\').last;
+
+    RegExp regex = RegExp(r'[^\x00-\x7F]');
+    String nameFormated = nameMusic.replaceAll(regex, '');
+
+    String pathFinal = '${directoryFolder.path}\\$nameFormated' ;
+
+    return pathFinal;
   }
 }
