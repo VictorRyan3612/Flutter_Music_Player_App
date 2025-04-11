@@ -57,193 +57,19 @@ class MusicDataService{
     shuffle = shuffle;
     // setFoldersPath(listFoldersPaths);
     playlistsService.loadPlaylists();
-    loadJson();
-
-  }
-
-  void loadJson() async{
-    Directory directory = await getApplicationSupportDirectory();
-    print(directory);
-    File file = File('${directory.path}\\allmusics.json');
-
-    if(!file.existsSync()){
-      file.createSync();
-    } 
-    Uint8List bytes = await file.readAsBytes();
-		String jsonString = utf8.decode(bytes);
-		List<dynamic> jsonData = jsonDecode(jsonString);
-
-    // List<Map<String, dynamic>> musicList = jsonData.map((e) => Metadata.fromJson(e)).toList();
-    musicsValueNotifier.value = {
-			'status': TableStatus.ready,
-			'data': jsonData,
-		};
-    // musicsValueNotifier.value['data'] = 
-  }
-  bool isMp3(String file){
-    String format = file.split('.').last.toLowerCase();
-    return format == 'mp3';
-  }
-
-  void saveJson() async{
-    Directory directory = await getApplicationSupportDirectory();
-    print(directory);
-    File file = File('${directory.path}\\allmusics.json');
-    print(file.path);
-    if(!file.existsSync()){
-      file.createSync();
-
-    }
-    String jsonString = jsonEncode(musicsValueNotifier.value['data']);
-    // file.writeAsStringSync(musicsValueNotifier.value['data'].toString());
-    var teste = Uint8List.fromList(utf8.encode(jsonString));
-    // file.writeAsSync(json.encode(musicsValueNotifier.value['data']));
-    file.writeAsBytesSync(teste, mode: FileMode.append);
-  }
-  Future<void> copyFileWithData(String sourcePath, String destinationPath) async {
-    musicsValueNotifier.value['status'] = TableStatus.loading;
-    try {
-      File sourceFile = File(sourcePath);
-      File destinationFile = File(destinationPath);
-
-      if (await sourceFile.exists()) {
-        IOSink destinationSink = destinationFile.openWrite();
-        await sourceFile.openRead().pipe(destinationSink);
-
-        await destinationSink.flush();
-        await destinationSink.close();
-
-        // print('Arquivo copiado com sucesso de\n $sourcePath \npara\n $destinationPath');
-        
-      } else {
-        print('Arquivo de origem não encontrado: $sourcePath');
-      }
-      musicsValueNotifier.value['status'] = TableStatus.ready;
-    } catch (e) {
-      print('Erro ao copiar arquivo: $e');
-      musicsValueNotifier.value['status'] = TableStatus.error;
-    }
-  }
-
-
-  String finalNamePath({required Directory directoryFolder, required String musicPath}){
-    
-    String nameMusic = musicPath!.split('\\').last;
-
-    RegExp regex = RegExp(r'[^\x00-\x7F]');
-    String nameFormated = nameMusic.replaceAll(regex, '');
-
-    String pathFinal = '${directoryFolder.path}\\$nameFormated' ;
-
-    return pathFinal;
-  }
-
-
-  Future<Directory> folderMusicsErrors() async{
-    Directory directory = await getApplicationSupportDirectory();
-    Directory directoryMusicsErrosFolder = Directory('${directory.path}\\musicsErrosCopies');
-    directoryMusicsErrosFolder.createSync();
-    return directoryMusicsErrosFolder;
-  }
-
-  Future<String> copyErrorMusic (String pathOrigin) async{
-    Directory directory = await folderMusicsErrors();
-    String pathFinal = finalNamePath(directoryFolder: directory, musicPath: pathOrigin);
-
-    await copyFileWithData(pathOrigin, pathFinal);
-    return pathFinal;
   }
 
   void addFolderPath(String folderPath) async {
-    if (listFoldersPathsValueNotifier.value.contains(folderPath)) return;
-
-    Directory directory = Directory(folderPath);
-    List<File> listFiles = [];
-    directory.listSync().forEach((entity) {
-      if(isMp3(entity.path)){
-        listFiles.add(File(entity.path));
-      }
-    });
-    loadMusicsDatas(listFiles);
+    
   }
 
   Future<void> removeFolderPath(String folderPath) async {
-    musicsValueNotifier.value['status'] = TableStatus.loading;
     
-    listFoldersPathsValueNotifier.value.remove(folderPath);
-    listPathsDeleted.value.add(folderPath);
-    
-    for (var folderPath in listPathsDeleted.value){
-      // listPaths.value.removeWhere((element) => element.contains(folderPath));
-      List<Metadata> tempAux = musicDataService.musicsValueNotifier.value['data'];
-      tempAux.removeWhere((element) => element.filePath!.contains(folderPath));
-      musicDataService.musicsValueNotifier.value['data'] = tempAux;
-      // musicsValueNotifier.value.removeWhere((key, value) => key[1].contains()
-      // 
-    // )}
-    }
-    musicsValueNotifier.value['status'] = TableStatus.ready;
-    saveValueNotifier(musicsValueNotifier.value['data']);
   }
   void setsTags(Metadata metadata){
     setAlbumName.add(stringNonNull(metadata.albumName));
     setGenders.add(stringNonNull(metadata.genre));
     setAlbumArtistName.add(stringNonNull(metadata.albumArtistName));
-  }
-  Future<File> saveAlbumArt({required Uint8List image, required name}) async{
-    Directory directory = await getApplicationSupportDirectory();
-    Directory directoryMusicsErrosFolder = Directory('${directory.path}\\AlbumsArt');
-    print('${directoryMusicsErrosFolder.path}\\$name.jpg');
-    // path.join()
-    directoryMusicsErrosFolder.createSync();
-    var fileImage = File('${directoryMusicsErrosFolder.path}\\$name.jpg');
-    fileImage.writeAsBytesSync(image);
-    return fileImage; 
-  }
-
-  Future<void> loadMusicsDatas(List<File> listFiles) async{
-    List<Map<String, dynamic>> musicsDatas = [];
-    musicsValueNotifier.value['status'] = TableStatus.loading;
-    var count = 0;
-    for (var singlePath in listFiles) {
-      try {
-        var metadata = await MetadataRetriever.fromFile(singlePath);
-        if(metadata.bitrate == null){
-          String musicCopiedpath = await copyErrorMusic(metadata.filePath!);
-          listMusicsError.value.add(musicCopiedpath);
-          
-          metadata = await MetadataRetriever.fromFile(File(musicCopiedpath));
-        }
-        // print(metadata);
-        Map<String, dynamic> aux ={};
-        aux.addAll(metadata.toJson());
-        if (metadata.albumArt != null) {
-          File file = await saveAlbumArt(image: metadata.albumArt!, name: metadata.albumName!);
-          aux.addAll({'albumArtPath': file.path});
-        }
-        musicsDatas.add(aux);
-        setsTags(metadata);
-
-      } catch (error) {
-        print('Erro ao obter metadados do arquivo: $error');
-        musicsValueNotifier.value['status'] = TableStatus.error;
-      }
-      count++;
-      if(count == 50){
-        count = 0;
-        // sortMusicByField();
-        // saveValueNotifier(musicsDatas);
-      }
-    }
-    saveJson();
-    // print(musicsDatas);
-    musicsValueNotifier.value['data'].addAll(musicsDatas);
-    // originalList = musicsValueNotifier.value['data'];
-    // sortMusicByField();
-    saveValueNotifier(musicsDatas);
-    // print(musicsValueNotifier.value['data']);
-    musicsValueNotifier.value['status'] = TableStatus.ready;
-    
   }
 
 
