@@ -47,13 +47,17 @@ class MusicDataService{
     required List<String> listFoldersPaths, 
     required bool addRepeat, 
     required bool repeat,
-    required bool shuffle})
+    required bool shuffle}) async
     {
   
     addRepeat = addRepeat;
     repeat = repeat;
     shuffle = shuffle;
-    // setFoldersPath(listFoldersPaths);
+
+    musicsValueNotifier.value['data'] = await filesService.loadJson();
+    musicsValueNotifier.value['status'] = TableStatus.ready;
+    saveValueNotifier(musicsValueNotifier.value['data']);
+
     playlistsService.loadPlaylists();
   }
 
@@ -65,7 +69,7 @@ class MusicDataService{
     musicsActual.addAll(musics);
 
     filesService.saveJson(musicsActual);
-    
+
     musicsValueNotifier.value['status'] = TableStatus.ready;
 
     saveValueNotifier(musicsActual);

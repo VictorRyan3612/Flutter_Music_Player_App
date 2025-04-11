@@ -27,7 +27,7 @@ class FilesService {
 
   Future<List<Map<String,dynamic>>> loadJson() async{
     Directory directory = await getApplicationSupportDirectory();
-    print(directory);
+
     File file = File('${directory.path}\\allmusics.json');
 
     if(!file.existsSync()){
@@ -35,8 +35,8 @@ class FilesService {
     } 
     Uint8List bytes = await file.readAsBytes();
 		String jsonString = utf8.decode(bytes);
-		List<Map<String,dynamic>> jsonData = jsonDecode(jsonString);
-
+		List<Map<String,dynamic>> jsonData = List.from(jsonDecode(jsonString));
+    print(jsonData);
     return jsonData;
     // musicsValueNotifier.value['data'] = 
   }
