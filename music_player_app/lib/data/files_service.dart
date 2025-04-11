@@ -103,50 +103,50 @@ class FilesService {
   }
 
   Future<void> loadMusicsDatas(List<File> listFiles) async{
-  }
-  //   List<Map<String, dynamic>> musicsDatas = [];
-  //   musicsValueNotifier.value['status'] = TableStatus.loading;
-  //   var count = 0;
-  //   for (var singlePath in listFiles) {
-  //     try {
-  //       var metadata = await MetadataRetriever.fromFile(singlePath);
-  //       if(metadata.bitrate == null){
-  //         String musicCopiedpath = await copyErrorMusic(metadata.filePath!);
-  //         listMusicsError.value.add(musicCopiedpath);
+    List<Map<String, dynamic>> musicsDatas = [];
+    List listMusicsError = [];
+    var count = 0;
+    for (var singlePath in listFiles) {
+      try {
+        var metadata = await MetadataRetriever.fromFile(singlePath);
+        if(metadata.bitrate == null){
+          String musicCopiedpath = await copyErrorMusic(metadata.filePath!);
+          listMusicsError.add(musicCopiedpath);
           
-  //         metadata = await MetadataRetriever.fromFile(File(musicCopiedpath));
-  //       }
-  //       // print(metadata);
-  //       Map<String, dynamic> aux ={};
-  //       aux.addAll(metadata.toJson());
-  //       if (metadata.albumArt != null) {
-  //         File file = await saveAlbumArt(image: metadata.albumArt!, name: metadata.albumName!);
-  //         aux.addAll({'albumArtPath': file.path});
-  //       }
-  //       musicsDatas.add(aux);
-  //       setsTags(metadata);
+          metadata = await MetadataRetriever.fromFile(File(musicCopiedpath));
+        }
+        // print(metadata);
+        Map<String, dynamic> aux ={};
+        aux.addAll(metadata.toJson());
+        if (metadata.albumArt != null) {
+          File file = await saveAlbumArt(image: metadata.albumArt!, name: metadata.albumName!);
+          aux.addAll({'albumArtPath': file.path});
+        }
+        aux.remove('albumArt');
+        musicsDatas.add(aux);
+        // setsTags(metadata);
 
-  //     } catch (error) {
-  //       print('Erro ao obter metadados do arquivo: $error');
-  //       musicsValueNotifier.value['status'] = TableStatus.error;
-  //     }
-  //     count++;
-  //     if(count == 50){
-  //       count = 0;
-  //       // sortMusicByField();
-  //       // saveValueNotifier(musicsDatas);
-  //     }
-  //   }
-  //   saveJson();
-  //   // print(musicsDatas);
-  //   musicsValueNotifier.value['data'].addAll(musicsDatas);
-  //   // originalList = musicsValueNotifier.value['data'];
-  //   // sortMusicByField();
-  //   saveValueNotifier(musicsDatas);
-  //   // print(musicsValueNotifier.value['data']);
-  //   musicsValueNotifier.value['status'] = TableStatus.ready;
+      } catch (error) {
+        print('Erro ao obter metadados do arquivo: $error');
+      }
+      count++;
+      if(count == 50){
+        count = 0;
+        // sortMusicByField();
+        // saveValueNotifier(musicsDatas);
+      }
+    }
+    saveJson(musicsDatas);
+    // print(musicsDatas);
+    // musicsValueNotifier.value['data'].addAll(musicsDatas);
+    // originalList = musicsValueNotifier.value['data'];
+    // sortMusicByField();
+    // saveValueNotifier(musicsDatas);
+    // print(musicsValueNotifier.value['data']);
+    // musicsValueNotifier.value['status'] = TableStatus.ready;
     
-  // }
+  }
+
   void addFolderPath(String folderPath) async {
     if (settingsService.listFoldersPaths.value.contains(folderPath)) return;
 
