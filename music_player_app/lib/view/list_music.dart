@@ -66,7 +66,7 @@ class ListMusics extends StatelessWidget {
 class ListViewMusic extends HookWidget {
   final List listMusics;
   final ValueNotifier<bool>? isSelecting;
-  final ValueNotifier<List<Metadata>>? playlist;
+  final ValueNotifier<List<Map<String, dynamic>>>? playlist;
   const ListViewMusic({
     super.key,
     required this.listMusics,
@@ -81,7 +81,7 @@ class ListViewMusic extends HookWidget {
     final listSelected = playlist ?? useState([]);
     final isSelectingState = isSelecting ?? useState(false);
     final selectedItem = useState<int>(-1);
-    void showContextMenu(BuildContext context, Metadata music, Offset position) {
+    void showContextMenu(BuildContext context, Map<String, dynamic> music, Offset position) {
       showMenu(
         context: context,
         position: RelativeRect.fromLTRB(position.dx, position.dy, position.dx, position.dy),
@@ -100,8 +100,8 @@ class ListViewMusic extends HookWidget {
         ],
       );
     }
-    void modifyList(Metadata metadata, Function(List<Metadata> list, Metadata metadata) function){
-      final lista = List<Metadata>.from(listSelected.value);
+    void modifyList(Map<String, dynamic> metadata, Function(List<Map<String, dynamic>> list, Map<String, dynamic> metadata) function){
+      final lista = List<Map<String, dynamic>>.from(listSelected.value);
       function(lista, metadata);
       listSelected.value = lista;
     }
