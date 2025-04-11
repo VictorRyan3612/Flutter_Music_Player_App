@@ -4,11 +4,12 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
+import 'package:music_player_app/config/settings_data_service.dart';
 import 'package:path_provider/path_provider.dart';
 
 class FilesService {
 
-  void saveJson(Map<String, dynamic> musics) async{
+  void saveJson(List<Map<String, dynamic>> musics) async{
     Directory directory = await getApplicationSupportDirectory();
     print(directory);
     File file = File('${directory.path}\\allmusics.json');
@@ -21,7 +22,7 @@ class FilesService {
     // file.writeAsStringSync(musicsValueNotifier.value['data'].toString());
     var teste = Uint8List.fromList(utf8.encode(jsonString));
     // file.writeAsSync(json.encode(musicsValueNotifier.value['data']));
-    file.writeAsBytesSync(teste, mode: FileMode.append);
+    file.writeAsBytesSync(teste);
   }
 
   Future<List<Map<String,dynamic>>> loadJson() async{
@@ -101,7 +102,8 @@ class FilesService {
     return fileImage; 
   }
 
-  // Future<void> loadMusicsDatas(List<File> listFiles) async{
+  Future<void> loadMusicsDatas(List<File> listFiles) async{
+  }
   //   List<Map<String, dynamic>> musicsDatas = [];
   //   musicsValueNotifier.value['status'] = TableStatus.loading;
   //   var count = 0;
@@ -146,7 +148,7 @@ class FilesService {
     
   // }
   void addFolderPath(String folderPath) async {
-    // if (listFoldersPathsValueNotifier.value.contains(folderPath)) return;
+    if (settingsService.listFoldersPaths.value.contains(folderPath)) return;
 
     Directory directory = Directory(folderPath);
     List<File> listFiles = [];
@@ -155,7 +157,7 @@ class FilesService {
         listFiles.add(File(entity.path));
       }
     });
-    // loadMusicsDatas(listFiles);
+    loadMusicsDatas(listFiles);
   }
   Future<void> removeFolderPath(String folderPath) async {
   }
