@@ -66,7 +66,21 @@ class MusicDataService{
     return format == 'mp3';
   }
 
+  void saveJson() async{
+    Directory directory = await getApplicationSupportDirectory();
+    print(directory);
+    File file = File('${directory.path}\\allmusics.json');
+    print(file.path);
+    if(!file.existsSync()){
+      file.createSync();
 
+    }
+    String jsonString = jsonEncode(musicsValueNotifier.value['data']);
+    // file.writeAsStringSync(musicsValueNotifier.value['data'].toString());
+    var teste = Uint8List.fromList(utf8.encode(jsonString));
+    // file.writeAsSync(json.encode(musicsValueNotifier.value['data']));
+    file.writeAsBytesSync(teste, mode: FileMode.append);
+  }
   Future<void> copyFileWithData(String sourcePath, String destinationPath) async {
     musicsValueNotifier.value['status'] = TableStatus.loading;
     try {
@@ -202,6 +216,7 @@ class MusicDataService{
         // saveValueNotifier(musicsDatas);
       }
     }
+    saveJson();
     // print(musicsDatas);
     musicsValueNotifier.value['data'].addAll(musicsDatas);
     // originalList = musicsValueNotifier.value['data'];
