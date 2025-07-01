@@ -194,11 +194,11 @@ class MusicDataService{
       listMusic = List.from(listMusic.reversed);
     } 
     else {
-      // listMusic.sort((a, b) {
-      //   String valueA = a.toJson()[field];
-      //   String valueB = b.toJson()[field];
-      //   return valueA.compareTo(valueB);
-      // });
+      listMusic.sort((a, b) {
+        String valueA = a[field];
+        String valueB = b[field];
+        return valueA.compareTo(valueB);
+      });
       isSorted = true;
     }
     musicsValueNotifier.value['data'] = listMusic;
