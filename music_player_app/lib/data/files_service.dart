@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:music_player_app/config/settings_data_service.dart';
+import 'package:music_player_app/data/music_data_service.dart';
 import 'package:path_provider/path_provider.dart';
 
 class FilesService {
@@ -124,7 +125,8 @@ class FilesService {
         }
         aux.remove('albumArt');
         musicsDatas.add(aux);
-        // setsTags(metadata);
+        // print(aux);
+        musicDataService.setsTags(aux);
 
       } catch (error) {
         print('Erro ao obter metadados do arquivo: $error');
