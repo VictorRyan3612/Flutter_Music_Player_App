@@ -55,6 +55,7 @@ class MusicDataService{
     shuffle = shuffle;
 
     musicsValueNotifier.value['data'] = await filesService.loadJson();
+    originalList = musicsValueNotifier.value['data'];
     musicsValueNotifier.value['status'] = TableStatus.ready;
     saveValueNotifier(musicsValueNotifier.value['data']);
 
