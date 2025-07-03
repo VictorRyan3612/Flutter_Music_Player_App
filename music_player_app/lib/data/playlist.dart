@@ -3,10 +3,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_media_metadata/flutter_media_metadata.dart';
+import 'package:music_player_app/data/files_service.dart';
 import 'package:music_player_app/data/music_data_service.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PlaylistService{
+  FilesService filesService = FilesService();
   Set<String> setPlaylistsNames = {};
   ValueNotifier<List<Map<String,dynamic>>> playlists = ValueNotifier([
     {
@@ -16,11 +18,11 @@ class PlaylistService{
   ]);
     ValueNotifier<Map<String,dynamic>> actualPlaylist = ValueNotifier({
     'index': -1,
-    'playlist': <Metadata>[]
+    'playlist': []
   });
-  ValueNotifier<List<Metadata>> newplaylist = ValueNotifier([]);
+  ValueNotifier<List<Map<String, dynamic>>> newplaylist = ValueNotifier([]);
 
-  Future<bool> createPlaylist(String name, {List<Metadata>? listMetadata, List<String>? listPaths}) async{
+  Future<bool> createPlaylist(String name, {List<Map<String, dynamic>>? listMetadata, List<String>? listPaths}) async{
     if (listMetadata == null && listPaths == null) {
     throw ArgumentError('Pelo menos um dos parâmetros opcionais (list ou listPaths) deve ser fornecido.');
   }
@@ -35,18 +37,9 @@ class PlaylistService{
       return true;
     }
 
-    List<String> listPathFinal =  listPaths ?? [];
-    // listMetadata ??= [];
-    listPaths ??= [];
-    if (listMetadata != null){
-      listMetadata.forEach((element) {
-        listPathFinal.add(element.filePath!);
-      });
-
-    }
     Map<String,dynamic> mapPlaylist = {
       'name': name,
-      'playlist': listPathFinal
+      'playlist': listMetadata
     };
     String jsonString = json.encode(mapPlaylist);
     
@@ -96,23 +89,14 @@ class PlaylistService{
   }
 
   void listplaylist(String name){
-    List<Metadata> objectsOriginals = musicDataService.originalList;
-    if (objectsOriginals.isEmpty) return;
-
-    List<Metadata> objectsFiltered = [];
     List test =[];
+
     for (var playlist in playlists.value){
       if (playlist['name'] == name){
         test = playlist['playlist'];
       }
     }
-    for (var objetoInd in objectsOriginals) {
-      if (test.contains(objetoInd.filePath)) {
-          objectsFiltered.add(objetoInd);
-      }
-    }
-
-    musicDataService.saveValueNotifier(objectsFiltered);
+    musicDataService.saveValueNotifier(test);
   }
   void exportAllPlaylist(String finalFolderPath) async{
     Directory directoryApp = await getApplicationSupportDirectory();
@@ -124,7 +108,7 @@ class PlaylistService{
 
     directoryApp.listSync().forEach((element) {
       File file = File(element.path);
-      musicDataService.copyFileWithData(file.path, musicDataService.finalNamePath(directoryFolder: directoryFinal, musicPath: file.path));
+      filesService.copyFileWithData(file.path, filesService.finalNamePath(directoryFolder: directoryFinal, musicPath: file.path));
     });
     
     
@@ -144,7 +128,7 @@ class PlaylistService{
       stringName = stringName.split('.').first;
 
       if (stringName == name){
-      musicDataService.copyFileWithData(file.path, musicDataService.finalNamePath(directoryFolder: directoryFinal, musicPath: file.path));
+      filesService.copyFileWithData(file.path, filesService.finalNamePath(directoryFolder: directoryFinal, musicPath: file.path));
 
       }
 

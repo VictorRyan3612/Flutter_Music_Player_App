@@ -1,23 +1,22 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter_media_metadata/flutter_media_metadata.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:music_player_app/data/files_service.dart';
 import 'package:music_player_app/data/playlist.dart';
-import 'package:path_provider/path_provider.dart';
+
 
 enum TableStatus {idle, loading, ready, error}
 
 class MusicDataService{
   PlaylistService playlistsService = PlaylistService();
   ValueNotifier<List<String>> listFoldersPathsValueNotifier = ValueNotifier([]);
-  ValueNotifier<List<String>> listPaths = ValueNotifier([]);
+
   ValueNotifier<List<String>> listPathsDeleted = ValueNotifier([]);
   ValueNotifier<List<String>> listMusicsError = ValueNotifier([]);
   ValueNotifier<Map<String,dynamic>> musicsValueNotifier = ValueNotifier({
     'status': TableStatus.idle,
-    'data': <Metadata>[]
+    'data':  <Map<String, dynamic>>[]
   });
 
 
@@ -27,8 +26,8 @@ class MusicDataService{
     'albumArtistName'
   ];
   var ordenableFieldActual = '';
-  ValueNotifier<Metadata> actualPlayingMusic = ValueNotifier(Metadata());
-  List<Metadata> originalList = [];
+  ValueNotifier<Map<String,dynamic>> actualPlayingMusic = ValueNotifier({});
+  List<Map<String, dynamic>> originalList = [];
 
   Set<String> setAlbumName = {};
   Set<String> setAlbumArtistName = {};
@@ -48,168 +47,40 @@ class MusicDataService{
     required List<String> listFoldersPaths, 
     required bool addRepeat, 
     required bool repeat,
-    required bool shuffle})
+    required bool shuffle}) async
     {
   
     addRepeat = addRepeat;
     repeat = repeat;
     shuffle = shuffle;
-    setFoldersPath(listFoldersPaths);
 
-  }
-  void setFoldersPath(List<String> listFoldersPaths) async{
-    listFoldersPathsValueNotifier.value = listFoldersPaths;
-    foldersPathToFilesPath(listFoldersPathsValueNotifier.value);
-    loadMusicsDatas();
+    musicsValueNotifier.value['data'] = await filesService.loadJson();
+    musicsValueNotifier.value['data'].forEach((element) => setsTags(element));
+    originalList = musicsValueNotifier.value['data'];
+    musicsValueNotifier.value['status'] = TableStatus.ready;
+    saveValueNotifier(musicsValueNotifier.value['data']);
+
     playlistsService.loadPlaylists();
   }
 
-
-  
-  bool isMp3(String file){
-    String format = file.split('.').last.toLowerCase();
-    return format == 'mp3';
-  }
-
-  void foldersPathToFilesPath(List<String> listPathFolders){
-    for (var pathFolder in listPathFolders){
-      Directory directory = Directory(pathFolder);
-      directory.listSync().forEach((entity) {
-        if(isMp3(entity.path)){
-          listPaths.value.add(entity.path);
-        }
-      });
-    }
-  }
-
-  Future<void> copyFileWithData(String sourcePath, String destinationPath) async {
-    musicsValueNotifier.value['status'] = TableStatus.loading;
-    try {
-      File sourceFile = File(sourcePath);
-      File destinationFile = File(destinationPath);
-
-      if (await sourceFile.exists()) {
-        IOSink destinationSink = destinationFile.openWrite();
-        await sourceFile.openRead().pipe(destinationSink);
-
-        await destinationSink.flush();
-        await destinationSink.close();
-
-        // print('Arquivo copiado com sucesso de\n $sourcePath \npara\n $destinationPath');
-        
-      } else {
-        print('Arquivo de origem não encontrado: $sourcePath');
-      }
-      musicsValueNotifier.value['status'] = TableStatus.ready;
-    } catch (e) {
-      print('Erro ao copiar arquivo: $e');
-      musicsValueNotifier.value['status'] = TableStatus.error;
-    }
-  }
-
-
-  String finalNamePath({required Directory directoryFolder, required String musicPath}){
+  void addFolderPath(Directory directory) async{
+    List<File> listMp3 = filesService.getListMp3Files(directory: directory);
+    List<Map<String, dynamic>> musics = await filesService.loadMusicsDatas(listMp3);
     
-    String nameMusic = musicPath!.split('\\').last;
+    var musicsActual = musicsValueNotifier.value['data'];
+    musicsActual.addAll(musics);
 
-    RegExp regex = RegExp(r'[^\x00-\x7F]');
-    String nameFormated = nameMusic.replaceAll(regex, '');
+    filesService.saveJson(musicsActual);
 
-    String pathFinal = '${directoryFolder.path}\\$nameFormated' ;
-
-    return pathFinal;
-  }
-
-
-  Future<Directory> folderMusicsErrors() async{
-    Directory directory = await getApplicationSupportDirectory();
-    Directory directoryMusicsErrosFolder = Directory('${directory.path}\\musicsErrosCopies');
-    directoryMusicsErrosFolder.createSync();
-    return directoryMusicsErrosFolder;
-  }
-
-  Future<String> copyErrorMusic (String pathOrigin) async{
-    Directory directory = await folderMusicsErrors();
-    String pathFinal = finalNamePath(directoryFolder: directory, musicPath: pathOrigin);
-
-    await copyFileWithData(pathOrigin, pathFinal);
-    return pathFinal;
-  }
-
-  void addFolderPath(String folderPath) async {
-    if (listFoldersPathsValueNotifier.value.contains(folderPath)) return;
-    listFoldersPathsValueNotifier.value.add(folderPath);
-    var listFoldersPaths = [folderPath];
-    Directory directoryMaster = Directory(folderPath);
-    directoryMaster.listSync().forEach((element) {
-      if (element is Directory){
-        if (listFoldersPathsValueNotifier.value.contains(element.path)) return;
-        listFoldersPathsValueNotifier.value.add(element.path);
-        listFoldersPaths.add(element.path);
-      }
-      
-    });
-    foldersPathToFilesPath(listFoldersPaths);
-    loadMusicsDatas();
-  }
-  
-  Future<void> removeFolderPath(String folderPath) async {
-    musicsValueNotifier.value['status'] = TableStatus.loading;
-    
-    listFoldersPathsValueNotifier.value.remove(folderPath);
-    listPathsDeleted.value.add(folderPath);
-    
-    for (var folderPath in listPathsDeleted.value){
-      listPaths.value.removeWhere((element) => element.contains(folderPath));
-      List<Metadata> tempAux = musicDataService.musicsValueNotifier.value['data'];
-      tempAux.removeWhere((element) => element.filePath!.contains(folderPath));
-      musicDataService.musicsValueNotifier.value['data'] = tempAux;
-      // musicsValueNotifier.value.removeWhere((key, value) => key[1].contains()
-      // 
-    // )}
-    }
     musicsValueNotifier.value['status'] = TableStatus.ready;
-    saveValueNotifier(musicsValueNotifier.value['data']);
+
+    saveValueNotifier(musicsActual);
   }
 
-  void setsTags(Metadata metadata){
-    setAlbumName.add(stringNonNull(metadata.albumName));
-    setGenders.add(stringNonNull(metadata.genre));
-    setAlbumArtistName.add(stringNonNull(metadata.albumArtistName));
-  }
-
-  Future<void> loadMusicsDatas() async{
-    musicsValueNotifier.value['status'] = TableStatus.loading;
-    var count = 0;
-    for (var singlePath in listPaths.value) {
-      try {
-        var metadata = await MetadataRetriever.fromFile(File(singlePath));
-        if(metadata.bitrate == null){
-          String musicCopiedpath = await copyErrorMusic(metadata.filePath!);
-          listMusicsError.value.add(musicCopiedpath);
-          
-          metadata = await MetadataRetriever.fromFile(File(musicCopiedpath));
-        }
-        musicsValueNotifier.value['data'].add(metadata);
-        setsTags(metadata);
-
-      } catch (error) {
-        print('Erro ao obter metadados do arquivo: $error');
-        musicsValueNotifier.value['status'] = TableStatus.error;
-      }
-      count++;
-      if(count == 50){
-        count = 0;
-        sortMusicByField();
-        saveValueNotifier(musicsValueNotifier.value['data']);
-      }
-    }
-    originalList = musicsValueNotifier.value['data'];
-    sortMusicByField();
-    saveValueNotifier(musicsValueNotifier.value['data']);
-    // print(musicsValueNotifier.value['data']);
-    musicsValueNotifier.value['status'] = TableStatus.ready;
-    
+  void setsTags(Map<String,dynamic> metadata){
+    setAlbumName.add(stringNonNull(metadata['albumName']));
+    setGenders.add(stringNonNull(metadata['genre']));
+    setAlbumArtistName.add(stringNonNull(metadata['albumArtistName']));
   }
 
 
@@ -245,7 +116,7 @@ class MusicDataService{
       actualPlayingMusic.value = musicsValueNotifier.value['data'][index];
     }
     
-    player.setAudioSource(AudioSource.file(actualPlayingMusic.value.filePath!));
+    player.setAudioSource(AudioSource.file(actualPlayingMusic.value['filePath']!));
     player.play();
   }
   void toggleRepeat(){
@@ -255,23 +126,23 @@ class MusicDataService{
     shuffle = !shuffle;
   }
 
-  void playMusicFromMetadata(Metadata metadata) async{
+  void playMusicFromMetadata(Map<String, dynamic> metadata) async{
     musicDataService.actualPlayingMusic.value = metadata;
     
     if(musicDataService.player.playing){
       musicDataService.player.stop();
     }
-    await musicDataService.player.setAudioSource(AudioSource.file(metadata.filePath as String));
+    await musicDataService.player.setAudioSource(AudioSource.file(metadata['filePath'] as String));
     await musicDataService.player.play();
     addPlaylist(metadata);
   }
   
-  void addPlaylist(Metadata metadata){
+  void addPlaylist(Map<String,dynamic> metadata){
     playlistsService.actualPlaylist.value['playlist'].add(metadata);
     playlistsService.actualPlaylist.value['index'] +=1;
   }
 
-  void addNextPlaylist(List<Metadata> listMetadata){
+  void addNextPlaylist(List<Map<String, dynamic>> listMetadata){
     int index = 1;
     listMetadata.forEach((element) {
       playlistsService.actualPlaylist.value['playlist'].insert(playlistsService.actualPlaylist.value['index']+index,element);
@@ -286,9 +157,9 @@ class MusicDataService{
       playlistsService.actualPlaylist.value['index'] -=1;
       int index = playlistsService.actualPlaylist.value['index'];
       
-      Metadata music = playlistsService.actualPlaylist.value['playlist'][index];
+      Map<String,dynamic> music = playlistsService.actualPlaylist.value['playlist'][index];
       actualPlayingMusic.value = music;
-      player.setAudioSource(AudioSource.file(music.filePath!));
+      player.setAudioSource(AudioSource.file(music['filePath']!));
       player.play();
     }
   }
@@ -313,7 +184,7 @@ class MusicDataService{
 
 
   void sortMusicByField([String field = 'trackName']){
-    List<Metadata> listMusic = musicsValueNotifier.value['data'];
+    List listMusic = musicsValueNotifier.value['data'];
 
     if (field != ordenableFieldActual) {
       isSorted = false;
@@ -324,8 +195,8 @@ class MusicDataService{
     } 
     else {
       listMusic.sort((a, b) {
-        String valueA = a.toJson()[field];
-        String valueB = b.toJson()[field];
+        String valueA = a[field];
+        String valueB = b[field];
         return valueA.compareTo(valueB);
       });
       isSorted = true;
@@ -334,19 +205,19 @@ class MusicDataService{
     saveValueNotifier(musicsValueNotifier.value['data']);
   }
 
-  bool seachInFields (Metadata objetoInd, String filtrar){
+  bool seachInFields (Map<String, dynamic> objetoInd, String filtrar){
     final bool =
-      stringNonNull(objetoInd.trackName).toLowerCase().contains(filtrar.toLowerCase()) ||
-      stringNonNull(objetoInd.albumArtistName).toLowerCase().contains(filtrar.toLowerCase()) ||
-      stringNonNull(objetoInd.albumName).toLowerCase().contains(filtrar.toLowerCase()) ||
-      stringNonNull(objetoInd.genre).toLowerCase().contains(filtrar.toLowerCase());
+      stringNonNull(objetoInd['trackName']).toLowerCase().contains(filtrar.toLowerCase()) ||
+      stringNonNull(objetoInd['albumArtistName']).toLowerCase().contains(filtrar.toLowerCase()) ||
+      stringNonNull(objetoInd['albumName']).toLowerCase().contains(filtrar.toLowerCase()) ||
+      stringNonNull(objetoInd['genre']).toLowerCase().contains(filtrar.toLowerCase());
     return bool;
   }
   void filterCurrentState(String filtrar) {
-    List<Metadata> objectsOriginals = originalList;
+    List<Map<String, dynamic>> objectsOriginals = originalList;
     if (objectsOriginals.isEmpty) return;
 
-    List<Metadata> objectsFiltered = [];
+    List<Map<String, dynamic>> objectsFiltered = [];
     if (filtrar != '') {
       for (var objetoInd in objectsOriginals) {
         if (seachInFields(objetoInd, filtrar)) {
@@ -360,7 +231,7 @@ class MusicDataService{
 
     saveValueNotifier(objectsFiltered);
   }
-  void saveValueNotifier(List<Metadata> listMetadata) {
+  void saveValueNotifier(List listMetadata) {
     var state = Map<String, dynamic>.from(musicsValueNotifier.value);
     state['data'] = listMetadata;
     musicsValueNotifier.value = state;

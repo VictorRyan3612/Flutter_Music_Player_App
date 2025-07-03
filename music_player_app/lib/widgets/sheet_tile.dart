@@ -11,15 +11,15 @@ class SheetTile extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: musicDataService.actualPlayingMusic,
       builder: (context, value, child) {
-        if (value.filePath == null){
+        if (value['filePath'] == null){
           return Container();
         }
         return ListTile(
           
           leading: PlayButton(),
           
-          title: Text("${value.trackName}", style: TextStyle(fontSize: 20),),
-          subtitle: Text("${value.albumArtistName} - ${value.albumName}", style: TextStyle(fontSize: 15)),
+          title: Text("${value['trackName']}", style: TextStyle(fontSize: 20),),
+          subtitle: Text("${value['albumArtistName']} - ${value['albumName']}", style: TextStyle(fontSize: 15)),
           onTap: () {
             Navigator.push(
               context,

@@ -25,13 +25,16 @@ void main() {
     configWidget: ConfigWidgets(
       trailingWidgets: listWidgets
     ),
-    routes: {
-      '/': (context) => VicrLayoutDecider(
-        isMobile: settingsService.isMobile,
-        optionMobile: MobileHomeScreen(),
-        optionDesktop: DesktopHomeScreen(),
-      ),
-    }
+    materialApp: MaterialApp(
+      debugShowCheckedModeBanner: false,
+      routes: {
+        '/': (context) => VicrLayoutDecider(
+          isMobile: settingsService.isMobile,
+          optionMobile: MobileHomeScreen(),
+          optionDesktop: DesktopHomeScreen(),
+        ),
+      }
+    ),
   ));
 }
 
