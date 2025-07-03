@@ -37,18 +37,9 @@ class PlaylistService{
       return true;
     }
 
-    List<String> listPathFinal =  listPaths ?? [];
-    // listMetadata ??= [];
-    listPaths ??= [];
-    if (listMetadata != null){
-      listMetadata.forEach((element) {
-        listPathFinal.add(element['filePath']!);
-      });
-
-    }
     Map<String,dynamic> mapPlaylist = {
       'name': name,
-      'playlist': listPathFinal
+      'playlist': listMetadata
     };
     String jsonString = json.encode(mapPlaylist);
     
@@ -98,24 +89,14 @@ class PlaylistService{
   }
 
   void listplaylist(String name){
-    // Todo List<Metadata> objectsOriginals = musicDataServiceoriginalList;
-    List<Metadata> objectsOriginals = [];
-    if (objectsOriginals.isEmpty) return;
-
-    List<Metadata> objectsFiltered = [];
     List test =[];
+
     for (var playlist in playlists.value){
       if (playlist['name'] == name){
         test = playlist['playlist'];
       }
     }
-    for (var objetoInd in objectsOriginals) {
-      if (test.contains(objetoInd.filePath)) {
-          objectsFiltered.add(objetoInd);
-      }
-    }
-
-    musicDataService.saveValueNotifier(objectsFiltered);
+    musicDataService.saveValueNotifier(test);
   }
   void exportAllPlaylist(String finalFolderPath) async{
     Directory directoryApp = await getApplicationSupportDirectory();
