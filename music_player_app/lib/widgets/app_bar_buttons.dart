@@ -21,17 +21,19 @@ class AppBarButtons extends StatelessWidget implements PreferredSizeWidget{
           tooltip: 'Selecionar tudo',
           icon: Icon(Icons.select_all),
           onPressed: () {
-            if (settingsService.isSelecting.value && musicDataService.playlistsService.newplaylist.value == musicDataService.musicsValueNotifier.value['data']) {
-              musicDataService.playlistsService.newplaylist.value = [];
+            final allMusics = musicDataService.musicsValueNotifier.value['data'];
+            final selected = musicDataService.playlistsService.newplaylist;
+
+            if (settingsService.isSelecting.value && selected.value.length == allMusics.length) {
+              selected.value = [];
               settingsService.isSelecting.value = false;
             } else {
               settingsService.isSelecting.value = true;
-              // musicDataService.playlistsService.newplaylist.value = musicDataService.musicsValueNotifier.value['data'];
-              
+              selected.value = List<Map<String, dynamic>>.from(allMusics);
             }
-
           },
         ),
+
         ValueListenableBuilder(
           valueListenable: settingsService.isSelecting, 
           builder: (context, value, child) {
@@ -41,22 +43,27 @@ class AppBarButtons extends StatelessWidget implements PreferredSizeWidget{
                   IconButton(
                     icon: Icon(Icons.all_out),
                     onPressed: () {
-                      if (musicDataService.musicsValueNotifier.value['data'] == musicDataService.playlistsService.newplaylist.value) {
-                        musicDataService.playlistsService.newplaylist.value = [];
+                      final allMusics = musicDataService.musicsValueNotifier.value['data'];
+                      final selected = musicDataService.playlistsService.newplaylist;
+
+                      final newList = <Map<String, dynamic>>[];
+
+                      for (var music in allMusics) {
+                        if (!selected.value.contains(music)) {
+                          newList.add(music);
+                        }
+                      }
+
+                      selected.value = newList;
+
+                      if (selected.value.isEmpty) {
                         settingsService.isSelecting.value = false;
                       } else {
-                        musicDataService.musicsValueNotifier.value['data'].forEach((element) {
-                        if(musicDataService.playlistsService.newplaylist.value.contains(element)){
-                          musicDataService.playlistsService.newplaylist.value.remove(element);
-                        }
-                        else{
-                          musicDataService.playlistsService.newplaylist.value.add(element);
-                        }
-                      });
+                        settingsService.isSelecting.value = true;
                       }
-                      
                     },
                   ),
+
                   IconButton(
                     tooltip: 'Ações',
                     icon: Icon(Icons.more_vert),
