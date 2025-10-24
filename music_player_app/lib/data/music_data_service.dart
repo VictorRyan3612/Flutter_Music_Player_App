@@ -84,7 +84,17 @@ class MusicDataService{
     saveValueNotifier(musicsActual);
   }
 
-  void setsTags(Map<String,dynamic> metadata){
+  void addFolderMotherPath(Directory directory) {
+    musicDataService.addFolderPath(directory);
+
+    for (var element in directory.listSync()) {
+      if (element is Directory) {
+        addFolderPath(element);
+      }
+    }
+  }
+
+  void setsTags(Map<String, dynamic> metadata) {
     setAlbumName.add(stringNonNull(metadata['albumName']));
     setGenders.add(stringNonNull(metadata['genre']));
     setAlbumArtistName.add(stringNonNull(metadata['albumArtistName']));

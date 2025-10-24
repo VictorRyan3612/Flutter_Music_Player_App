@@ -45,7 +45,7 @@ List<Widget> listWidgets = [
   ),
   
   ListTile(
-    title: Text("Selecionar Pastas"),
+    title: Text("Selecionar Pasta (individual)"),
     onTap: () async {
       String? folder = await FilePicker.platform.getDirectoryPath();
       
@@ -53,7 +53,25 @@ List<Widget> listWidgets = [
         print('Pasta selecionada: $folder');
         Directory directory = Directory(folder);
         settingsService.saveSettings();
+        
         musicDataService.addFolderPath(directory);
+      } else {
+        print('Nenhuma pasta selecionada.');
+      }
+
+    },
+  ),
+  ListTile(
+    title: Text("Selecionar pasta mãe (sub pastas com músicas)"),
+    onTap: () async {
+      String? folder = await FilePicker.platform.getDirectoryPath();
+      
+      if (folder != null) {
+        print('Pasta selecionada: $folder');
+        Directory directory = Directory(folder);
+        settingsService.saveSettings();
+        
+        musicDataService.addFolderMotherPath(directory);
       } else {
         print('Nenhuma pasta selecionada.');
       }
