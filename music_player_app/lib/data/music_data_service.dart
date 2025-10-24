@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:music_player_app/config/settings_data_service.dart';
 import 'package:music_player_app/data/files_service.dart';
 import 'package:music_player_app/data/playlist.dart';
 
@@ -47,8 +49,8 @@ class MusicDataService{
     required List<String> listFoldersPaths, 
     required bool addRepeat, 
     required bool repeat,
-    required bool shuffle}) async
-    {
+    required bool shuffle,
+    String? lastMusic}) async {
   
     addRepeat = addRepeat;
     repeat = repeat;
