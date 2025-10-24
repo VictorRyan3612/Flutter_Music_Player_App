@@ -16,7 +16,7 @@ class SettingsService{
   ValueNotifier<bool> addRepeat = ValueNotifier(false);
   ValueNotifier<bool> isSelecting = ValueNotifier(false);
   ValueNotifier<bool> isTable = ValueNotifier(false);
-
+  ValueNotifier<String> lastMusic = ValueNotifier('');
 
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
@@ -27,6 +27,8 @@ class SettingsService{
     // final colorTheme = prefs.getString('colorTheme') ?? settingsService.colorName.value;
     // settingsService.colorName.value = colorTheme;
 
+    final lastMusic = prefs.getString('lastMusic') ?? settingsService.lastMusic.value;
+    settingsService.lastMusic.value = lastMusic;
 
     final shuffle = prefs.getBool('shuffle') ?? settingsService.shuffle;
     settingsService.shuffle = shuffle;
@@ -49,6 +51,8 @@ class SettingsService{
     
     // prefs.setBool('isDarkMode', isDarkMode.value);
     // prefs.setString('colorTheme', colorName.value);
+    prefs.setString('lastMusic', lastMusic.value);
+    
     prefs.setBool('addRepeat', addRepeat.value);
     prefs.setBool('repeat', repeat);
     prefs.setBool('shuffle', shuffle);

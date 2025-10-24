@@ -53,7 +53,14 @@ class MusicDataService{
     addRepeat = addRepeat;
     repeat = repeat;
     shuffle = shuffle;
-
+    if (lastMusic != null) {
+      var json = jsonDecode(lastMusic);
+      actualPlayingMusic.value = json;
+      await player.setAudioSource(AudioSource.file(json['filePath'] as String));
+      // await player.pause();
+      await player.stop();
+      actualPlayingMusic.notifyListeners();
+    }
     musicsValueNotifier.value['data'] = await filesService.loadJson();
     musicsValueNotifier.value['data'].forEach((element) => setsTags(element));
     originalList = musicsValueNotifier.value['data'];
@@ -117,6 +124,8 @@ class MusicDataService{
     }
     
     player.setAudioSource(AudioSource.file(actualPlayingMusic.value['filePath']!));
+    settingsService.lastMusic.value = jsonEncode(actualPlayingMusic.value);
+    settingsService.saveSettings();
     player.play();
   }
   void toggleRepeat(){
@@ -135,6 +144,8 @@ class MusicDataService{
     await musicDataService.player.setAudioSource(AudioSource.file(metadata['filePath'] as String));
     await musicDataService.player.play();
     addPlaylist(metadata);
+    settingsService.lastMusic.value = jsonEncode(actualPlayingMusic.value);
+    settingsService.saveSettings();
   }
   
   void addPlaylist(Map<String,dynamic> metadata){

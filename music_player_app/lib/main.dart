@@ -15,7 +15,8 @@ void main() {
         listFoldersPaths: settingsService.listFoldersPaths.value,
         repeat: settingsService.repeat,
         addRepeat: settingsService.addRepeat.value,
-        shuffle: settingsService.shuffle
+        shuffle: settingsService.shuffle,
+        lastMusic: settingsService.lastMusic.value
       );
     });
     
